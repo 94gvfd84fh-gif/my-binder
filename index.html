@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Binder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>My Binder</h1>
+    <p>Collect. Showcase. Trade.</p>
+  </header>
+
+  <section class="stats">
+    <div>
+      <h3 id="totalCards">0</h3>
+      <p>Total Cards</p>
+    </div>
+    <div>
+      <h3 id="totalValue">$0</h3>
+      <p>Collection Value</p>
+    </div>
+    <div>
+      <h3 id="tradeCards">0</h3>
+      <p>For Trade</p>
+    </div>
+    <div>
+      <h3 id="saleCards">0</h3>
+      <p>For Sale</p>
+    </div>
+  </section>
+
+  <section class="form-box">
+    <h2>Add Card</h2>
+
+    <input id="cardName" placeholder="Card name">
+    <input id="setName" placeholder="Set name">
+    <input id="value" placeholder="Estimated value">
+
+    <label>Upload Card Image</label>
+    <input id="cardImage" type="file" accept="image/*">
+
+    <select id="status">
+      <option>Keep</option>
+      <option>For Trade</option>
+      <option>For Sale</option>
+    </select>
+
+    <button onclick="addCard()">Add Card</button>
+  </section>
+
+  <section class="controls">
+    <h2>Your Cards</h2>
+
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="🔍 Search cards..."
+      onkeyup="displayCards()"
+    >
+
+    <select id="sortOption" onchange="sortCards()">
+      <option value="name">Sort by Name</option>
+      <option value="set">Sort by Set</option>
+      <option value="value">Sort by Value</option>
+      <option value="status">Sort by Status</option>
+    </select>
+
+    <button onclick="toggleFavorites()" id="favoriteFilterBtn">
+      Show Favorites Only
+    </button>
+
+    <button onclick="setView('grid')" id="gridViewBtn">
+      Grid View
+    </button>
+
+    <button onclick="setView('binder')" id="binderViewBtn">
+      Binder View
+    </button>
+  </section>
+
+  <section id="binderControls" class="binder-controls">
+    <button onclick="previousPage()">Previous Page</button>
+    <span id="pageNumber">Page 1</span>
+    <button onclick="nextPage()">Next Page</button>
+  </section>
+
+  <section id="cardList"></section>
+
+  <script src="script.js"></script>
+</body>
+</html>
