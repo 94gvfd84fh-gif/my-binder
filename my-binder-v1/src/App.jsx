@@ -1,9 +1,10 @@
+import { Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import Topbar from "./components/Topbar";
-import Hero from "./components/Hero";
-import Stats from "./components/Stats";
-import QuickActions from "./components/QuickActions";
-import RecentCards from "./components/RecentCards";
+import Dashboard from "./pages/Dashboard";
+import Collection from "./pages/Collection";
+import Binder from "./pages/Binder";
+import Marketplace from "./pages/Marketplace";
+import Profile from "./pages/Profile";
 import "./App.css";
 
 function App() {
@@ -12,11 +13,13 @@ function App() {
       <Sidebar />
 
       <main className="content">
-        <Topbar />
-        <Hero />
-        <Stats />
-        <QuickActions />
-        <RecentCards />
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/collection" element={<Collection />} />
+          <Route path="/binder" element={<Binder />} />
+          <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
       </main>
     </div>
   );

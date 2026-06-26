@@ -1,9 +1,10 @@
+import { useContext } from "react";
+import { CardContext } from "../context/CardContext";
+
 function RecentCards() {
-  const cards = [
-    { id: 1, name: "Mega Greninja EX", set: "Chaos Rising", favorite: true },
-    { id: 2, name: "Charizard", set: "Base Set", favorite: false },
-    { id: 3, name: "Pikachu", set: "151", favorite: true },
-  ];
+  const { cards } = useContext(CardContext);
+
+  const recentCards = cards.slice(0, 3);
 
   return (
     <section className="recent-cards">
@@ -13,11 +14,9 @@ function RecentCards() {
       </div>
 
       <div className="recent-grid">
-        {cards.map((card) => (
+        {recentCards.map((card) => (
           <div className="recent-card" key={card.id}>
-            <div className="card-image-placeholder">
-              {card.name}
-            </div>
+            <div className="card-image-placeholder">{card.name}</div>
 
             <h3>{card.name}</h3>
             <p>{card.set}</p>

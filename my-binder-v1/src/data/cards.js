@@ -5,26 +5,24 @@ const cards = [
     set: "Chaos Rising",
     value: 210,
     favorite: true,
-    image: "https://placehold.co/300x420"
+    status: "For Trade",
   },
-
   {
     id: 2,
     name: "Charizard",
     set: "Base Set",
     value: 550,
     favorite: false,
-    image: "https://placehold.co/300x420"
+    status: "Keep",
   },
-
   {
     id: 3,
     name: "Pikachu",
     set: "151",
     value: 48,
     favorite: true,
-    image: "https://placehold.co/300x420"
-  }
+    status: "For Sale",
+  },
 ];
 
 export default cards;
