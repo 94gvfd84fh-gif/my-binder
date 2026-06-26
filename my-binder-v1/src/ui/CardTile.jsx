@@ -1,6 +1,14 @@
+import { useNavigate } from "react-router-dom";
+
 function CardTile({ card, onDelete, onToggleFavorite }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="collection-card">
+    <div
+      className="collection-card"
+      onClick={() => navigate(`/collection/${card.id}`)}
+      style={{ cursor: "pointer" }}
+    >
       <div className="collection-card-image">
         {card.image ? (
           <img src={card.image} alt={card.name} />
@@ -17,7 +25,10 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
 
         <button
           className="favorite-button"
-          onClick={() => onToggleFavorite(card.id)}
+          onClick={(event) => {
+            event.stopPropagation();
+            onToggleFavorite(card.id);
+          }}
         >
           {card.favorite ? "★" : "☆"}
         </button>
@@ -25,7 +36,13 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
 
       <small>{card.status}</small>
 
-      <button className="delete-button" onClick={() => onDelete(card.id)}>
+      <button
+        className="delete-button"
+        onClick={(event) => {
+          event.stopPropagation();
+          onDelete(card.id);
+        }}
+      >
         Delete
       </button>
     </div>

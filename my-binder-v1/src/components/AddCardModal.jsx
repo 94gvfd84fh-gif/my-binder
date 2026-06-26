@@ -1,15 +1,17 @@
 import { useContext, useState } from "react";
 import { CardContext } from "../context/CardContext";
 
-function AddCardModal({ onClose }) {
+function AddCardModal({ onClose, cardToEdit }) {
   const { cards, setCards } = useContext(CardContext);
 
-  const [name, setName] = useState("");
-  const [set, setSet] = useState("");
-  const [value, setValue] = useState("");
-  const [status, setStatus] = useState("Keep");
-  const [favorite, setFavorite] = useState(false);
-  const [image, setImage] = useState("");
+  const [name, setName] = useState(cardToEdit ? cardToEdit.name : "");
+  const [set, setSet] = useState(cardToEdit ? cardToEdit.set : "");
+  const [value, setValue] = useState(cardToEdit ? cardToEdit.value : "");
+  const [status, setStatus] = useState(cardToEdit ? cardToEdit.status : "Keep");
+  const [favorite, setFavorite] = useState(
+    cardToEdit ? cardToEdit.favorite : false
+  );
+  const [image, setImage] = useState(cardToEdit ? cardToEdit.image : "");
 
   function handleImageUpload(event) {
     const file = event.target.files[0];
@@ -26,6 +28,28 @@ function AddCardModal({ onClose }) {
   }
 
   function handleSave() {
+    if (cardToEdit) {
+      const updatedCards = cards.map((card) => {
+        if (card.id === cardToEdit.id) {
+          return {
+            ...card,
+            name,
+            set,
+            value: Number(value),
+            status,
+            favorite,
+            image,
+          };
+        }
+
+        return card;
+      });
+
+      setCards(updatedCards);
+      onClose();
+      return;
+    }
+
     const newCard = {
       id: Date.now(),
       name,
@@ -44,7 +68,7 @@ function AddCardModal({ onClose }) {
     <div className="modal-backdrop">
       <div className="modal">
         <div className="modal-header">
-          <h2>Add Card</h2>
+          <h2>{cardToEdit ? "Edit Card" : "Add Card"}</h2>
           <button onClick={onClose}>X</button>
         </div>
 
@@ -91,7 +115,7 @@ function AddCardModal({ onClose }) {
           </label>
 
           <button type="button" onClick={handleSave}>
-            Save Card
+            {cardToEdit ? "Save Changes" : "Save Card"}
           </button>
         </form>
       </div>

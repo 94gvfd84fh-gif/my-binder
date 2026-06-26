@@ -5,6 +5,7 @@ import Collection from "./pages/Collection";
 import Binder from "./pages/Binder";
 import Marketplace from "./pages/Marketplace";
 import Profile from "./pages/Profile";
+import CardDetails from "./pages/CardDetails";
 import "./App.css";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/binder" element={<Binder />} />
           <Route path="/collection" element={<Collection />} />
+          <Route path="/collection/:id" element={<CardDetails />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
