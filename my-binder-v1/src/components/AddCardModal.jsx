@@ -6,8 +6,19 @@ function AddCardModal({ onClose, cardToEdit }) {
 
   const [name, setName] = useState(cardToEdit ? cardToEdit.name : "");
   const [set, setSet] = useState(cardToEdit ? cardToEdit.set : "");
+  const [cardNumber, setCardNumber] = useState(
+    cardToEdit ? cardToEdit.cardNumber || "" : ""
+  );
+  const [rarity, setRarity] = useState(cardToEdit ? cardToEdit.rarity || "" : "");
+  const [condition, setCondition] = useState(
+    cardToEdit ? cardToEdit.condition || "Near Mint" : "Near Mint"
+  );
+  const [notes, setNotes] = useState(cardToEdit ? cardToEdit.notes || "" : "");
   const [value, setValue] = useState(cardToEdit ? cardToEdit.value : "");
   const [status, setStatus] = useState(cardToEdit ? cardToEdit.status : "Keep");
+  const [binder, setBinder] = useState(
+    cardToEdit ? cardToEdit.binder || "Main Collection" : "Main Collection"
+  );
   const [favorite, setFavorite] = useState(
     cardToEdit ? cardToEdit.favorite : false
   );
@@ -28,17 +39,26 @@ function AddCardModal({ onClose, cardToEdit }) {
   }
 
   function handleSave() {
+    const cardData = {
+      name,
+      set,
+      cardNumber,
+      rarity,
+      condition,
+      notes,
+      value: Number(value),
+      status,
+      binder,
+      favorite,
+      image,
+    };
+
     if (cardToEdit) {
       const updatedCards = cards.map((card) => {
         if (card.id === cardToEdit.id) {
           return {
             ...card,
-            name,
-            set,
-            value: Number(value),
-            status,
-            favorite,
-            image,
+            ...cardData,
           };
         }
 
@@ -52,12 +72,7 @@ function AddCardModal({ onClose, cardToEdit }) {
 
     const newCard = {
       id: Date.now(),
-      name,
-      set,
-      value: Number(value),
-      status,
-      favorite,
-      image,
+      ...cardData,
     };
 
     setCards([newCard, ...cards]);
@@ -86,6 +101,30 @@ function AddCardModal({ onClose, cardToEdit }) {
           />
 
           <input
+            placeholder="Card number ex: 199/165"
+            value={cardNumber}
+            onChange={(event) => setCardNumber(event.target.value)}
+          />
+
+          <input
+            placeholder="Rarity ex: Secret Rare"
+            value={rarity}
+            onChange={(event) => setRarity(event.target.value)}
+          />
+
+          <select
+            value={condition}
+            onChange={(event) => setCondition(event.target.value)}
+          >
+            <option>Mint</option>
+            <option>Near Mint</option>
+            <option>Lightly Played</option>
+            <option>Moderately Played</option>
+            <option>Heavily Played</option>
+            <option>Damaged</option>
+          </select>
+
+          <input
             placeholder="Estimated value"
             type="number"
             value={value}
@@ -100,6 +139,23 @@ function AddCardModal({ onClose, cardToEdit }) {
             <option>For Trade</option>
             <option>For Sale</option>
           </select>
+
+          <select
+            value={binder}
+            onChange={(event) => setBinder(event.target.value)}
+          >
+            <option>Main Collection</option>
+            <option>Showcase Binder</option>
+            <option>Trade Binder</option>
+            <option>Graded Vault</option>
+            <option>Wishlist</option>
+          </select>
+
+          <textarea
+            placeholder="Notes"
+            value={notes}
+            onChange={(event) => setNotes(event.target.value)}
+          />
 
           <input type="file" accept="image/*" onChange={handleImageUpload} />
 

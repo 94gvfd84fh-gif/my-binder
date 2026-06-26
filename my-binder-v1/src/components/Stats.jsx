@@ -7,37 +7,38 @@ function Stats() {
   const totalCards = cards.length;
 
   const collectionValue = cards.reduce((total, card) => {
-    return total + card.value;
+    return total + Number(card.value || 0);
   }, 0);
 
   const favoriteCards = cards.filter((card) => card.favorite).length;
 
-  const tradeCards = cards.filter((card) => card.status === "For Trade").length;
+  const averageValue =
+    totalCards > 0 ? collectionValue / totalCards : 0;
 
   return (
     <section className="stats">
-      <div className="stat-card blue">
+      <div className="stat-card">
         <p>TOTAL CARDS</p>
         <h2>{totalCards}</h2>
-        <span>From your collection</span>
+        <span>Cards secured in Vaulted</span>
       </div>
 
-      <div className="stat-card green">
+      <div className="stat-card">
         <p>COLLECTION VALUE</p>
-        <h2>${collectionValue}</h2>
+        <h2>${collectionValue.toLocaleString()}</h2>
         <span>Total estimated value</span>
       </div>
 
-      <div className="stat-card purple">
+      <div className="stat-card">
         <p>FAVORITES</p>
         <h2>{favoriteCards}</h2>
-        <span>Favorite cards</span>
+        <span>Showcase-worthy cards</span>
       </div>
 
-      <div className="stat-card orange">
-        <p>FOR TRADE</p>
-        <h2>{tradeCards}</h2>
-        <span>Trade binder</span>
+      <div className="stat-card">
+        <p>AVG. CARD VALUE</p>
+        <h2>${averageValue.toFixed(2)}</h2>
+        <span>Average value per card</span>
       </div>
     </section>
   );

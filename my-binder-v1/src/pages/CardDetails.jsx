@@ -58,13 +58,38 @@ function CardDetails() {
           </div>
 
           <div className="detail-row">
+            <strong>Card Number:</strong>
+            <span>{card.cardNumber || "-"}</span>
+          </div>
+
+          <div className="detail-row">
+            <strong>Rarity:</strong>
+            <span>{card.rarity || "-"}</span>
+          </div>
+
+          <div className="detail-row">
+            <strong>Condition:</strong>
+            <span>{card.condition || "-"}</span>
+          </div>
+
+          <div className="detail-row">
             <strong>Status:</strong>
             <span>{card.status}</span>
           </div>
 
           <div className="detail-row">
+            <strong>Binder:</strong>
+            <span>{card.binder || "Main Collection"}</span>
+          </div>
+
+          <div className="detail-row">
             <strong>Estimated Value:</strong>
             <span>${card.value}</span>
+          </div>
+
+          <div className="detail-row">
+            <strong>Notes:</strong>
+            <span>{card.notes || "No notes added."}</span>
           </div>
 
           <div className="detail-row">

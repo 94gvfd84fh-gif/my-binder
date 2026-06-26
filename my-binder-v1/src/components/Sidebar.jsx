@@ -4,19 +4,27 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="logo">
+        <div className="vault-logo">V</div>
+
         <h1>
-          MY <span>BINDER</span>
+          <span>Vaulted</span>
         </h1>
-        <p>COLLECT. SHOWCASE. TRADE.</p>
+
+        <p>SECURE YOUR COLLECTION</p>
       </div>
 
       <nav>
         <NavLink to="/">🏠 Dashboard</NavLink>
-        <NavLink to="/binder">📖 Binder</NavLink>
-        <NavLink to="/collection">📚 Collection</NavLink>
-        <NavLink to="/marketplace">🛒 Marketplace</NavLink>
-        <NavLink to="/profile">👤 Profile</NavLink>
+        <NavLink to="/collection">🃏 Collection</NavLink>
+        <NavLink to="/binder">📚 Binders</NavLink>
+        <NavLink to="/marketplace">💰 Marketplace</NavLink>
+        <NavLink to="/profile">⚙️ Profile</NavLink>
       </nav>
+
+      <div className="sidebar-footer">
+        <small>Vaulted v0.1</small>
+        <p>Your collection. Protected.</p>
+      </div>
     </aside>
   );
 }
