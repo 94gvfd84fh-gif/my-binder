@@ -1,6 +1,6 @@
 import cards from "./data/cards";
 import "./App.css";
-
+import AddCardForm from "./components/AddCardForm";
 function App() {
   const recentCards = cards.slice(0, 5);
 

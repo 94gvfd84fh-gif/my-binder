@@ -393,4 +393,27 @@ body {
   .recent-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}.add-card-form {
+  display: grid;
+  gap: 14px;
+}
+
+.add-card-form input,
+.add-card-form select {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #263956;
+  background: #080f1e;
+  color: white;
+  font-size: 16px;
+}
+
+.add-card-form button {
+  padding: 16px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
 }
