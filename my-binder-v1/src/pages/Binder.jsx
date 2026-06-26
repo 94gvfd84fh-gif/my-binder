@@ -1,5 +1,10 @@
 function Binder() {
-  return <h1>Binder</h1>;
+  return (
+    <div className="app">
+      <Stats />
+      <RecentCards />
+    </div>
+  );
 }
 
 export default Binder;

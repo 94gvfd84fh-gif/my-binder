@@ -1,18 +1,27 @@
 import { useContext, useState } from "react";
 import { CardContext } from "../context/CardContext";
 import AddCardModal from "../components/AddCardModal";
+import PageHeader from "../ui/PageHeader";
+import CardTile from "../ui/CardTile";
 
 function Collection() {
   const { cards } = useContext(CardContext);
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("All Cards");
   const [showAddModal, setShowAddModal] = useState(false);
 
   const filteredCards = cards.filter((card) => {
-    return (
+    const matchesSearch =
       card.name.toLowerCase().includes(search.toLowerCase()) ||
       card.set.toLowerCase().includes(search.toLowerCase()) ||
-      card.status.toLowerCase().includes(search.toLowerCase())
-    );
+      card.status.toLowerCase().includes(search.toLowerCase());
+
+    const matchesFilter =
+      filter === "All Cards" ||
+      (filter === "Favorites" && card.favorite) ||
+      filter === card.status;
+
+    return matchesSearch && matchesFilter;
   });
 
   return (
@@ -21,20 +30,19 @@ function Collection() {
         <AddCardModal onClose={() => setShowAddModal(false)} />
       )}
 
-      <div className="page-header">
-        <div>
-          <p className="page-label">MY BINDER</p>
-          <h1>Collection</h1>
-          <p>Manage your cards, values, favorites, and trade status.</p>
-        </div>
-
-        <button
-          className="primary-button"
-          onClick={() => setShowAddModal(true)}
-        >
-          + Add Card
-        </button>
-      </div>
+      <PageHeader
+        label="MY BINDER"
+        title="Collection"
+        description="Manage your cards, values, favorites, and trade status."
+        action={
+          <button
+            className="primary-button"
+            onClick={() => setShowAddModal(true)}
+          >
+            + Add Card
+          </button>
+        }
+      />
 
       <div className="collection-tools">
         <input
@@ -43,7 +51,10 @@ function Collection() {
           onChange={(event) => setSearch(event.target.value)}
         />
 
-        <select>
+        <select
+          value={filter}
+          onChange={(event) => setFilter(event.target.value)}
+        >
           <option>All Cards</option>
           <option>Favorites</option>
           <option>For Trade</option>
@@ -53,19 +64,7 @@ function Collection() {
 
       <div className="collection-grid">
         {filteredCards.map((card) => (
-          <div className="collection-card" key={card.id}>
-            <div className="collection-card-image">{card.name}</div>
-
-            <h3>{card.name}</h3>
-            <p>{card.set}</p>
-
-            <div className="collection-card-footer">
-              <span>${card.value}</span>
-              <span>{card.favorite ? "★" : "☆"}</span>
-            </div>
-
-            <small>{card.status}</small>
-          </div>
+          <CardTile key={card.id} card={card} />
         ))}
       </div>
     </div>

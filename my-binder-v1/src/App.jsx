@@ -15,8 +15,8 @@ function App() {
       <main className="content">
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/collection" element={<Collection />} />
           <Route path="/binder" element={<Binder />} />
+          <Route path="/collection" element={<Collection />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>

@@ -23,6 +23,14 @@ const cards = [
     favorite: true,
     status: "For Sale",
   },
+  {
+    id: 4,
+    name: "Blastoise",
+    set: "Base Set",
+    value: 320,
+    favorite: false,
+    status: "For Trade",
+  },
 ];
 
 export default cards;

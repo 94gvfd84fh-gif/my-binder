@@ -1,5 +1,9 @@
 function Marketplace() {
-  return <h1>Marketplace</h1>;
+  return (
+    <div className="app">
+      <h1>Marketplace</h1>
+    </div>
+  );
 }
 
 export default Marketplace;
