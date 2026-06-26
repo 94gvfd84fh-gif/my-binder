@@ -1,7 +1,18 @@
+import cards from "./data/cards";
 import "./App.css";
 
 function App() {
-  const recentCards = ["Pikachu", "Charizard", "Mewtwo", "Blastoise", "Eevee"];
+  const recentCards = cards.slice(0, 5);
+
+  const totalCards = cards.length;
+
+  const collectionValue = cards.reduce((total, card) => {
+    return total + card.value;
+  }, 0);
+
+  const favoriteCards = cards.filter((card) => card.favorite).length;
+
+  const tradeCards = cards.filter((card) => card.status === "For Trade").length;
 
   return (
     <div className="app">
@@ -12,6 +23,7 @@ function App() {
             <div></div>
             <div>M</div>
           </div>
+
           <div>
             <h1>
               MY <span>BINDER</span>
@@ -49,9 +61,15 @@ function App() {
 
         <section className="hero">
           <div>
-            <p className="eyebrow">WELCOME <span>BACK, ADAM!</span> 👋</p>
+            <p className="eyebrow">
+              WELCOME <span>BACK, ADAM!</span> 👋
+            </p>
             <h2>Build your legacy.</h2>
-            <p>Organize your cards. Complete your sets.<br />Connect with collectors.</p>
+            <p>
+              Organize your cards. Complete your sets.
+              <br />
+              Connect with collectors.
+            </p>
           </div>
 
           <div className="hero-art">
@@ -66,8 +84,8 @@ function App() {
             <div className="icon">▰</div>
             <div>
               <p>TOTAL CARDS</p>
-              <h3>123</h3>
-              <small>+12 this week ↗</small>
+              <h3>{totalCards}</h3>
+              <small>From your collection</small>
             </div>
           </div>
 
@@ -75,8 +93,8 @@ function App() {
             <div className="icon">$</div>
             <div>
               <p>COLLECTION VALUE</p>
-              <h3>$1,245</h3>
-              <small>+8.3% this week ↗</small>
+              <h3>${collectionValue}</h3>
+              <small>Total estimated value</small>
             </div>
           </div>
 
@@ -84,7 +102,7 @@ function App() {
             <div className="icon">♥</div>
             <div>
               <p>FAVORITES</p>
-              <h3>28</h3>
+              <h3>{favoriteCards}</h3>
               <small>View favorites →</small>
             </div>
           </div>
@@ -93,7 +111,7 @@ function App() {
             <div className="icon">↔</div>
             <div>
               <p>FOR TRADE</p>
-              <h3>15</h3>
+              <h3>{tradeCards}</h3>
               <small>Manage trades →</small>
             </div>
           </div>
@@ -103,10 +121,37 @@ function App() {
           <h3>QUICK ACTIONS</h3>
 
           <div className="quick-actions">
-            <button><span>▣</span><div>Add Card<small>Add to collection</small></div></button>
-            <button><span>▦</span><div>View Binder<small>Open your binder</small></div></button>
-            <button><span>🔍</span><div>Search Cards<small>Find cards</small></div></button>
-            <button><span>↔</span><div>Browse Marketplace<small>Buy & trade</small></div></button>
+            <button>
+              <span>▣</span>
+              <div>
+                Add Card
+                <small>Add to collection</small>
+              </div>
+            </button>
+
+            <button>
+              <span>▦</span>
+              <div>
+                View Binder
+                <small>Open your binder</small>
+              </div>
+            </button>
+
+            <button>
+              <span>🔍</span>
+              <div>
+                Search Cards
+                <small>Find cards</small>
+              </div>
+            </button>
+
+            <button>
+              <span>↔</span>
+              <div>
+                Browse Marketplace
+                <small>Buy & trade</small>
+              </div>
+            </button>
           </div>
         </section>
 
@@ -118,11 +163,11 @@ function App() {
 
           <div className="recent-grid">
             {recentCards.map((card) => (
-              <div className="recent-card" key={card}>
-                <div className="card-image">{card}</div>
-                <h4>{card}</h4>
-                <p>{card === "Eevee" ? "Jungle Set" : "Base Set"}</p>
-                <span>☆</span>
+              <div className="recent-card" key={card.id}>
+                <img src={card.image} alt={card.name} className="card-image" />
+                <h4>{card.name}</h4>
+                <p>{card.set}</p>
+                <span>{card.favorite ? "★" : "☆"}</span>
               </div>
             ))}
           </div>
