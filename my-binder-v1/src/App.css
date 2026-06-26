@@ -621,4 +621,6 @@ nav a.active {
 .modal {
   max-height: 90vh;
   overflow-y: auto;
+}.collection-tools {
+  grid-template-columns: 1fr 220px 220px;
 }
