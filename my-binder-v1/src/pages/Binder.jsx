@@ -57,9 +57,7 @@ function Binder() {
       <div className="binder-toolbar">
         <div>
           <h2>{selectedBinder}</h2>
-          <p>
-            {binderCards.length} cards • 9-pocket digital display
-          </p>
+          <p>{binderCards.length} cards • 9-pocket digital display</p>
         </div>
 
         <div className="binder-controls">
@@ -84,6 +82,12 @@ function Binder() {
           <div className="binder-pocket" key={index}>
             {card ? (
               <>
+                {card.gradingCompany && card.gradingCompany !== "Raw" && (
+                  <div className="graded-badge">
+                    {card.gradingCompany} {card.grade || ""}
+                  </div>
+                )}
+
                 <div className="binder-card-image">
                   {card.image ? (
                     <img src={card.image} alt={card.name} />
@@ -94,6 +98,10 @@ function Binder() {
 
                 <h3>{card.name}</h3>
                 <p>{card.set}</p>
+
+                {card.certNumber && (
+                  <small className="cert-number">Cert #{card.certNumber}</small>
+                )}
               </>
             ) : (
               <span>Empty Pocket</span>

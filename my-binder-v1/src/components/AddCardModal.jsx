@@ -100,111 +100,129 @@ function AddCardModal({ onClose, cardToEdit }) {
         </div>
 
         <form className="add-card-form">
-          <input
-            placeholder="Card name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
+          <div className="form-section">
+            <h3>Basic Information</h3>
 
-          <input
-            placeholder="Set name"
-            value={set}
-            onChange={(event) => setSet(event.target.value)}
-          />
-
-          <input
-            placeholder="Card number ex: 199/165"
-            value={cardNumber}
-            onChange={(event) => setCardNumber(event.target.value)}
-          />
-
-          <input
-            placeholder="Rarity ex: Secret Rare"
-            value={rarity}
-            onChange={(event) => setRarity(event.target.value)}
-          />
-
-          <select
-            value={condition}
-            onChange={(event) => setCondition(event.target.value)}
-          >
-            <option>Mint</option>
-            <option>Near Mint</option>
-            <option>Lightly Played</option>
-            <option>Moderately Played</option>
-            <option>Heavily Played</option>
-            <option>Damaged</option>
-          </select>
-
-          <input
-            placeholder="Estimated value"
-            type="number"
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-          />
-
-          <select
-            value={status}
-            onChange={(event) => setStatus(event.target.value)}
-          >
-            <option>Keep</option>
-            <option>For Trade</option>
-            <option>For Sale</option>
-          </select>
-
-          <select
-            value={binder}
-            onChange={(event) => setBinder(event.target.value)}
-          >
-            <option>Main Collection</option>
-            <option>Showcase Binder</option>
-            <option>Trade Binder</option>
-            <option>Graded Vault</option>
-            <option>Wishlist</option>
-          </select>
-
-          <select
-            value={gradingCompany}
-            onChange={(event) => setGradingCompany(event.target.value)}
-          >
-            <option>Raw</option>
-            <option>PSA</option>
-            <option>Beckett</option>
-            <option>TAG</option>
-            <option>CGC</option>
-            <option>Other</option>
-          </select>
-
-          <input
-            placeholder="Grade ex: 10, 9.5, Pristine 10"
-            value={grade}
-            onChange={(event) => setGrade(event.target.value)}
-          />
-
-          <input
-            placeholder="Certification number"
-            value={certNumber}
-            onChange={(event) => setCertNumber(event.target.value)}
-          />
-
-          <textarea
-            placeholder="Notes"
-            value={notes}
-            onChange={(event) => setNotes(event.target.value)}
-          />
-
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
-
-          {image && <img className="image-preview" src={image} alt="Preview" />}
-
-          <label>
             <input
-              type="checkbox"
-              checked={favorite}
-              onChange={(event) => setFavorite(event.target.checked)}
+              placeholder="Card name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
             />
-            Favorite
-          </label>
+
+            <input
+              placeholder="Set name"
+              value={set}
+              onChange={(event) => setSet(event.target.value)}
+            />
+
+            <input
+              placeholder="Card number ex: 199/165"
+              value={cardNumber}
+              onChange={(event) => setCardNumber(event.target.value)}
+            />
+
+            <input
+              placeholder="Rarity ex: Secret Rare"
+              value={rarity}
+              onChange={(event) => setRarity(event.target.value)}
+            />
+          </div>
+
+          <div className="form-section">
+            <h3>Collection Details</h3>
+
+            <select
+              value={condition}
+              onChange={(event) => setCondition(event.target.value)}
+            >
+              <option>Mint</option>
+              <option>Near Mint</option>
+              <option>Lightly Played</option>
+              <option>Moderately Played</option>
+              <option>Heavily Played</option>
+              <option>Damaged</option>
+            </select>
+
+            <input
+              placeholder="Estimated value"
+              type="number"
+              value={value}
+              onChange={(event) => setValue(event.target.value)}
+            />
+
+            <select
+              value={status}
+              onChange={(event) => setStatus(event.target.value)}
+            >
+              <option>Keep</option>
+              <option>For Trade</option>
+              <option>For Sale</option>
+            </select>
+
+            <select
+              value={binder}
+              onChange={(event) => setBinder(event.target.value)}
+            >
+              <option>Main Collection</option>
+              <option>Showcase Binder</option>
+              <option>Trade Binder</option>
+              <option>Graded Vault</option>
+              <option>Wishlist</option>
+            </select>
+          </div>
+
+          <div className="form-section">
+            <h3>Grading</h3>
+
+            <select
+              value={gradingCompany}
+              onChange={(event) => setGradingCompany(event.target.value)}
+            >
+              <option>Raw</option>
+              <option>PSA</option>
+              <option>Beckett</option>
+              <option>TAG</option>
+              <option>CGC</option>
+              <option>Other</option>
+            </select>
+
+            <input
+              placeholder="Grade ex: 10, 9.5, Pristine 10"
+              value={grade}
+              onChange={(event) => setGrade(event.target.value)}
+            />
+
+            <input
+              placeholder="Certification number"
+              value={certNumber}
+              onChange={(event) => setCertNumber(event.target.value)}
+            />
+          </div>
+
+          <div className="form-section">
+            <h3>Extras</h3>
+
+            <textarea
+              placeholder="Notes"
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
+            />
+
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+
+            {image && (
+              <img className="image-preview" src={image} alt="Preview" />
+            )}
+
+            <label className="favorite-toggle">
+              <input
+                type="checkbox"
+                checked={favorite}
+                onChange={(event) => setFavorite(event.target.checked)}
+              />
+              Favorite
+            </label>
+          </div>
 
           <button type="button" onClick={handleSave}>
             {cardToEdit ? "Save Changes" : "Save Card"}

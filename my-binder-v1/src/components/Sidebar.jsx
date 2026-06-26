@@ -22,7 +22,7 @@ function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <small>Vaulted v0.3</small>
+        <small>Vaulted v0.4</small>
         <p>Your collection. Protected.</p>
       </div>
     </aside>

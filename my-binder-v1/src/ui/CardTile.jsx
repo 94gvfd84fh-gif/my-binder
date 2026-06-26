@@ -9,6 +9,12 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
       onClick={() => navigate(`/collection/${card.id}`)}
       style={{ cursor: "pointer" }}
     >
+      {card.gradingCompany && card.gradingCompany !== "Raw" && (
+        <div className="card-grade-badge">
+          {card.gradingCompany} {card.grade || ""}
+        </div>
+      )}
+
       <div className="collection-card-image">
         {card.image ? (
           <img src={card.image} alt={card.name} />
@@ -20,8 +26,14 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
       <h3>{card.name}</h3>
       <p>{card.set}</p>
 
+      {card.binder && (
+        <small className="binder-label">
+          📚 {card.binder}
+        </small>
+      )}
+
       <div className="collection-card-footer">
-        <span>${card.value}</span>
+        <span>${Number(card.value || 0).toLocaleString()}</span>
 
         <button
           className="favorite-button"

@@ -78,8 +78,8 @@ function Profile() {
 
         <div className="profile-card">
           <p className="page-label">APP VERSION</p>
-          <h2>Vaulted v0.3</h2>
-          <p>Collection intelligence and grading support.</p>
+          <h2>Vaulted v0.4</h2>
+          <p>Collector experience and workflow improvements.</p>
         </div>
 
         <div className="profile-card">

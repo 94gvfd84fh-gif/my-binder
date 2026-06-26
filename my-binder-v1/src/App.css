@@ -650,4 +650,57 @@ nav a.active {
   .profile-grid {
     grid-template-columns: 1fr;
   }
+}.form-section {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.form-section h3 {
+  color: var(--accent);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.favorite-toggle {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}.graded-badge {
+  align-self: center;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.16);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.cert-number {
+  margin-top: 8px;
+  color: var(--text-muted);
+}.card-grade-badge {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, #d4af37, #f4d03f);
+  color: #111;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 999px;
+}
+
+.binder-label {
+  display: block;
+  margin: 8px 0;
+  color: var(--accent);
+  font-weight: 600;
 }
