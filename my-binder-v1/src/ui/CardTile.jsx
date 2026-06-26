@@ -1,4 +1,4 @@
-function CardTile({ card }) {
+function CardTile({ card, onDelete, onToggleFavorite }) {
   return (
     <div className="collection-card">
       <div className="collection-card-image">
@@ -14,10 +14,20 @@ function CardTile({ card }) {
 
       <div className="collection-card-footer">
         <span>${card.value}</span>
-        <span>{card.favorite ? "★" : "☆"}</span>
+
+        <button
+          className="favorite-button"
+          onClick={() => onToggleFavorite(card.id)}
+        >
+          {card.favorite ? "★" : "☆"}
+        </button>
       </div>
 
       <small>{card.status}</small>
+
+      <button className="delete-button" onClick={() => onDelete(card.id)}>
+        Delete
+      </button>
     </div>
   );
 }

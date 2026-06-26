@@ -366,4 +366,19 @@ nav a.active {
   height: 100%;
   object-fit: contain;
   border-radius: 12px;
+}.delete-button {
+  margin-top: 14px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--danger);
+  background: rgba(239, 68, 68, 0.12);
+  color: #fecaca;
+  border-radius: 10px;
+  cursor: pointer;
+}.favorite-button {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 24px;
+  cursor: pointer;
 }

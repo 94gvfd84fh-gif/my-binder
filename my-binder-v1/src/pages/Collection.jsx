@@ -5,10 +5,27 @@ import PageHeader from "../ui/PageHeader";
 import CardTile from "../ui/CardTile";
 
 function Collection() {
-  const { cards } = useContext(CardContext);
+  const { cards, setCards } = useContext(CardContext);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All Cards");
   const [showAddModal, setShowAddModal] = useState(false);
+
+  function deleteCard(id) {
+    const updatedCards = cards.filter((card) => card.id !== id);
+    setCards(updatedCards);
+  }
+
+  function toggleFavorite(id) {
+    const updatedCards = cards.map((card) => {
+      if (card.id === id) {
+        return { ...card, favorite: !card.favorite };
+      }
+
+      return card;
+    });
+
+    setCards(updatedCards);
+  }
 
   const filteredCards = cards.filter((card) => {
     const matchesSearch =
@@ -64,7 +81,12 @@ function Collection() {
 
       <div className="collection-grid">
         {filteredCards.map((card) => (
-          <CardTile key={card.id} card={card} />
+          <CardTile
+            key={card.id}
+            card={card}
+            onDelete={deleteCard}
+            onToggleFavorite={toggleFavorite}
+          />
         ))}
       </div>
     </div>
