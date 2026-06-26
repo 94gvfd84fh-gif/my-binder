@@ -83,6 +83,21 @@ function CardDetails() {
           </div>
 
           <div className="detail-row">
+            <strong>Grading Company:</strong>
+            <span>{card.gradingCompany || "Raw"}</span>
+          </div>
+
+          <div className="detail-row">
+            <strong>Grade:</strong>
+            <span>{card.grade || "-"}</span>
+          </div>
+
+          <div className="detail-row">
+            <strong>Certification #:</strong>
+            <span>{card.certNumber || "-"}</span>
+          </div>
+
+          <div className="detail-row">
             <strong>Estimated Value:</strong>
             <span>${card.value}</span>
           </div>

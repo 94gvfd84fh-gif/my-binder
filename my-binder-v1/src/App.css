@@ -623,4 +623,31 @@ nav a.active {
   overflow-y: auto;
 }.collection-tools {
   grid-template-columns: 1fr 220px 220px;
+}.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.profile-card {
+  background: linear-gradient(180deg, var(--bg-card), #111c31);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  box-shadow: var(--shadow-card);
+}
+
+.profile-card h2 {
+  margin: 10px 0;
+}
+
+.profile-card p {
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
 }

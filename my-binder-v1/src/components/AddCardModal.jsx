@@ -19,6 +19,15 @@ function AddCardModal({ onClose, cardToEdit }) {
   const [binder, setBinder] = useState(
     cardToEdit ? cardToEdit.binder || "Main Collection" : "Main Collection"
   );
+
+  const [gradingCompany, setGradingCompany] = useState(
+    cardToEdit ? cardToEdit.gradingCompany || "Raw" : "Raw"
+  );
+  const [grade, setGrade] = useState(cardToEdit ? cardToEdit.grade || "" : "");
+  const [certNumber, setCertNumber] = useState(
+    cardToEdit ? cardToEdit.certNumber || "" : ""
+  );
+
   const [favorite, setFavorite] = useState(
     cardToEdit ? cardToEdit.favorite : false
   );
@@ -49,6 +58,9 @@ function AddCardModal({ onClose, cardToEdit }) {
       value: Number(value),
       status,
       binder,
+      gradingCompany,
+      grade,
+      certNumber,
       favorite,
       image,
     };
@@ -150,6 +162,30 @@ function AddCardModal({ onClose, cardToEdit }) {
             <option>Graded Vault</option>
             <option>Wishlist</option>
           </select>
+
+          <select
+            value={gradingCompany}
+            onChange={(event) => setGradingCompany(event.target.value)}
+          >
+            <option>Raw</option>
+            <option>PSA</option>
+            <option>Beckett</option>
+            <option>TAG</option>
+            <option>CGC</option>
+            <option>Other</option>
+          </select>
+
+          <input
+            placeholder="Grade ex: 10, 9.5, Pristine 10"
+            value={grade}
+            onChange={(event) => setGrade(event.target.value)}
+          />
+
+          <input
+            placeholder="Certification number"
+            value={certNumber}
+            onChange={(event) => setCertNumber(event.target.value)}
+          />
 
           <textarea
             placeholder="Notes"
