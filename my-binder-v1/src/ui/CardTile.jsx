@@ -1,7 +1,13 @@
 function CardTile({ card }) {
   return (
     <div className="collection-card">
-      <div className="collection-card-image">{card.name}</div>
+      <div className="collection-card-image">
+        {card.image ? (
+          <img src={card.image} alt={card.name} />
+        ) : (
+          card.name
+        )}
+      </div>
 
       <h3>{card.name}</h3>
       <p>{card.set}</p>

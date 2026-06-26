@@ -9,15 +9,31 @@ function AddCardModal({ onClose }) {
   const [value, setValue] = useState("");
   const [status, setStatus] = useState("Keep");
   const [favorite, setFavorite] = useState(false);
+  const [image, setImage] = useState("");
+
+  function handleImageUpload(event) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+      setImage(reader.result);
+    };
+
+    reader.readAsDataURL(file);
+  }
 
   function handleSave() {
     const newCard = {
       id: Date.now(),
-      name: name,
-      set: set,
+      name,
+      set,
       value: Number(value),
-      status: status,
-      favorite: favorite,
+      status,
+      favorite,
+      image,
     };
 
     setCards([newCard, ...cards]);
@@ -60,6 +76,10 @@ function AddCardModal({ onClose }) {
             <option>For Trade</option>
             <option>For Sale</option>
           </select>
+
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
+
+          {image && <img className="image-preview" src={image} alt="Preview" />}
 
           <label>
             <input
