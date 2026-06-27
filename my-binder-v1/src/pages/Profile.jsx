@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
 import PageHeader from "../ui/PageHeader";
-
+import "../styles/profile.css";
 const PROFILE_KEY = "pocket-deck-profile";
 
 const defaultProfile = {
@@ -14,12 +14,21 @@ const defaultProfile = {
   collectorSince: "2026",
   bio: "Collecting since I was a kid. Always looking for vintage holos.",
   avatar: "",
+  featuredCardId: "",
 };
 
 function Profile() {
   const { cards, setCards } = useContext(CardContext);
-  const { binders, binderGoals, replaceBinders, replaceBinderGoals } =
-    useContext(BinderContext);
+  const {
+    binders,
+    binderGoals,
+    binderVisibility,
+    BINDER_VISIBILITY,
+    getBinderVisibility,
+    replaceBinders,
+    replaceBinderGoals,
+    replaceBinderVisibility,
+  } = useContext(BinderContext);
 
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isPreviewingPublicProfile, setIsPreviewingPublicProfile] =
@@ -30,7 +39,10 @@ function Profile() {
 
     if (savedProfile) {
       try {
-        return JSON.parse(savedProfile);
+        return {
+          ...defaultProfile,
+          ...JSON.parse(savedProfile),
+        };
       } catch {
         return defaultProfile;
       }
@@ -40,14 +52,8 @@ function Profile() {
   });
 
   function getPrimaryBinder(card) {
-    if (card.primaryBinder) {
-      return card.primaryBinder;
-    }
-
-    if (card.binder) {
-      return card.binder;
-    }
-
+    if (card.primaryBinder) return card.primaryBinder;
+    if (card.binder) return card.binder;
     if (card.gradingCompany && card.gradingCompany !== "Raw") {
       return "Graded Collection";
     }
@@ -69,6 +75,15 @@ function Profile() {
     }
 
     return getExtraBinders(card).includes(binderName);
+  }
+
+  function isPublicBinder(binderName) {
+    const visibility = getBinderVisibility(binderName);
+
+    return (
+      visibility === BINDER_VISIBILITY.PUBLIC ||
+      visibility === BINDER_VISIBILITY.TRADE_VISIBLE
+    );
   }
 
   const ownedCards = cards.filter((card) => {
@@ -98,20 +113,29 @@ function Profile() {
     return card.gradingCompany && card.gradingCompany !== "Raw";
   }).length;
 
+  const selectedFeaturedCard = ownedCards.find((card) => {
+    return String(card.id) === String(collectorProfile.featuredCardId);
+  });
+
   const highestValueCard = [...ownedCards].sort((a, b) => {
     return Number(b.value || 0) - Number(a.value || 0);
   })[0];
 
-  const publicBinders = binders.slice(0, 3).map((binderName) => {
-    const cardCount = cards.filter((card) => {
-      return cardBelongsToBinder(card, binderName);
-    }).length;
+  const displayedFeaturedCard = selectedFeaturedCard || highestValueCard;
 
-    return {
-      name: binderName,
-      cardCount,
-    };
-  });
+  const publicBinders = binders
+    .filter(isPublicBinder)
+    .map((binderName) => {
+      const cardCount = cards.filter((card) => {
+        return cardBelongsToBinder(card, binderName);
+      }).length;
+
+      return {
+        name: binderName,
+        cardCount,
+        visibility: getBinderVisibility(binderName),
+      };
+    });
 
   function updateProfile(field, value) {
     setCollectorProfile((currentProfile) => {
@@ -161,11 +185,12 @@ function Profile() {
   function exportCollection() {
     const backup = {
       app: "Pocket Deck",
-      backupVersion: 2,
+      backupVersion: 3,
       exportedAt: new Date().toISOString(),
       cards,
       binders,
       binderGoals,
+      binderVisibility,
       collectorProfile,
     };
 
@@ -213,6 +238,7 @@ function Profile() {
         if (!isOldCardBackup) {
           replaceBinders(importedBackup.binders);
           replaceBinderGoals(importedBackup.binderGoals);
+          replaceBinderVisibility(importedBackup.binderVisibility);
           replaceCollectorProfile(importedBackup.collectorProfile);
         }
 
@@ -251,6 +277,10 @@ function Profile() {
           </div>
 
           <div className="profile-action-row">
+            <Link className="secondary-button" to="/u/collector">
+              View Public Profile
+            </Link>
+
             <button
               className="secondary-button"
               onClick={() => {
@@ -348,12 +378,16 @@ function Profile() {
           </div>
         </div>
 
-        {highestValueCard && (
+        {displayedFeaturedCard && (
           <div className="collector-top-card">
             <span>
-              {isPreviewingPublicProfile ? "Featured Card" : "Highest Value Card"}
+              {selectedFeaturedCard
+                ? "Featured Card"
+                : isPreviewingPublicProfile
+                ? "Featured Card"
+                : "Highest Value Card"}
             </span>
-            <strong>{highestValueCard.name}</strong>
+            <strong>{displayedFeaturedCard.name}</strong>
           </div>
         )}
 
@@ -361,17 +395,24 @@ function Profile() {
           <div className="section-header">
             <div>
               <h3>Public Binders</h3>
-              <p>Binders other collectors will be able to view.</p>
+              <p>Only binders marked Public or Trade Visible appear here.</p>
             </div>
           </div>
 
-          <div className="public-binder-list">
-            {publicBinders.map((binder) => (
-              <Link key={binder.name} to="/binder">
-                {binder.name} · {binder.cardCount} cards
-              </Link>
-            ))}
-          </div>
+          {publicBinders.length > 0 ? (
+            <div className="public-binder-list">
+              {publicBinders.map((binder) => (
+                <Link key={binder.name} to="/binder">
+                  {binder.name} · {binder.cardCount} cards · {binder.visibility}
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="profile-empty-note">
+              <p>No public binders yet.</p>
+              <span>Set binder visibility from the Binders page.</span>
+            </div>
+          )}
         </div>
 
         {isEditingProfile && !isPreviewingPublicProfile && (
@@ -409,6 +450,24 @@ function Profile() {
                   value={collectorProfile.favoriteSet}
                   onChange={(event) => updateProfile("favoriteSet", event.target.value)}
                 />
+              </label>
+
+              <label>
+                <span>Featured Card</span>
+                <select
+                  value={collectorProfile.featuredCardId}
+                  onChange={(event) =>
+                    updateProfile("featuredCardId", event.target.value)
+                  }
+                >
+                  <option value="">Auto-select featured card</option>
+
+                  {ownedCards.map((card) => (
+                    <option key={card.id} value={card.id}>
+                      {card.name} - {card.set || "Unknown set"}
+                    </option>
+                  ))}
+                </select>
               </label>
 
               <label>
@@ -460,7 +519,7 @@ function Profile() {
           <section className="profile-card">
             <p className="page-label">BACKUP</p>
             <h2>Export Pocket Deck</h2>
-            <p>Download your cards, binders, goals, and profile as a backup file.</p>
+            <p>Download your cards, binders, goals, profile, and visibility settings.</p>
             <button className="primary-button" onClick={exportCollection}>
               Export Backup
             </button>
@@ -469,7 +528,7 @@ function Profile() {
           <section className="profile-card">
             <p className="page-label">RESTORE</p>
             <h2>Import Pocket Deck</h2>
-            <p>Restore your cards, binders, goals, and profile from a backup file.</p>
+            <p>Restore your cards, binders, goals, profile, and visibility settings.</p>
 
             <label className="primary-button import-backup-button">
               Import Backup

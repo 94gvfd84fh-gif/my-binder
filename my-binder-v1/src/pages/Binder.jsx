@@ -9,10 +9,13 @@ function Binder() {
   const {
     binders,
     binderGoals,
+    BINDER_VISIBILITY,
     addBinder,
     renameBinder,
     deleteBinder,
     setBinderGoal,
+    getBinderVisibility,
+    setBinderVisibilityStatus,
     isDefaultBinder,
   } = useContext(BinderContext);
 
@@ -38,6 +41,7 @@ function Binder() {
   }, [searchParams, binders]);
 
   const selectedBinderIsDefault = isDefaultBinder(selectedBinder);
+  const selectedBinderVisibility = getBinderVisibility(selectedBinder);
 
   function getPrimaryBinder(card) {
     if (card.primaryBinder) return card.primaryBinder;
@@ -97,6 +101,18 @@ function Binder() {
       title: "This custom binder is empty",
       text: "Use the Add Card picker above to add cards without removing them from their primary binder.",
     };
+  }
+
+  function getVisibilityDescription() {
+    if (selectedBinderVisibility === BINDER_VISIBILITY.PUBLIC) {
+      return "This binder can appear on your public collector profile.";
+    }
+
+    if (selectedBinderVisibility === BINDER_VISIBILITY.TRADE_VISIBLE) {
+      return "This binder can be shown to collectors looking for trades.";
+    }
+
+    return "Only you can see this binder.";
   }
 
   const binderCards = cards.filter((card) => {
@@ -354,6 +370,25 @@ function Binder() {
             Next
           </button>
         </div>
+      </div>
+
+      <div className="binder-visibility-panel">
+        <div>
+          <p className="page-label">BINDER VISIBILITY</p>
+          <h3>{selectedBinderVisibility}</h3>
+          <p>{getVisibilityDescription()}</p>
+        </div>
+
+        <select
+          value={selectedBinderVisibility}
+          onChange={(event) =>
+            setBinderVisibilityStatus(selectedBinder, event.target.value)
+          }
+        >
+          <option>{BINDER_VISIBILITY.PRIVATE}</option>
+          <option>{BINDER_VISIBILITY.PUBLIC}</option>
+          <option>{BINDER_VISIBILITY.TRADE_VISIBLE}</option>
+        </select>
       </div>
 
       <div className="binder-management-grid">

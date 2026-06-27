@@ -4,6 +4,13 @@ export const BinderContext = createContext();
 
 const BINDERS_STORAGE_KEY = "pocket-deck-binders";
 const GOALS_STORAGE_KEY = "pocket-deck-binder-goals";
+const VISIBILITY_STORAGE_KEY = "pocket-deck-binder-visibility";
+
+export const BINDER_VISIBILITY = {
+  PRIVATE: "Private",
+  PUBLIC: "Public",
+  TRADE_VISIBLE: "Trade Visible",
+};
 
 export const defaultBinders = [
   "Main Collection",
@@ -12,6 +19,14 @@ export const defaultBinders = [
   "Graded Collection",
   "Wishlist",
 ];
+
+const defaultBinderVisibility = {
+  "Main Collection": BINDER_VISIBILITY.PRIVATE,
+  "Showcase Binder": BINDER_VISIBILITY.PUBLIC,
+  "Trade Binder": BINDER_VISIBILITY.TRADE_VISIBLE,
+  "Graded Collection": BINDER_VISIBILITY.PRIVATE,
+  Wishlist: BINDER_VISIBILITY.PRIVATE,
+};
 
 function BinderProvider({ children }) {
   const [binders, setBinders] = useState(() => {
@@ -50,6 +65,27 @@ function BinderProvider({ children }) {
     return {};
   });
 
+  const [binderVisibility, setBinderVisibility] = useState(() => {
+    const savedVisibility = localStorage.getItem(VISIBILITY_STORAGE_KEY);
+
+    if (savedVisibility) {
+      try {
+        const parsedVisibility = JSON.parse(savedVisibility);
+
+        if (parsedVisibility && typeof parsedVisibility === "object") {
+          return {
+            ...defaultBinderVisibility,
+            ...parsedVisibility,
+          };
+        }
+      } catch {
+        return defaultBinderVisibility;
+      }
+    }
+
+    return defaultBinderVisibility;
+  });
+
   useEffect(() => {
     localStorage.setItem(BINDERS_STORAGE_KEY, JSON.stringify(binders));
   }, [binders]);
@@ -57,6 +93,13 @@ function BinderProvider({ children }) {
   useEffect(() => {
     localStorage.setItem(GOALS_STORAGE_KEY, JSON.stringify(binderGoals));
   }, [binderGoals]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      VISIBILITY_STORAGE_KEY,
+      JSON.stringify(binderVisibility)
+    );
+  }, [binderVisibility]);
 
   function isDefaultBinder(name) {
     return defaultBinders.some((binder) => {
@@ -70,6 +113,19 @@ function BinderProvider({ children }) {
     });
   }
 
+  function getBinderVisibility(name) {
+    return binderVisibility[name] || BINDER_VISIBILITY.PRIVATE;
+  }
+
+  function setBinderVisibilityStatus(name, visibility) {
+    setBinderVisibility((currentVisibility) => {
+      return {
+        ...currentVisibility,
+        [name]: visibility,
+      };
+    });
+  }
+
   function addBinder(name) {
     const trimmedName = name.trim();
 
@@ -78,6 +134,14 @@ function BinderProvider({ children }) {
     }
 
     setBinders([...binders, trimmedName]);
+
+    setBinderVisibility((currentVisibility) => {
+      return {
+        ...currentVisibility,
+        [trimmedName]: BINDER_VISIBILITY.PRIVATE,
+      };
+    });
+
     return true;
   }
 
@@ -113,6 +177,14 @@ function BinderProvider({ children }) {
       return updatedGoals;
     });
 
+    setBinderVisibility((currentVisibility) => {
+      const updatedVisibility = { ...currentVisibility };
+      updatedVisibility[trimmedName] =
+        updatedVisibility[oldName] || BINDER_VISIBILITY.PRIVATE;
+      delete updatedVisibility[oldName];
+      return updatedVisibility;
+    });
+
     return true;
   }
 
@@ -128,6 +200,12 @@ function BinderProvider({ children }) {
       const updatedGoals = { ...currentGoals };
       delete updatedGoals[name];
       return updatedGoals;
+    });
+
+    setBinderVisibility((currentVisibility) => {
+      const updatedVisibility = { ...currentVisibility };
+      delete updatedVisibility[name];
+      return updatedVisibility;
     });
 
     return true;
@@ -171,6 +249,18 @@ function BinderProvider({ children }) {
     setBinderGoals(importedGoals);
   }
 
+  function replaceBinderVisibility(importedVisibility) {
+    if (!importedVisibility || typeof importedVisibility !== "object") {
+      setBinderVisibility(defaultBinderVisibility);
+      return;
+    }
+
+    setBinderVisibility({
+      ...defaultBinderVisibility,
+      ...importedVisibility,
+    });
+  }
+
   return (
     <BinderContext.Provider
       value={{
@@ -178,12 +268,17 @@ function BinderProvider({ children }) {
         setBinders,
         binderGoals,
         setBinderGoals,
+        binderVisibility,
+        BINDER_VISIBILITY,
         addBinder,
         renameBinder,
         deleteBinder,
         setBinderGoal,
+        getBinderVisibility,
+        setBinderVisibilityStatus,
         replaceBinders,
         replaceBinderGoals,
+        replaceBinderVisibility,
         isDefaultBinder,
       }}
     >
