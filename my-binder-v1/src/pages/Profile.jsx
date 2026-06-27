@@ -6,6 +6,7 @@ import PageHeader from "../ui/PageHeader";
 import "../styles/profile.css";
 
 const PROFILE_KEY = "pocket-deck-profile";
+const FOLLOWED_COLLECTORS_KEY = "pocket-deck-followed-collectors";
 
 const defaultProfile = {
   username: "Pocket Deck Collector",
@@ -17,6 +18,21 @@ const defaultProfile = {
   avatar: "",
   featuredCardId: "",
 };
+
+function getSavedCount(key) {
+  const saved = localStorage.getItem(key);
+
+  if (!saved) {
+    return 0;
+  }
+
+  try {
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) ? parsed.length : 0;
+  } catch {
+    return 0;
+  }
+}
 
 function Profile() {
   const { cards, setCards } = useContext(CardContext);
@@ -52,7 +68,13 @@ function Profile() {
     return defaultProfile;
   });
 
+  const followedCollectors = getSavedCount(FOLLOWED_COLLECTORS_KEY);
+
   function getPrimaryBinder(card) {
+    if (card.status === "Wishlist") {
+      return "Wishlist";
+    }
+
     if (card.primaryBinder) return card.primaryBinder;
     if (card.binder) return card.binder;
 
@@ -376,7 +398,7 @@ function Profile() {
           </div>
 
           <div>
-            <strong>0</strong>
+            <strong>{followedCollectors}</strong>
             <span>Following</span>
           </div>
 
