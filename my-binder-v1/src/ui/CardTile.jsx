@@ -6,6 +6,15 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
   const value = Number(card.value || 0).toLocaleString();
   const isGraded = card.gradingCompany && card.gradingCompany !== "Raw";
 
+  const primaryBinder =
+    card.primaryBinder ||
+    card.binder ||
+    (isGraded ? "Graded Collection" : "Main Collection");
+
+  const extraBinders = Array.isArray(card.extraBinders)
+    ? card.extraBinders
+    : [];
+
   return (
     <article
       className="collection-card"
@@ -38,7 +47,21 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
           <p>{card.set || "Unknown set"}</p>
         </div>
 
-        {card.binder && <small className="binder-label">{card.binder}</small>}
+        <div className="card-binder-stack">
+          <small className="binder-label">{primaryBinder}</small>
+
+          {extraBinders.length > 0 && (
+            <div className="extra-binder-chips">
+              {extraBinders.slice(0, 3).map((binderName) => (
+                <span key={binderName}>{binderName}</span>
+              ))}
+
+              {extraBinders.length > 3 && (
+                <span>+{extraBinders.length - 3}</span>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="collection-card-footer">
           <span>${value}</span>

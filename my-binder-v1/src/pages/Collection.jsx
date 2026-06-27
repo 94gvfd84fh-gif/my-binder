@@ -1,15 +1,50 @@
 import { useContext, useState } from "react";
 import { CardContext } from "../context/CardContext";
+import { BinderContext } from "../context/BinderContext";
 import AddCardModal from "../components/AddCardModal";
 import PageHeader from "../ui/PageHeader";
 import CardTile from "../ui/CardTile";
 
 function Collection() {
   const { cards, setCards } = useContext(CardContext);
+  const { binders } = useContext(BinderContext);
+
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All Cards");
   const [sort, setSort] = useState("Newest");
   const [showAddModal, setShowAddModal] = useState(false);
+
+  function getPrimaryBinder(card) {
+    if (card.primaryBinder) {
+      return card.primaryBinder;
+    }
+
+    if (card.binder) {
+      return card.binder;
+    }
+
+    if (card.gradingCompany && card.gradingCompany !== "Raw") {
+      return "Graded Collection";
+    }
+
+    return "Main Collection";
+  }
+
+  function getExtraBinders(card) {
+    return Array.isArray(card.extraBinders) ? card.extraBinders : [];
+  }
+
+  function cardBelongsToBinder(card, binderName) {
+    if (
+      binderName === "Main Collection" ||
+      binderName === "Graded Collection" ||
+      binderName === "Wishlist"
+    ) {
+      return getPrimaryBinder(card) === binderName;
+    }
+
+    return getExtraBinders(card).includes(binderName);
+  }
 
   function deleteCard(id) {
     const updatedCards = cards.filter((card) => card.id !== id);
@@ -30,6 +65,8 @@ function Collection() {
 
   const filteredCards = cards.filter((card) => {
     const searchText = search.toLowerCase();
+    const primaryBinder = getPrimaryBinder(card);
+    const extraBinders = getExtraBinders(card);
 
     const matchesSearch =
       (card.name || "").toLowerCase().includes(searchText) ||
@@ -37,13 +74,14 @@ function Collection() {
       (card.status || "").toLowerCase().includes(searchText) ||
       (card.rarity || "").toLowerCase().includes(searchText) ||
       (card.condition || "").toLowerCase().includes(searchText) ||
-      (card.binder || "").toLowerCase().includes(searchText);
+      primaryBinder.toLowerCase().includes(searchText) ||
+      extraBinders.join(" ").toLowerCase().includes(searchText);
 
     const matchesFilter =
       filter === "All Cards" ||
       (filter === "Favorites" && card.favorite) ||
       filter === card.status ||
-      filter === card.binder;
+      cardBelongsToBinder(card, filter);
 
     return matchesSearch && matchesFilter;
   });
@@ -111,11 +149,10 @@ function Collection() {
           <option>Favorites</option>
           <option>For Trade</option>
           <option>For Sale</option>
-          <option>Main Collection</option>
-          <option>Showcase Binder</option>
-          <option>Trade Binder</option>
-          <option>Graded Vault</option>
-          <option>Wishlist</option>
+
+          {binders.map((binder) => (
+            <option key={binder}>{binder}</option>
+          ))}
         </select>
 
         <select value={sort} onChange={(event) => setSort(event.target.value)}>

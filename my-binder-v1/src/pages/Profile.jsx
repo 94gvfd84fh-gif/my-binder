@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
+import { BinderContext } from "../context/BinderContext";
 import PageHeader from "../ui/PageHeader";
 
 const PROFILE_KEY = "pocket-deck-profile";
@@ -17,6 +18,9 @@ const defaultProfile = {
 
 function Profile() {
   const { cards, setCards } = useContext(CardContext);
+  const { binders, binderGoals, replaceBinders, replaceBinderGoals } =
+    useContext(BinderContext);
+
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isPreviewingPublicProfile, setIsPreviewingPublicProfile] =
     useState(false);
@@ -35,25 +39,72 @@ function Profile() {
     return defaultProfile;
   });
 
-  const totalCards = cards.length;
+  function getPrimaryBinder(card) {
+    if (card.primaryBinder) {
+      return card.primaryBinder;
+    }
 
-  const totalValue = cards.reduce((total, card) => {
+    if (card.binder) {
+      return card.binder;
+    }
+
+    if (card.gradingCompany && card.gradingCompany !== "Raw") {
+      return "Graded Collection";
+    }
+
+    return "Main Collection";
+  }
+
+  function getExtraBinders(card) {
+    return Array.isArray(card.extraBinders) ? card.extraBinders : [];
+  }
+
+  function cardBelongsToBinder(card, binderName) {
+    if (
+      binderName === "Main Collection" ||
+      binderName === "Graded Collection" ||
+      binderName === "Wishlist"
+    ) {
+      return getPrimaryBinder(card) === binderName;
+    }
+
+    return getExtraBinders(card).includes(binderName);
+  }
+
+  const ownedCards = cards.filter((card) => {
+    return getPrimaryBinder(card) !== "Wishlist";
+  });
+
+  const wishlistCards = cards.filter((card) => {
+    return getPrimaryBinder(card) === "Wishlist";
+  });
+
+  const totalCards = ownedCards.length;
+
+  const totalValue = ownedCards.reduce((total, card) => {
     return total + Number(card.value || 0);
   }, 0);
 
-  const favoriteCards = cards.filter((card) => card.favorite).length;
+  const favoriteCards = ownedCards.filter((card) => card.favorite).length;
 
-  const highestValueCard = [...cards].sort((a, b) => {
+  const tradeCards = ownedCards.filter((card) => {
+    return (
+      card.status === "For Trade" ||
+      getExtraBinders(card).includes("Trade Binder")
+    );
+  }).length;
+
+  const gradedCards = ownedCards.filter((card) => {
+    return card.gradingCompany && card.gradingCompany !== "Raw";
+  }).length;
+
+  const highestValueCard = [...ownedCards].sort((a, b) => {
     return Number(b.value || 0) - Number(a.value || 0);
   })[0];
 
-  const publicBinders = [
-    "Main Collection",
-    "Showcase Binder",
-    "Trade Binder",
-  ].map((binderName) => {
+  const publicBinders = binders.slice(0, 3).map((binderName) => {
     const cardCount = cards.filter((card) => {
-      return (card.binder || "Main Collection") === binderName;
+      return cardBelongsToBinder(card, binderName);
     }).length;
 
     return {
@@ -72,6 +123,20 @@ function Profile() {
       localStorage.setItem(PROFILE_KEY, JSON.stringify(updatedProfile));
       return updatedProfile;
     });
+  }
+
+  function replaceCollectorProfile(importedProfile) {
+    if (!importedProfile || typeof importedProfile !== "object") {
+      return;
+    }
+
+    const updatedProfile = {
+      ...defaultProfile,
+      ...importedProfile,
+    };
+
+    setCollectorProfile(updatedProfile);
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(updatedProfile));
   }
 
   function handleAvatarUpload(event) {
@@ -94,7 +159,17 @@ function Profile() {
   }
 
   function exportCollection() {
-    const data = JSON.stringify(cards, null, 2);
+    const backup = {
+      app: "Pocket Deck",
+      backupVersion: 2,
+      exportedAt: new Date().toISOString(),
+      cards,
+      binders,
+      binderGoals,
+      collectorProfile,
+    };
+
+    const data = JSON.stringify(backup, null, 2);
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
@@ -115,7 +190,12 @@ function Profile() {
 
     reader.onload = function () {
       try {
-        const importedCards = JSON.parse(reader.result);
+        const importedBackup = JSON.parse(reader.result);
+
+        const isOldCardBackup = Array.isArray(importedBackup);
+        const importedCards = isOldCardBackup
+          ? importedBackup
+          : importedBackup.cards;
 
         if (!Array.isArray(importedCards)) {
           alert("Invalid backup file.");
@@ -123,13 +203,20 @@ function Profile() {
         }
 
         const confirmImport = confirm(
-          "This will replace your current collection with the imported backup. Continue?"
+          "This will replace your current Pocket Deck data with the imported backup. Continue?"
         );
 
         if (!confirmImport) return;
 
         setCards(importedCards);
-        alert("Collection imported successfully.");
+
+        if (!isOldCardBackup) {
+          replaceBinders(importedBackup.binders);
+          replaceBinderGoals(importedBackup.binderGoals);
+          replaceCollectorProfile(importedBackup.collectorProfile);
+        }
+
+        alert("Pocket Deck backup imported successfully.");
       } catch {
         alert("Could not import this file.");
       }
@@ -212,7 +299,7 @@ function Profile() {
           )}
 
           <div>
-            <span>Collection</span>
+            <span>Owned Collection</span>
             <strong>{totalCards} Cards</strong>
           </div>
 
@@ -226,6 +313,21 @@ function Profile() {
           <div>
             <span>Favorites</span>
             <strong>{favoriteCards}</strong>
+          </div>
+
+          <div>
+            <span>Wishlist</span>
+            <strong>{wishlistCards.length} Cards</strong>
+          </div>
+
+          <div>
+            <span>For Trade</span>
+            <strong>{tradeCards} Cards</strong>
+          </div>
+
+          <div>
+            <span>Graded</span>
+            <strong>{gradedCards} Cards</strong>
           </div>
         </div>
 
@@ -357,8 +459,8 @@ function Profile() {
         <div className="profile-grid">
           <section className="profile-card">
             <p className="page-label">BACKUP</p>
-            <h2>Export Collection</h2>
-            <p>Download your Pocket Deck collection as a JSON backup file.</p>
+            <h2>Export Pocket Deck</h2>
+            <p>Download your cards, binders, goals, and profile as a backup file.</p>
             <button className="primary-button" onClick={exportCollection}>
               Export Backup
             </button>
@@ -366,13 +468,17 @@ function Profile() {
 
           <section className="profile-card">
             <p className="page-label">RESTORE</p>
-            <h2>Import Collection</h2>
-            <p>Restore your cards from a Pocket Deck backup file.</p>
-            <input
-              type="file"
-              accept="application/json"
-              onChange={importCollection}
-            />
+            <h2>Import Pocket Deck</h2>
+            <p>Restore your cards, binders, goals, and profile from a backup file.</p>
+
+            <label className="primary-button import-backup-button">
+              Import Backup
+              <input
+                type="file"
+                accept="application/json"
+                onChange={importCollection}
+              />
+            </label>
           </section>
         </div>
       )}

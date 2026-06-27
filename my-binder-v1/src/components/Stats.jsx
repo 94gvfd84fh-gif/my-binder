@@ -4,36 +4,67 @@ import { CardContext } from "../context/CardContext";
 function Stats() {
   const { cards } = useContext(CardContext);
 
-  const totalCards = cards.length;
+  function getPrimaryBinder(card) {
+    if (card.primaryBinder) {
+      return card.primaryBinder;
+    }
 
-  const collectionValue = cards.reduce((total, card) => {
+    if (card.binder) {
+      return card.binder;
+    }
+
+    if (card.gradingCompany && card.gradingCompany !== "Raw") {
+      return "Graded Collection";
+    }
+
+    return "Main Collection";
+  }
+
+  function getExtraBinders(card) {
+    return Array.isArray(card.extraBinders) ? card.extraBinders : [];
+  }
+
+  const ownedCards = cards.filter((card) => {
+    return getPrimaryBinder(card) !== "Wishlist";
+  });
+
+  const totalCards = ownedCards.length;
+
+  const collectionValue = ownedCards.reduce((total, card) => {
     return total + Number(card.value || 0);
   }, 0);
 
-  const favoriteCards = cards.filter((card) => card.favorite).length;
+  const favoriteCards = ownedCards.filter((card) => card.favorite).length;
 
-  const gradedCards = cards.filter((card) => {
-    return card.grade || card.gradingCompany || card.certNumber;
+  const gradedCards = ownedCards.filter((card) => {
+    return card.gradingCompany && card.gradingCompany !== "Raw";
+  }).length;
+
+  const tradeCards = ownedCards.filter((card) => {
+    return (
+      card.status === "For Trade" ||
+      getExtraBinders(card).includes("Trade Binder")
+    );
   }).length;
 
   return (
     <section className="stats">
       <div className="stat-card">
-        <p>TOTAL CARDS</p>
+        <p>OWNED CARDS</p>
         <h2>{totalCards}</h2>
-        <span>Cards in your collection</span>
+        <span>Main and graded cards you own</span>
       </div>
 
       <div className="stat-card">
         <p>ESTIMATED VALUE</p>
         <h2>${collectionValue.toLocaleString()}</h2>
-        <span>Based on your saved values</span>
+        <span>Excludes wishlist cards</span>
       </div>
 
       <div className="stat-card">
-        <p>FAVORITES</p>
-        <h2>{favoriteCards}</h2>
-        <span>Your favorite pulls</span>
+        <p>FOR TRADE</p>
+        <h2>{tradeCards}</h2>
+        <span>Cards available in your Trade Binder</span>
       </div>
 
       <div className="stat-card">

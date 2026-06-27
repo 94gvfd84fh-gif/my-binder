@@ -1,9 +1,57 @@
 import { useContext, useState } from "react";
 import { CardContext } from "../context/CardContext";
+import { BinderContext } from "../context/BinderContext";
 import { searchPokemonCards } from "../services/pokemonApi";
 
 function AddCardModal({ onClose, cardToEdit }) {
   const { cards, setCards } = useContext(CardContext);
+  const { binders } = useContext(BinderContext);
+
+  function getStartingPrimaryBinder(card) {
+    if (!card) {
+      return "Main Collection";
+    }
+
+    if (card.primaryBinder) {
+      return card.primaryBinder;
+    }
+
+    if (
+      card.binder === "Main Collection" ||
+      card.binder === "Graded Collection" ||
+      card.binder === "Wishlist"
+    ) {
+      return card.binder;
+    }
+
+    if (card.gradingCompany && card.gradingCompany !== "Raw") {
+      return "Graded Collection";
+    }
+
+    return "Main Collection";
+  }
+
+  function getStartingExtraBinders(card) {
+    if (!card) {
+      return [];
+    }
+
+    const extras = Array.isArray(card.extraBinders)
+      ? [...card.extraBinders]
+      : [];
+
+    if (
+      card.binder &&
+      card.binder !== "Main Collection" &&
+      card.binder !== "Graded Collection" &&
+      card.binder !== "Wishlist" &&
+      !extras.includes(card.binder)
+    ) {
+      extras.push(card.binder);
+    }
+
+    return extras;
+  }
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -21,9 +69,6 @@ function AddCardModal({ onClose, cardToEdit }) {
   const [notes, setNotes] = useState(cardToEdit ? cardToEdit.notes || "" : "");
   const [value, setValue] = useState(cardToEdit ? cardToEdit.value : "");
   const [status, setStatus] = useState(cardToEdit ? cardToEdit.status : "Keep");
-  const [binder, setBinder] = useState(
-    cardToEdit ? cardToEdit.binder || "Main Collection" : "Main Collection"
-  );
 
   const [gradingCompany, setGradingCompany] = useState(
     cardToEdit ? cardToEdit.gradingCompany || "Raw" : "Raw"
@@ -33,10 +78,32 @@ function AddCardModal({ onClose, cardToEdit }) {
     cardToEdit ? cardToEdit.certNumber || "" : ""
   );
 
+  const [extraBinders, setExtraBinders] = useState(
+    getStartingExtraBinders(cardToEdit)
+  );
+
   const [favorite, setFavorite] = useState(
     cardToEdit ? cardToEdit.favorite : false
   );
   const [image, setImage] = useState(cardToEdit ? cardToEdit.image : "");
+
+  const primaryBinder =
+    status === "Wishlist"
+      ? "Wishlist"
+      : gradingCompany && gradingCompany !== "Raw"
+      ? "Graded Collection"
+      : getStartingPrimaryBinder(cardToEdit) === "Wishlist"
+      ? "Main Collection"
+      : "Main Collection";
+
+  const extraBinderOptions = binders.filter((binderName) => {
+    return binderName !== "Main Collection" && binderName !== "Graded Collection";
+  });
+
+  const selectedExtraBinderCount =
+    status === "For Trade" && !extraBinders.includes("Trade Binder")
+      ? extraBinders.length + 1
+      : extraBinders.length;
 
   async function handleCardSearch() {
     try {
@@ -74,7 +141,40 @@ function AddCardModal({ onClose, cardToEdit }) {
     reader.readAsDataURL(file);
   }
 
+  function toggleExtraBinder(binderName) {
+    if (extraBinders.includes(binderName)) {
+      setExtraBinders(
+        extraBinders.filter((binder) => {
+          return binder !== binderName;
+        })
+      );
+
+      return;
+    }
+
+    setExtraBinders([...extraBinders, binderName]);
+  }
+
+  function getFinalExtraBinders() {
+    const finalExtraBinders = [...extraBinders];
+
+    if (status === "For Trade" && !finalExtraBinders.includes("Trade Binder")) {
+      finalExtraBinders.push("Trade Binder");
+    }
+
+    return Array.from(
+      new Set(
+        finalExtraBinders.filter((binderName) => {
+          return binderName !== primaryBinder;
+        })
+      )
+    );
+  }
+
   function handleSave() {
+    const now = new Date().toISOString();
+    const finalExtraBinders = getFinalExtraBinders();
+
     const cardData = {
       name,
       set,
@@ -84,12 +184,15 @@ function AddCardModal({ onClose, cardToEdit }) {
       notes,
       value: Number(value),
       status,
-      binder,
+      binder: primaryBinder,
+      primaryBinder,
+      extraBinders: finalExtraBinders,
       gradingCompany,
       grade,
       certNumber,
       favorite,
       image,
+      updatedAt: now,
     };
 
     if (cardToEdit) {
@@ -98,6 +201,7 @@ function AddCardModal({ onClose, cardToEdit }) {
           return {
             ...card,
             ...cardData,
+            createdAt: card.createdAt || now,
           };
         }
 
@@ -112,6 +216,7 @@ function AddCardModal({ onClose, cardToEdit }) {
     const newCard = {
       id: Date.now(),
       ...cardData,
+      createdAt: now,
     };
 
     setCards([newCard, ...cards]);
@@ -227,18 +332,54 @@ function AddCardModal({ onClose, cardToEdit }) {
               <option>Keep</option>
               <option>For Trade</option>
               <option>For Sale</option>
-            </select>
-
-            <select
-              value={binder}
-              onChange={(event) => setBinder(event.target.value)}
-            >
-              <option>Main Collection</option>
-              <option>Showcase Binder</option>
-              <option>Trade Binder</option>
-              <option>Graded Pocket Deck</option>
               <option>Wishlist</option>
             </select>
+
+            <div className="primary-binder-preview">
+              <p>Primary Binder</p>
+              <strong>{primaryBinder}</strong>
+              <span>
+                {primaryBinder === "Graded Collection"
+                  ? "Graded cards are stored here automatically."
+                  : primaryBinder === "Wishlist"
+                  ? "Wishlist cards are tracked separately from owned cards."
+                  : "Raw owned cards stay in your Main Collection."}
+              </span>
+            </div>
+
+            <div className="extra-binder-picker">
+              <p>Extra Binders</p>
+
+              <details className="extra-binder-dropdown">
+                <summary>
+                  {selectedExtraBinderCount > 0
+                    ? `${selectedExtraBinderCount} selected`
+                    : "Choose extra binders"}
+                </summary>
+
+                <div className="extra-binder-menu">
+                  {extraBinderOptions.map((binderName) => (
+                    <label key={binderName} className="extra-binder-option">
+                      <input
+                        type="checkbox"
+                        checked={
+                          extraBinders.includes(binderName) ||
+                          (status === "For Trade" &&
+                            binderName === "Trade Binder")
+                        }
+                        disabled={
+                          status === "For Trade" &&
+                          binderName === "Trade Binder"
+                        }
+                        onChange={() => toggleExtraBinder(binderName)}
+                      />
+
+                      <span>{binderName}</span>
+                    </label>
+                  ))}
+                </div>
+              </details>
+            </div>
           </div>
 
           <div className="form-section">

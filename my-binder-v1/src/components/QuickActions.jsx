@@ -12,23 +12,23 @@ function QuickActions() {
 
       <div className="action-grid">
         <Link className="action-card" to="/collection">
-          <h3>Add Card</h3>
-          <p>Add a new pull, favorite, or graded card to your collection.</p>
+          <h3>Add or Search Cards</h3>
+          <p>Add new cards, search your collection, and update card details.</p>
         </Link>
 
         <Link className="action-card" to="/binder">
-          <h3>Open Binder</h3>
-          <p>Flip through your binders and organize your cards.</p>
+          <h3>Manage Binders</h3>
+          <p>Create custom binders, track goals, and organize cards.</p>
         </Link>
 
-        <Link className="action-card" to="/collection">
-          <h3>Search Collection</h3>
-          <p>Find cards by name, set, status, condition, or binder.</p>
+        <Link className="action-card" to="/binder?view=Wishlist">
+          <h3>Wishlist</h3>
+          <p>Review chase cards and mark them collected when you land them.</p>
         </Link>
 
-        <Link className="action-card" to="/marketplace">
-          <h3>Marketplace</h3>
-          <p>Prepare your collection for future buying, selling, and trading.</p>
+        <Link className="action-card" to="/binder?view=Trade%20Binder">
+          <h3>Trade Binder</h3>
+          <p>Check which cards are ready for future trades.</p>
         </Link>
       </div>
     </section>

@@ -5,11 +5,39 @@ import { CardContext } from "../context/CardContext";
 function RecentCards() {
   const { cards } = useContext(CardContext);
 
-  const recentCards = [...cards]
+  function getPrimaryBinder(card) {
+    if (card.primaryBinder) {
+      return card.primaryBinder;
+    }
+
+    if (card.binder) {
+      return card.binder;
+    }
+
+    if (card.gradingCompany && card.gradingCompany !== "Raw") {
+      return "Graded Collection";
+    }
+
+    return "Main Collection";
+  }
+
+  const ownedCards = cards.filter((card) => {
+    return getPrimaryBinder(card) !== "Wishlist";
+  });
+
+  const wishlistCards = cards.filter((card) => {
+    return getPrimaryBinder(card) === "Wishlist";
+  });
+
+  const recentCards = [...ownedCards]
     .sort((a, b) => Number(b.id) - Number(a.id))
     .slice(0, 3);
 
-  const mostValuable = [...cards]
+  const recentWishlist = [...wishlistCards]
+    .sort((a, b) => Number(b.id) - Number(a.id))
+    .slice(0, 3);
+
+  const mostValuable = [...ownedCards]
     .filter((card) => Number(card.value || 0) > 0)
     .sort((a, b) => Number(b.value || 0) - Number(a.value || 0))[0];
 
@@ -60,34 +88,79 @@ function RecentCards() {
         </section>
       )}
 
-      <section className="recent-cards">
-        <div className="section-header">
-          <div>
-            <h2>Recent Additions</h2>
-            <p>The newest cards added to your Pocket Deck.</p>
+      {recentCards.length > 0 && (
+        <section className="recent-cards">
+          <div className="section-header">
+            <div>
+              <h2>Recent Additions</h2>
+              <p>The newest owned cards added to your Pocket Deck.</p>
+            </div>
           </div>
-        </div>
 
-        <div className="recent-grid">
-          {recentCards.map((card) => (
-            <Link className="recent-card" to={`/collection/${card.id}`} key={card.id}>
-              <div className="card-image-placeholder">
-                {card.image ? (
-                  <img src={card.image} alt={card.name} />
-                ) : (
-                  card.name
+          <div className="recent-grid">
+            {recentCards.map((card) => (
+              <Link
+                className="recent-card"
+                to={`/collection/${card.id}`}
+                key={card.id}
+              >
+                <div className="card-image-placeholder">
+                  {card.image ? (
+                    <img src={card.image} alt={card.name} />
+                  ) : (
+                    card.name
+                  )}
+                </div>
+
+                <h3>{card.name}</h3>
+                <p>{card.set}</p>
+                <strong>${Number(card.value || 0).toLocaleString()}</strong>
+
+                {card.favorite && (
+                  <span className="favorite-label">★ Favorite</span>
                 )}
-              </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
-              <h3>{card.name}</h3>
-              <p>{card.set}</p>
-              <strong>${Number(card.value || 0).toLocaleString()}</strong>
+      {recentWishlist.length > 0 && (
+        <section className="recent-cards">
+          <div className="section-header">
+            <div>
+              <h2>Wishlist</h2>
+              <p>Cards you are still chasing.</p>
+            </div>
 
-              {card.favorite && <span className="favorite-label">★ Favorite</span>}
+            <Link className="text-link" to="/binder">
+              View Wishlist
             </Link>
-          ))}
-        </div>
-      </section>
+          </div>
+
+          <div className="recent-grid">
+            {recentWishlist.map((card) => (
+              <Link
+                className="recent-card wishlist-card"
+                to={`/collection/${card.id}`}
+                key={card.id}
+              >
+                <div className="card-image-placeholder">
+                  {card.image ? (
+                    <img src={card.image} alt={card.name} />
+                  ) : (
+                    card.name
+                  )}
+                </div>
+
+                <h3>{card.name}</h3>
+                <p>{card.set}</p>
+                <span className="favorite-label">Wishlist</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </>
   );
 }

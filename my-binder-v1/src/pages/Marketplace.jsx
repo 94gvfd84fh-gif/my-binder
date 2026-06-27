@@ -4,29 +4,38 @@ function Marketplace() {
   return (
     <div>
       <PageHeader
-        label="POCKET DECK MARKETPLACE"
+        label="COMING IN V0.9"
         title="Marketplace"
-        description="Buy, sell, and trade features are coming soon to Pocket Deck."
+        description="Pocket Deck will use your collection, wishlist, and trade binder to power future buying, selling, and trading."
       />
 
       <div className="marketplace-preview">
         <section className="marketplace-card">
           <p className="page-label">BUY</p>
           <h2>Find Cards</h2>
-          <p>Discover cards from collectors and shops when marketplace listings go live.</p>
+          <p>Discover listings from collectors, shops, and local sellers when marketplace features go live.</p>
         </section>
 
         <section className="marketplace-card">
           <p className="page-label">SELL</p>
           <h2>List Cards</h2>
-          <p>Turn cards from your collection into future listings with condition and value details.</p>
+          <p>Turn owned cards into listings using condition, grading, binder, and value details.</p>
         </section>
 
         <section className="marketplace-card">
           <p className="page-label">TRADE</p>
           <h2>Match Trades</h2>
-          <p>Use wishlists and trade binders to connect with collectors looking for the same cards.</p>
+          <p>Use wishlists and trade binders to find collectors who are chasing what you have.</p>
         </section>
+      </div>
+
+      <div className="marketplace-note">
+        <p className="page-label">FOUNDATION READY</p>
+        <h3>v0.7 prepares the marketplace</h3>
+        <p>
+          Your trade binder, wishlist, custom binders, and card details are now structured
+          so marketplace and trade features can build on top later.
+        </p>
       </div>
     </div>
   );

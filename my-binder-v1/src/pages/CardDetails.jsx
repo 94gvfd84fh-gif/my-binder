@@ -5,7 +5,7 @@ import AddCardModal from "../components/AddCardModal";
 
 function CardDetails() {
   const { id } = useParams();
-  const { cards } = useContext(CardContext);
+  const { cards, setCards } = useContext(CardContext);
   const [showEditModal, setShowEditModal] = useState(false);
 
   const card = cards.find((card) => Number(card.id) === Number(id));
@@ -23,6 +23,50 @@ function CardDetails() {
 
   const estimatedValue = Number(card.value || 0).toLocaleString();
   const isGraded = card.gradingCompany && card.gradingCompany !== "Raw";
+
+  const primaryBinder =
+    card.primaryBinder ||
+    card.binder ||
+    (isGraded ? "Graded Collection" : "Main Collection");
+
+  const extraBinders = Array.isArray(card.extraBinders)
+    ? card.extraBinders
+    : [];
+
+  const isWishlistCard = primaryBinder === "Wishlist";
+
+  function formatDate(dateValue) {
+    if (!dateValue) {
+      return "-";
+    }
+
+    return new Date(dateValue).toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+
+  function markAsCollected() {
+    const now = new Date().toISOString();
+
+    const updatedCards = cards.map((currentCard) => {
+      if (Number(currentCard.id) !== Number(id)) {
+        return currentCard;
+      }
+
+      return {
+        ...currentCard,
+        status: "Keep",
+        binder: "Main Collection",
+        primaryBinder: "Main Collection",
+        updatedAt: now,
+        createdAt: currentCard.createdAt || now,
+      };
+    });
+
+    setCards(updatedCards);
+  }
 
   return (
     <div className="card-details-page">
@@ -59,12 +103,20 @@ function CardDetails() {
               </p>
             </div>
 
-            <button
-              className="primary-button"
-              onClick={() => setShowEditModal(true)}
-            >
-              Edit Card
-            </button>
+            <div className="card-detail-actions">
+              {isWishlistCard && (
+                <button className="primary-button" onClick={markAsCollected}>
+                  Mark as Collected
+                </button>
+              )}
+
+              <button
+                className="secondary-button"
+                onClick={() => setShowEditModal(true)}
+              >
+                Edit Card
+              </button>
+            </div>
           </div>
 
           <div className="detail-highlight-grid">
@@ -79,10 +131,22 @@ function CardDetails() {
             </div>
 
             <div>
-              <span>Binder</span>
-              <strong>{card.binder || "Main Collection"}</strong>
+              <span>Primary Binder</span>
+              <strong>{primaryBinder}</strong>
             </div>
           </div>
+
+          {extraBinders.length > 0 && (
+            <div className="details-binder-panel">
+              <strong>Extra Binders</strong>
+
+              <div className="extra-binder-chips">
+                {extraBinders.map((binderName) => (
+                  <span key={binderName}>{binderName}</span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {isGraded && (
             <div className="grading-summary">
@@ -114,6 +178,11 @@ function CardDetails() {
           </div>
 
           <div className="detail-row">
+            <strong>Primary Binder</strong>
+            <span>{primaryBinder}</span>
+          </div>
+
+          <div className="detail-row">
             <strong>Grading Company</strong>
             <span>{card.gradingCompany || "Raw"}</span>
           </div>
@@ -131,6 +200,16 @@ function CardDetails() {
           <div className="detail-row">
             <strong>Favorite</strong>
             <span>{card.favorite ? "Yes ★" : "No ☆"}</span>
+          </div>
+
+          <div className="detail-row">
+            <strong>Date Added</strong>
+            <span>{formatDate(card.createdAt || card.id)}</span>
+          </div>
+
+          <div className="detail-row">
+            <strong>Last Updated</strong>
+            <span>{formatDate(card.updatedAt || card.createdAt || card.id)}</span>
           </div>
 
           <div className="notes-panel">
