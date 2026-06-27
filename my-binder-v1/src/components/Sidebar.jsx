@@ -22,7 +22,7 @@ function Sidebar() {
         <NavLink to="/binder">📚 Binders</NavLink>
         <NavLink to="/trade-list">🔁 Trade & Sale</NavLink>
         <NavLink to="/trade-list">🔁 Trade & Sale</NavLink>
-        <NavLink to="/marketplace">💰 Marketplace</NavLink>
+        <NavLink to="/community">🌐 Community</NavLink>
         <NavLink to="/profile">⚙️ Profile</NavLink>
         <NavLink to="/u/collector">👤 Public Profile</NavLink>
       </nav>

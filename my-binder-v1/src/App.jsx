@@ -22,6 +22,7 @@ function App() {
           <Route path="/collection" element={<Collection />} />
           <Route path="/collection/:id" element={<CardDetails />} />
           <Route path="/trade-list" element={<TradeList />} />
+          <Route path="/community" element={<Marketplace />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/u/collector" element={<PublicProfile />} />
