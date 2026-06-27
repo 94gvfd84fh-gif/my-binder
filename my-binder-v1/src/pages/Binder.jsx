@@ -44,19 +44,19 @@ function Binder() {
   const selectedBinderVisibility = getBinderVisibility(selectedBinder);
 
   function getPrimaryBinder(card) {
-  if (card.status === "Wishlist") {
-    return "Wishlist";
+    if (card.status === "Wishlist") {
+      return "Wishlist";
+    }
+
+    if (card.primaryBinder) return card.primaryBinder;
+    if (card.binder) return card.binder;
+
+    if (card.gradingCompany && card.gradingCompany !== "Raw") {
+      return "Graded Collection";
+    }
+
+    return "Main Collection";
   }
-
-  if (card.primaryBinder) return card.primaryBinder;
-  if (card.binder) return card.binder;
-
-  if (card.gradingCompany && card.gradingCompany !== "Raw") {
-    return "Graded Collection";
-  }
-
-  return "Main Collection";
-}
 
   function getExtraBinders(card) {
     return Array.isArray(card.extraBinders) ? card.extraBinders : [];
@@ -78,14 +78,14 @@ function Binder() {
     if (selectedBinder === "Wishlist") {
       return {
         title: "No wishlist cards yet",
-        text: "Add cards as Wishlist items to build a chase list you can mark collected later.",
+        text: "Add cards as Wishlist items from the Add Card modal to build your chase list.",
       };
     }
 
     if (selectedBinder === "Trade Binder") {
       return {
         title: "No trade cards yet",
-        text: "Mark cards as For Trade or add cards here when you are ready to trade.",
+        text: "Mark cards as For Trade and Pocket Deck will add them here automatically.",
       };
     }
 
@@ -258,26 +258,13 @@ function Binder() {
   function handleAddCardToBinder(event) {
     event.preventDefault();
 
-    if (!cardToAdd) return;
+    if (!cardToAdd || selectedBinderIsDefault) return;
 
     const now = new Date().toISOString();
 
     const updatedCards = cards.map((card) => {
       if (String(card.id) !== cardToAdd) {
         return card;
-      }
-
-      if (
-        selectedBinder === "Main Collection" ||
-        selectedBinder === "Graded Collection" ||
-        selectedBinder === "Wishlist"
-      ) {
-        return {
-          ...card,
-          binder: selectedBinder,
-          primaryBinder: selectedBinder,
-          updatedAt: now,
-        };
       }
 
       const extraBinders = getExtraBinders(card);
@@ -413,35 +400,37 @@ function Binder() {
         <button type="submit">Add Binder</button>
       </form>
 
-      <form className="add-card-to-binder-form" onSubmit={handleAddCardToBinder}>
-        <div className="form-copy">
-          <p className="page-label">ADD CARD</p>
-          <h3>Add to {selectedBinder}</h3>
-          <p>
-            {selectedBinderIsDefault
-              ? "Set this as the card's primary binder."
-              : "Add an existing card here without removing it from its primary binder."}
-          </p>
-        </div>
-
-        <select
-          value={cardToAdd}
-          onChange={(event) => setCardToAdd(event.target.value)}
-        >
-          <option value="">Choose a card...</option>
-
-          {cardsNotInBinder.map((card) => (
-            <option key={card.id} value={card.id}>
-              {card.name} - {card.set || "Unknown set"}
-            </option>
-          ))}
-        </select>
-
-        <button type="submit">Add Card</button>
-      </form>
-
       {!selectedBinderIsDefault && (
         <>
+          <form
+            className="add-card-to-binder-form"
+            onSubmit={handleAddCardToBinder}
+          >
+            <div className="form-copy">
+              <p className="page-label">ADD CARD</p>
+              <h3>Add to {selectedBinder}</h3>
+              <p>
+                Add an existing card here without removing it from its primary
+                binder.
+              </p>
+            </div>
+
+            <select
+              value={cardToAdd}
+              onChange={(event) => setCardToAdd(event.target.value)}
+            >
+              <option value="">Choose a card...</option>
+
+              {cardsNotInBinder.map((card) => (
+                <option key={card.id} value={card.id}>
+                  {card.name} - {card.set || "Unknown set"}
+                </option>
+              ))}
+            </select>
+
+            <button type="submit">Add Card</button>
+          </form>
+
           <form
             className="add-card-to-binder-form binder-goal-form"
             onSubmit={handleSetGoal}
@@ -499,7 +488,10 @@ function Binder() {
             <div className="form-copy">
               <p className="page-label">MANAGE BINDER</p>
               <h3>Rename or Delete</h3>
-              <p>Update this custom binder without affecting the cards themselves.</p>
+              <p>
+                Update this custom binder without affecting the cards
+                themselves.
+              </p>
             </div>
 
             <input
