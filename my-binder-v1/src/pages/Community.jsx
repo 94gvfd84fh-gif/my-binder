@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PageHeader from "../ui/PageHeader";
+import CommunityCard from "../ui/CommunityCard";
 import {
   collectors,
   communityFeatures,
@@ -121,29 +122,16 @@ function Community() {
 
           <div className="community-events-grid">
             {savedEventDetails.map((event) => (
-              <article
-                className="community-event-card saved-event-card"
+              <CommunityCard
                 key={event.id}
-              >
-                <p className="page-label">{event.type}</p>
-                <h3>{event.title}</h3>
-
-                <div className="event-detail-list">
-                  <span>{event.date}</span>
-                  <span>{event.time}</span>
-                  <span>{event.location}</span>
-                </div>
-
-                <p>{event.details}</p>
-
-                <button
-                  type="button"
-                  className="saved-event-button"
-                  onClick={() => toggleSavedEvent(event.id)}
-                >
-                  Remove Saved
-                </button>
-              </article>
+                label={event.type}
+                title={event.title}
+                details={[event.date, event.time, event.location]}
+                description={event.details}
+                buttonText="Remove Saved"
+                buttonClassName="saved-event-button"
+                onButtonClick={() => toggleSavedEvent(event.id)}
+              />
             ))}
           </div>
         </section>
@@ -162,26 +150,16 @@ function Community() {
             const isSaved = savedEvents.includes(event.id);
 
             return (
-              <article className="community-event-card" key={event.id}>
-                <p className="page-label">{event.type}</p>
-                <h3>{event.title}</h3>
-
-                <div className="event-detail-list">
-                  <span>{event.date}</span>
-                  <span>{event.time}</span>
-                  <span>{event.location}</span>
-                </div>
-
-                <p>{event.details}</p>
-
-                <button
-                  type="button"
-                  className={isSaved ? "saved-event-button" : ""}
-                  onClick={() => toggleSavedEvent(event.id)}
-                >
-                  {isSaved ? "Saved" : "Save Event"}
-                </button>
-              </article>
+              <CommunityCard
+                key={event.id}
+                label={event.type}
+                title={event.title}
+                details={[event.date, event.time, event.location]}
+                description={event.details}
+                buttonText={isSaved ? "Saved" : "Save Event"}
+                buttonClassName={isSaved ? "saved-event-button" : ""}
+                onButtonClick={() => toggleSavedEvent(event.id)}
+              />
             );
           })}
         </div>
@@ -198,29 +176,16 @@ function Community() {
 
           <div className="community-events-grid">
             {savedShopDetails.map((shop) => (
-              <article
-                className="community-event-card saved-event-card"
+              <CommunityCard
                 key={shop.id}
-              >
-                <p className="page-label">LOCAL SHOP</p>
-                <h3>{shop.name}</h3>
-
-                <div className="event-detail-list">
-                  <span>{shop.area}</span>
-                  <span>{shop.distance}</span>
-                  <span>{shop.eventType}</span>
-                </div>
-
-                <p>{shop.specialties}</p>
-
-                <button
-                  type="button"
-                  className="saved-event-button"
-                  onClick={() => toggleSavedShop(shop.id)}
-                >
-                  Remove Saved
-                </button>
-              </article>
+                label="LOCAL SHOP"
+                title={shop.name}
+                details={[shop.area, shop.distance, shop.eventType]}
+                description={shop.specialties}
+                buttonText="Remove Saved"
+                buttonClassName="saved-event-button"
+                onButtonClick={() => toggleSavedShop(shop.id)}
+              />
             ))}
           </div>
         </section>
@@ -239,26 +204,16 @@ function Community() {
             const isSaved = savedShops.includes(shop.id);
 
             return (
-              <article className="community-event-card" key={shop.id}>
-                <p className="page-label">LOCAL SHOP</p>
-                <h3>{shop.name}</h3>
-
-                <div className="event-detail-list">
-                  <span>{shop.area}</span>
-                  <span>{shop.distance}</span>
-                  <span>{shop.eventType}</span>
-                </div>
-
-                <p>{shop.specialties}</p>
-
-                <button
-                  type="button"
-                  className={isSaved ? "saved-event-button" : ""}
-                  onClick={() => toggleSavedShop(shop.id)}
-                >
-                  {isSaved ? "Saved" : "Save Shop"}
-                </button>
-              </article>
+              <CommunityCard
+                key={shop.id}
+                label="LOCAL SHOP"
+                title={shop.name}
+                details={[shop.area, shop.distance, shop.eventType]}
+                description={shop.specialties}
+                buttonText={isSaved ? "Saved" : "Save Shop"}
+                buttonClassName={isSaved ? "saved-event-button" : ""}
+                onButtonClick={() => toggleSavedShop(shop.id)}
+              />
             );
           })}
         </div>
@@ -277,25 +232,20 @@ function Community() {
             const isFollowing = followedCollectors.includes(collector.id);
 
             return (
-              <article className="community-event-card" key={collector.id}>
-                <p className="page-label">{collector.favoriteTcg} COLLECTOR</p>
-                <h3>{collector.username}</h3>
-
-                <div className="event-detail-list">
-                  <span>{collector.style}</span>
-                  <span>{collector.publicBinders} public binders</span>
-                  <span>{collector.tradeStatus}</span>
-                  <span>Featured: {collector.featuredCard}</span>
-                </div>
-
-                <button
-                  type="button"
-                  className={isFollowing ? "saved-event-button" : ""}
-                  onClick={() => toggleFollowCollector(collector.id)}
-                >
-                  {isFollowing ? "Following" : "Follow Preview"}
-                </button>
-              </article>
+              <CommunityCard
+                key={collector.id}
+                label={`${collector.favoriteTcg} COLLECTOR`}
+                title={collector.username}
+                details={[
+                  collector.style,
+                  `${collector.publicBinders} public binders`,
+                  collector.tradeStatus,
+                  `Featured: ${collector.featuredCard}`,
+                ]}
+                buttonText={isFollowing ? "Following" : "Follow Preview"}
+                buttonClassName={isFollowing ? "saved-event-button" : ""}
+                onButtonClick={() => toggleFollowCollector(collector.id)}
+              />
             );
           })}
         </div>
