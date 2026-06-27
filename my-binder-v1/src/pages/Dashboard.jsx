@@ -1,5 +1,6 @@
 import Stats from "../components/Stats";
 import QuickActions from "../components/QuickActions";
+import CommunitySummary from "../components/CommunitySummary";
 import RecentCards from "../components/RecentCards";
 import CollectionTimeline from "../components/CollectionTimeline";
 import CollectionAnalytics from "../components/CollectionAnalytics";
@@ -16,6 +17,7 @@ function Dashboard() {
 
       <Stats />
       <QuickActions />
+      <CommunitySummary />
       <CollectionAnalytics />
       <ValueAnalytics />
       <RecentCards />
