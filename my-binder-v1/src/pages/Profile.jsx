@@ -4,6 +4,7 @@ import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
 import PageHeader from "../ui/PageHeader";
 import "../styles/profile.css";
+
 const PROFILE_KEY = "pocket-deck-profile";
 
 const defaultProfile = {
@@ -54,6 +55,7 @@ function Profile() {
   function getPrimaryBinder(card) {
     if (card.primaryBinder) return card.primaryBinder;
     if (card.binder) return card.binder;
+
     if (card.gradingCompany && card.gradingCompany !== "Raw") {
       return "Graded Collection";
     }
@@ -117,11 +119,14 @@ function Profile() {
     return String(card.id) === String(collectorProfile.featuredCardId);
   });
 
-  const highestValueCard = [...ownedCards].sort((a, b) => {
-    return Number(b.value || 0) - Number(a.value || 0);
+  const favoriteFeaturedCard = ownedCards.find((card) => card.favorite);
+
+  const newestOwnedCard = [...ownedCards].sort((a, b) => {
+    return Number(b.id) - Number(a.id);
   })[0];
 
-  const displayedFeaturedCard = selectedFeaturedCard || highestValueCard;
+  const displayedFeaturedCard =
+    selectedFeaturedCard || favoriteFeaturedCard || newestOwnedCard;
 
   const publicBinders = binders
     .filter(isPublicBinder)
@@ -185,7 +190,7 @@ function Profile() {
   function exportCollection() {
     const backup = {
       app: "Pocket Deck",
-      backupVersion: 3,
+      backupVersion: 4,
       exportedAt: new Date().toISOString(),
       cards,
       binders,
@@ -264,7 +269,10 @@ function Profile() {
         <div className="collector-profile-top">
           <div className="collector-avatar">
             {collectorProfile.avatar ? (
-              <img src={collectorProfile.avatar} alt={collectorProfile.username} />
+              <img
+                src={collectorProfile.avatar}
+                alt={collectorProfile.username}
+              />
             ) : (
               <span>{collectorProfile.username.charAt(0)}</span>
             )}
@@ -380,13 +388,7 @@ function Profile() {
 
         {displayedFeaturedCard && (
           <div className="collector-top-card">
-            <span>
-              {selectedFeaturedCard
-                ? "Featured Card"
-                : isPreviewingPublicProfile
-                ? "Featured Card"
-                : "Highest Value Card"}
-            </span>
+            <span>Featured Card</span>
             <strong>{displayedFeaturedCard.name}</strong>
           </div>
         )}
@@ -430,7 +432,9 @@ function Profile() {
                 <input
                   placeholder="Username"
                   value={collectorProfile.username}
-                  onChange={(event) => updateProfile("username", event.target.value)}
+                  onChange={(event) =>
+                    updateProfile("username", event.target.value)
+                  }
                 />
               </label>
 
@@ -439,7 +443,9 @@ function Profile() {
                 <input
                   placeholder="Favorite TCG"
                   value={collectorProfile.favoriteTcg}
-                  onChange={(event) => updateProfile("favoriteTcg", event.target.value)}
+                  onChange={(event) =>
+                    updateProfile("favoriteTcg", event.target.value)
+                  }
                 />
               </label>
 
@@ -448,7 +454,9 @@ function Profile() {
                 <input
                   placeholder="Favorite Set"
                   value={collectorProfile.favoriteSet}
-                  onChange={(event) => updateProfile("favoriteSet", event.target.value)}
+                  onChange={(event) =>
+                    updateProfile("favoriteSet", event.target.value)
+                  }
                 />
               </label>
 
@@ -475,7 +483,9 @@ function Profile() {
                 <input
                   placeholder="Location"
                   value={collectorProfile.location}
-                  onChange={(event) => updateProfile("location", event.target.value)}
+                  onChange={(event) =>
+                    updateProfile("location", event.target.value)
+                  }
                 />
               </label>
 
@@ -501,7 +511,15 @@ function Profile() {
 
               <div className="profile-editor-wide avatar-actions">
                 <span>Profile Picture</span>
-                <input type="file" accept="image/*" onChange={handleAvatarUpload} />
+
+                <label className="secondary-button">
+                  Upload Profile Picture
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAvatarUpload}
+                  />
+                </label>
 
                 {collectorProfile.avatar && (
                   <button type="button" onClick={removeAvatar}>
@@ -519,7 +537,11 @@ function Profile() {
           <section className="profile-card">
             <p className="page-label">BACKUP</p>
             <h2>Export Pocket Deck</h2>
-            <p>Download your cards, binders, goals, profile, and visibility settings.</p>
+            <p>
+              Download your cards, binders, goals, profile, and visibility
+              settings.
+            </p>
+
             <button className="primary-button" onClick={exportCollection}>
               Export Backup
             </button>
@@ -528,9 +550,12 @@ function Profile() {
           <section className="profile-card">
             <p className="page-label">RESTORE</p>
             <h2>Import Pocket Deck</h2>
-            <p>Restore your cards, binders, goals, profile, and visibility settings.</p>
+            <p>
+              Restore your cards, binders, goals, profile, and visibility
+              settings.
+            </p>
 
-            <label className="primary-button import-backup-button">
+            <label className="primary-button">
               Import Backup
               <input
                 type="file"

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
 import PageHeader from "../ui/PageHeader";
+
 import "../styles/publicProfile.css";
 const PROFILE_KEY = "pocket-deck-profile";
 

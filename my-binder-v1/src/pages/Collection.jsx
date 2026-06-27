@@ -15,6 +15,10 @@ function Collection() {
   const [showAddModal, setShowAddModal] = useState(false);
 
   function getPrimaryBinder(card) {
+    if (card.status === "Wishlist") {
+      return "Wishlist";
+    }
+
     if (card.primaryBinder) {
       return card.primaryBinder;
     }
@@ -67,6 +71,7 @@ function Collection() {
     const searchText = search.toLowerCase();
     const primaryBinder = getPrimaryBinder(card);
     const extraBinders = getExtraBinders(card);
+    const salePriceText = String(card.salePrice || "");
 
     const matchesSearch =
       (card.name || "").toLowerCase().includes(searchText) ||
@@ -74,6 +79,8 @@ function Collection() {
       (card.status || "").toLowerCase().includes(searchText) ||
       (card.rarity || "").toLowerCase().includes(searchText) ||
       (card.condition || "").toLowerCase().includes(searchText) ||
+      String(card.value || "").includes(searchText) ||
+      salePriceText.includes(searchText) ||
       primaryBinder.toLowerCase().includes(searchText) ||
       extraBinders.join(" ").toLowerCase().includes(searchText);
 
@@ -101,6 +108,14 @@ function Collection() {
 
     if (sort === "Lowest Value") {
       return Number(a.value || 0) - Number(b.value || 0);
+    }
+
+    if (sort === "Highest Sale Price") {
+      return Number(b.salePrice || 0) - Number(a.salePrice || 0);
+    }
+
+    if (sort === "Lowest Sale Price") {
+      return Number(a.salePrice || 0) - Number(b.salePrice || 0);
     }
 
     if (sort === "A-Z") {
@@ -136,7 +151,7 @@ function Collection() {
 
       <div className="collection-tools">
         <input
-          placeholder="Search cards, sets, rarity, condition, status, or binder..."
+          placeholder="Search cards, sets, rarity, condition, status, binder, or price..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
@@ -149,6 +164,7 @@ function Collection() {
           <option>Favorites</option>
           <option>For Trade</option>
           <option>For Sale</option>
+          <option>Wishlist</option>
 
           {binders.map((binder) => (
             <option key={binder}>{binder}</option>
@@ -160,6 +176,8 @@ function Collection() {
           <option>Oldest</option>
           <option>Highest Value</option>
           <option>Lowest Value</option>
+          <option>Highest Sale Price</option>
+          <option>Lowest Sale Price</option>
           <option>A-Z</option>
           <option>Favorites First</option>
         </select>
@@ -180,7 +198,8 @@ function Collection() {
         <div className="empty-state-card">
           <h2>No cards found</h2>
           <p>
-            Add a card or adjust your search and filters to keep building your Pocket Deck.
+            Add a card or adjust your search and filters to keep building your
+            Pocket Deck.
           </p>
           <button
             className="primary-button"

@@ -37,7 +37,7 @@ function ValueAnalytics() {
   }
 
   return (
-    <section className="value-analytics">
+    <section className="value-snapshot">
       <div className="section-header">
         <div>
           <h2>Value Snapshot</h2>
@@ -46,31 +46,34 @@ function ValueAnalytics() {
       </div>
 
       <div className="value-snapshot-grid">
-        <div className="value-snapshot-main">
+        <div className="value-card">
           <span>Total Owned Value</span>
           <strong>${totalValue.toLocaleString()}</strong>
           <p>{ownedCards.length} owned cards tracked</p>
         </div>
 
-        <div className="value-snapshot-side">
-          <div>
-            <span>Average Card</span>
-            <strong>${averageValue.toFixed(2)}</strong>
-          </div>
-
-          <div>
-            <span>Graded Value</span>
-            <strong>${gradedValue.toLocaleString()}</strong>
-          </div>
-
-          {highestValueCard && (
-            <Link to={`/collection/${highestValueCard.id}`}>
-              <span>Highest Value</span>
-              <strong>{highestValueCard.name}</strong>
-              <small>${Number(highestValueCard.value || 0).toLocaleString()}</small>
-            </Link>
-          )}
+        <div className="value-card">
+          <span>Average Card</span>
+          <strong>${averageValue.toFixed(2)}</strong>
+          <p>Average estimated value per owned card</p>
         </div>
+
+        <div className="value-card">
+          <span>Graded Value</span>
+          <strong>${gradedValue.toLocaleString()}</strong>
+          <p>Total estimated value from graded cards</p>
+        </div>
+
+        {highestValueCard && (
+          <Link
+            className="value-card highest-value-card"
+            to={`/collection/${highestValueCard.id}`}
+          >
+            <span>Highest Value</span>
+            <strong>{highestValueCard.name}</strong>
+            <p>${Number(highestValueCard.value || 0).toLocaleString()}</p>
+          </Link>
+        )}
       </div>
     </section>
   );

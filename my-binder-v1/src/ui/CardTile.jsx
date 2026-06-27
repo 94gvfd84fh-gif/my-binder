@@ -4,12 +4,18 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
   const navigate = useNavigate();
 
   const value = Number(card.value || 0).toLocaleString();
+  const salePrice = Number(card.salePrice || 0).toLocaleString();
   const isGraded = card.gradingCompany && card.gradingCompany !== "Raw";
+  const isForSale = card.status === "For Sale";
+  const isForTrade = card.status === "For Trade";
+  const isWishlist = card.status === "Wishlist";
 
   const primaryBinder =
-    card.primaryBinder ||
-    card.binder ||
-    (isGraded ? "Graded Collection" : "Main Collection");
+    isWishlist
+      ? "Wishlist"
+      : card.primaryBinder ||
+        card.binder ||
+        (isGraded ? "Graded Collection" : "Main Collection");
 
   const extraBinders = Array.isArray(card.extraBinders)
     ? card.extraBinders
@@ -80,7 +86,21 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
           </button>
         </div>
 
-        {card.status && <small className="card-status">{card.status}</small>}
+        <div className="card-status-stack">
+          {card.status && <small className="card-status">{card.status}</small>}
+
+          {isForSale && (
+            <small className="sale-price-chip">Ask ${salePrice}</small>
+          )}
+
+          {isForTrade && (
+            <small className="trade-chip">Open to Trade</small>
+          )}
+
+          {isWishlist && (
+            <small className="wishlist-chip">Not collected yet</small>
+          )}
+        </div>
 
         <button
           className="delete-button"

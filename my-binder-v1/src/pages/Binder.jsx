@@ -44,13 +44,19 @@ function Binder() {
   const selectedBinderVisibility = getBinderVisibility(selectedBinder);
 
   function getPrimaryBinder(card) {
-    if (card.primaryBinder) return card.primaryBinder;
-    if (card.binder) return card.binder;
-    if (card.gradingCompany && card.gradingCompany !== "Raw") {
-      return "Graded Collection";
-    }
-    return "Main Collection";
+  if (card.status === "Wishlist") {
+    return "Wishlist";
   }
+
+  if (card.primaryBinder) return card.primaryBinder;
+  if (card.binder) return card.binder;
+
+  if (card.gradingCompany && card.gradingCompany !== "Raw") {
+    return "Graded Collection";
+  }
+
+  return "Main Collection";
+}
 
   function getExtraBinders(card) {
     return Array.isArray(card.extraBinders) ? card.extraBinders : [];
@@ -351,7 +357,7 @@ function Binder() {
         <div>
           <h2>{selectedBinder}</h2>
           <p>
-            {binderCards.length} cards • Page {page} of {totalPages}
+            {binderCards.length} cards · Page {page} of {totalPages}
           </p>
         </div>
 
@@ -391,70 +397,67 @@ function Binder() {
         </select>
       </div>
 
-      <div className="binder-management-grid">
-        <form className="binder-action-card" onSubmit={handleAddBinder}>
-          <div>
-            <p className="page-label">CREATE BINDER</p>
-            <h3>New Custom Binder</h3>
-            <p>Create a binder for a Pokémon, set, chase list, or theme.</p>
-          </div>
+      <form className="add-binder-form" onSubmit={handleAddBinder}>
+        <div className="form-copy">
+          <p className="page-label">CREATE BINDER</p>
+          <h3>New Custom Binder</h3>
+          <p>Create a binder for a Pokémon, set, chase list, or theme.</p>
+        </div>
 
-          <div className="binder-action-row">
-            <input
-              placeholder="Example: All Charizards"
-              value={newBinderName}
-              onChange={(event) => setNewBinderName(event.target.value)}
-            />
+        <input
+          placeholder="Example: All Charizards"
+          value={newBinderName}
+          onChange={(event) => setNewBinderName(event.target.value)}
+        />
 
-            <button type="submit">Add Binder</button>
-          </div>
-        </form>
+        <button type="submit">Add Binder</button>
+      </form>
 
-        <form className="binder-action-card" onSubmit={handleAddCardToBinder}>
-          <div>
-            <p className="page-label">ADD CARD</p>
-            <h3>Add to {selectedBinder}</h3>
-            <p>
-              {selectedBinderIsDefault
-                ? "Set this as the card's primary binder."
-                : "Add an existing card here without removing it from its primary binder."}
-            </p>
-          </div>
+      <form className="add-card-to-binder-form" onSubmit={handleAddCardToBinder}>
+        <div className="form-copy">
+          <p className="page-label">ADD CARD</p>
+          <h3>Add to {selectedBinder}</h3>
+          <p>
+            {selectedBinderIsDefault
+              ? "Set this as the card's primary binder."
+              : "Add an existing card here without removing it from its primary binder."}
+          </p>
+        </div>
 
-          <div className="binder-action-row">
-            <select
-              value={cardToAdd}
-              onChange={(event) => setCardToAdd(event.target.value)}
-            >
-              <option value="">Choose a card...</option>
+        <select
+          value={cardToAdd}
+          onChange={(event) => setCardToAdd(event.target.value)}
+        >
+          <option value="">Choose a card...</option>
 
-              {cardsNotInBinder.map((card) => (
-                <option key={card.id} value={card.id}>
-                  {card.name} - {card.set || "Unknown set"}
-                </option>
-              ))}
-            </select>
+          {cardsNotInBinder.map((card) => (
+            <option key={card.id} value={card.id}>
+              {card.name} - {card.set || "Unknown set"}
+            </option>
+          ))}
+        </select>
 
-            <button type="submit">Add Card</button>
-          </div>
-        </form>
+        <button type="submit">Add Card</button>
+      </form>
 
-        {!selectedBinderIsDefault && (
-          <>
-            <form className="binder-action-card" onSubmit={handleSetGoal}>
-              <div>
-                <p className="page-label">BINDER GOAL</p>
-                <h3>
-                  {selectedBinderGoal
-                    ? `${binderCards.length} / ${selectedBinderGoal} cards`
-                    : "Set a Goal"}
-                </h3>
-                <p>
-                  {selectedBinderGoal
-                    ? `${goalPercent}% complete`
-                    : "Track progress for this custom binder."}
-                </p>
-              </div>
+      {!selectedBinderIsDefault && (
+        <>
+          <form
+            className="add-card-to-binder-form binder-goal-form"
+            onSubmit={handleSetGoal}
+          >
+            <div className="form-copy">
+              <p className="page-label">BINDER GOAL</p>
+              <h3>
+                {selectedBinderGoal
+                  ? `${binderCards.length} / ${selectedBinderGoal} cards`
+                  : "Set a Goal"}
+              </h3>
+              <p>
+                {selectedBinderGoal
+                  ? `${goalPercent}% complete`
+                  : "Track progress for this custom binder."}
+              </p>
 
               {selectedBinderGoal > 0 && (
                 <div
@@ -464,60 +467,59 @@ function Binder() {
                   <span></span>
                 </div>
               )}
+            </div>
 
-              <div className="binder-action-row">
-                <input
-                  type="number"
-                  min="1"
-                  placeholder="Target cards ex: 50"
-                  value={goalInput}
-                  onChange={(event) => setGoalInput(event.target.value)}
-                />
+            <input
+              type="number"
+              min="1"
+              placeholder="Target cards ex: 50"
+              value={goalInput}
+              onChange={(event) => setGoalInput(event.target.value)}
+            />
 
-                <button type="submit">
-                  {selectedBinderGoal ? "Update Goal" : "Set Goal"}
-                </button>
+            <button type="submit">
+              {selectedBinderGoal ? "Update Goal" : "Set Goal"}
+            </button>
 
-                {selectedBinderGoal > 0 && (
-                  <button
-                    type="button"
-                    className="secondary-button"
-                    onClick={() => setBinderGoal(selectedBinder, "")}
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
-            </form>
+            {selectedBinderGoal > 0 && (
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => setBinderGoal(selectedBinder, "")}
+              >
+                Clear
+              </button>
+            )}
+          </form>
 
-            <form className="binder-action-card" onSubmit={handleRenameBinder}>
-              <div>
-                <p className="page-label">MANAGE BINDER</p>
-                <h3>Rename or Delete</h3>
-                <p>Update this custom binder without affecting the cards themselves.</p>
-              </div>
+          <form
+            className="add-card-to-binder-form binder-manage-form"
+            onSubmit={handleRenameBinder}
+          >
+            <div className="form-copy">
+              <p className="page-label">MANAGE BINDER</p>
+              <h3>Rename or Delete</h3>
+              <p>Update this custom binder without affecting the cards themselves.</p>
+            </div>
 
-              <div className="binder-action-row">
-                <input
-                  placeholder="New binder name"
-                  value={renameBinderName}
-                  onChange={(event) => setRenameBinderName(event.target.value)}
-                />
+            <input
+              placeholder="New binder name"
+              value={renameBinderName}
+              onChange={(event) => setRenameBinderName(event.target.value)}
+            />
 
-                <button type="submit">Rename</button>
+            <button type="submit">Rename</button>
 
-                <button
-                  type="button"
-                  className="danger-button"
-                  onClick={handleDeleteBinder}
-                >
-                  Delete
-                </button>
-              </div>
-            </form>
-          </>
-        )}
-      </div>
+            <button
+              type="button"
+              className="danger-button"
+              onClick={handleDeleteBinder}
+            >
+              Delete
+            </button>
+          </form>
+        </>
+      )}
 
       {binderCards.length === 0 && (
         <div className="binder-empty-state">

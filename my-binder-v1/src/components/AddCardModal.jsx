@@ -56,6 +56,7 @@ function AddCardModal({ onClose, cardToEdit }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isExtraBinderOpen, setIsExtraBinderOpen] = useState(false);
 
   const [name, setName] = useState(cardToEdit ? cardToEdit.name : "");
   const [set, setSet] = useState(cardToEdit ? cardToEdit.set : "");
@@ -68,6 +69,9 @@ function AddCardModal({ onClose, cardToEdit }) {
   );
   const [notes, setNotes] = useState(cardToEdit ? cardToEdit.notes || "" : "");
   const [value, setValue] = useState(cardToEdit ? cardToEdit.value : "");
+  const [salePrice, setSalePrice] = useState(
+    cardToEdit ? cardToEdit.salePrice || "" : ""
+  );
   const [status, setStatus] = useState(cardToEdit ? cardToEdit.status : "Keep");
 
   const [gradingCompany, setGradingCompany] = useState(
@@ -171,6 +175,18 @@ function AddCardModal({ onClose, cardToEdit }) {
     );
   }
 
+  function getExtraBinderSummary() {
+    if (selectedExtraBinderCount === 0) {
+      return "Choose extra binders";
+    }
+
+    if (selectedExtraBinderCount === 1) {
+      return "1 extra binder selected";
+    }
+
+    return `${selectedExtraBinderCount} extra binders selected`;
+  }
+
   function handleSave() {
     const now = new Date().toISOString();
     const finalExtraBinders = getFinalExtraBinders();
@@ -182,7 +198,8 @@ function AddCardModal({ onClose, cardToEdit }) {
       rarity,
       condition,
       notes,
-      value: Number(value),
+      value: Number(value || 0),
+      salePrice: status === "For Sale" ? Number(salePrice || 0) : "",
       status,
       binder: primaryBinder,
       primaryBinder,
@@ -264,7 +281,7 @@ function AddCardModal({ onClose, cardToEdit }) {
                       <strong>{result.name}</strong>
                       <span>{result.set}</span>
                       <small>
-                        #{result.cardNumber} • {result.rarity || "Unknown"}
+                        #{result.cardNumber} · {result.rarity || "Unknown"}
                       </small>
                     </div>
                   </button>
@@ -335,6 +352,15 @@ function AddCardModal({ onClose, cardToEdit }) {
               <option>Wishlist</option>
             </select>
 
+            {status === "For Sale" && (
+              <input
+                placeholder="Sale price"
+                type="number"
+                value={salePrice}
+                onChange={(event) => setSalePrice(event.target.value)}
+              />
+            )}
+
             <div className="primary-binder-preview">
               <p>Primary Binder</p>
               <strong>{primaryBinder}</strong>
@@ -350,35 +376,48 @@ function AddCardModal({ onClose, cardToEdit }) {
             <div className="extra-binder-picker">
               <p>Extra Binders</p>
 
-              <details className="extra-binder-dropdown">
-                <summary>
-                  {selectedExtraBinderCount > 0
-                    ? `${selectedExtraBinderCount} selected`
-                    : "Choose extra binders"}
-                </summary>
+              <div className="extra-binder-dropdown">
+                <button
+                  type="button"
+                  className="extra-binder-trigger"
+                  onClick={() => setIsExtraBinderOpen(!isExtraBinderOpen)}
+                >
+                  <span>{getExtraBinderSummary()}</span>
+                  <span>{isExtraBinderOpen ? "▲" : "▼"}</span>
+                </button>
 
-                <div className="extra-binder-menu">
-                  {extraBinderOptions.map((binderName) => (
-                    <label key={binderName} className="extra-binder-option">
-                      <input
-                        type="checkbox"
-                        checked={
-                          extraBinders.includes(binderName) ||
-                          (status === "For Trade" &&
-                            binderName === "Trade Binder")
-                        }
-                        disabled={
-                          status === "For Trade" &&
-                          binderName === "Trade Binder"
-                        }
-                        onChange={() => toggleExtraBinder(binderName)}
-                      />
+                {isExtraBinderOpen && (
+                  <div className="extra-binder-menu">
+                    {extraBinderOptions.map((binderName) => {
+                      const isAutoTradeBinder =
+                        status === "For Trade" && binderName === "Trade Binder";
 
-                      <span>{binderName}</span>
-                    </label>
-                  ))}
-                </div>
-              </details>
+                      return (
+                        <label
+                          key={binderName}
+                          className="extra-binder-option"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={
+                              extraBinders.includes(binderName) ||
+                              isAutoTradeBinder
+                            }
+                            disabled={isAutoTradeBinder}
+                            onChange={() => toggleExtraBinder(binderName)}
+                          />
+
+                          <span>{binderName}</span>
+
+                          {isAutoTradeBinder && (
+                            <small>Auto-added for trade cards</small>
+                          )}
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

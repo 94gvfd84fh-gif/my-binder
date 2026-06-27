@@ -20,12 +20,14 @@ function Sidebar() {
         <NavLink to="/">🏠 Dashboard</NavLink>
         <NavLink to="/collection">🃏 Collection</NavLink>
         <NavLink to="/binder">📚 Binders</NavLink>
+        <NavLink to="/trade-list">🔁 Trade & Sale</NavLink>
+        <NavLink to="/trade-list">🔁 Trade & Sale</NavLink>
         <NavLink to="/marketplace">💰 Marketplace</NavLink>
         <NavLink to="/profile">⚙️ Profile</NavLink>
       </nav>
 
       <div className="sidebar-footer">
-        <small>Pocket Deck v0.7</small>
+        <small>Pocket Deck v0.8</small>
         <p>Collect. Connect. Trade.</p>
       </div>
     </aside>

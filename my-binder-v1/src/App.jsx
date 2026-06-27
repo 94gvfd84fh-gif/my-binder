@@ -7,6 +7,7 @@ import Marketplace from "./pages/Marketplace";
 import Profile from "./pages/Profile";
 import PublicProfile from "./pages/PublicProfile";
 import CardDetails from "./pages/CardDetails";
+import TradeList from "./pages/TradeList";
 import "./App.css";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/binder" element={<Binder />} />
           <Route path="/collection" element={<Collection />} />
           <Route path="/collection/:id" element={<CardDetails />} />
+          <Route path="/trade-list" element={<TradeList />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/u/collector" element={<PublicProfile />} />

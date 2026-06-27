@@ -22,12 +22,16 @@ function CardDetails() {
   }
 
   const estimatedValue = Number(card.value || 0).toLocaleString();
+  const askingPrice = Number(card.salePrice || 0).toLocaleString();
   const isGraded = card.gradingCompany && card.gradingCompany !== "Raw";
+  const isForSale = card.status === "For Sale";
 
   const primaryBinder =
-    card.primaryBinder ||
-    card.binder ||
-    (isGraded ? "Graded Collection" : "Main Collection");
+    card.status === "Wishlist"
+      ? "Wishlist"
+      : card.primaryBinder ||
+        card.binder ||
+        (isGraded ? "Graded Collection" : "Main Collection");
 
   const extraBinders = Array.isArray(card.extraBinders)
     ? card.extraBinders
@@ -125,6 +129,13 @@ function CardDetails() {
               <strong>${estimatedValue}</strong>
             </div>
 
+            {isForSale && (
+              <div>
+                <span>Asking Price</span>
+                <strong>${askingPrice}</strong>
+              </div>
+            )}
+
             <div>
               <span>Condition</span>
               <strong>{card.condition || "-"}</strong>
@@ -176,6 +187,13 @@ function CardDetails() {
             <strong>Status</strong>
             <span>{card.status || "-"}</span>
           </div>
+
+          {isForSale && (
+            <div className="detail-row">
+              <strong>Asking Price</strong>
+              <span>${askingPrice}</span>
+            </div>
+          )}
 
           <div className="detail-row">
             <strong>Primary Binder</strong>

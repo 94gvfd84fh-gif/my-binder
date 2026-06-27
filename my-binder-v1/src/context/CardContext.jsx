@@ -6,6 +6,10 @@ export const CardContext = createContext();
 const STORAGE_KEY = "pocket-deck-cards";
 
 function getPrimaryBinder(card) {
+  if (card.status === "Wishlist") {
+    return "Wishlist";
+  }
+
   if (card.primaryBinder) {
     return card.primaryBinder;
   }
@@ -20,10 +24,6 @@ function getPrimaryBinder(card) {
 
   if (card.gradingCompany && card.gradingCompany !== "Raw") {
     return "Graded Collection";
-  }
-
-  if (card.status === "Wishlist") {
-    return "Wishlist";
   }
 
   return "Main Collection";
@@ -80,6 +80,8 @@ function normalizeCard(card) {
 
   return {
     ...card,
+    value: Number(card.value || 0),
+    salePrice: card.salePrice === undefined ? "" : card.salePrice,
     binder: primaryBinder,
     primaryBinder,
     extraBinders: getExtraBinders(card, primaryBinder),
