@@ -1,8 +1,5 @@
 import { Link } from "react-router-dom";
-
-const SAVED_EVENTS_KEY = "pocket-deck-saved-events";
-const SAVED_SHOPS_KEY = "pocket-deck-saved-shops";
-const FOLLOWED_COLLECTORS_KEY = "pocket-deck-followed-collectors";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 
 function getSavedCount(key) {
   const saved = localStorage.getItem(key);
@@ -20,9 +17,9 @@ function getSavedCount(key) {
 }
 
 function CommunitySummary() {
-  const savedEvents = getSavedCount(SAVED_EVENTS_KEY);
-  const savedShops = getSavedCount(SAVED_SHOPS_KEY);
-  const followedCollectors = getSavedCount(FOLLOWED_COLLECTORS_KEY);
+  const savedEvents = getSavedCount(STORAGE_KEYS.savedEvents);
+  const savedShops = getSavedCount(STORAGE_KEYS.savedShops);
+  const followedCollectors = getSavedCount(STORAGE_KEYS.followedCollectors);
 
   return (
     <section className="community-summary">
