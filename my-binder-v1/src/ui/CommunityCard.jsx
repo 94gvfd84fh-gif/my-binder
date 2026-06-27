@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function CommunityCard({
   label,
   title,
@@ -6,6 +8,8 @@ function CommunityCard({
   buttonText,
   buttonClassName = "",
   onButtonClick,
+  linkTo,
+  linkText = "View Profile",
 }) {
   return (
     <article className="community-event-card">
@@ -23,15 +27,23 @@ function CommunityCard({
 
       {description && <p>{description}</p>}
 
-      {buttonText && (
-        <button
-          type="button"
-          className={buttonClassName}
-          onClick={onButtonClick}
-        >
-          {buttonText}
-        </button>
-      )}
+      <div className="community-card-actions">
+        {linkTo && (
+          <Link className="secondary-button" to={linkTo}>
+            {linkText}
+          </Link>
+        )}
+
+        {buttonText && (
+          <button
+            type="button"
+            className={buttonClassName}
+            onClick={onButtonClick}
+          >
+            {buttonText}
+          </button>
+        )}
+      </div>
     </article>
   );
 }

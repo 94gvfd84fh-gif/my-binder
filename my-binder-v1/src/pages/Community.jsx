@@ -11,17 +11,9 @@ import {
 } from "../data/communityData";
 
 function getFeatureTarget(feature) {
-  if (feature.label === "LOCAL SHOPS") {
-    return "#local-shops";
-  }
-
-  if (feature.label === "COLLECTORS") {
-    return "#discover-collectors";
-  }
-
-  if (feature.label === "MARKETPLACE") {
-    return "/trade-list";
-  }
+  if (feature.label === "LOCAL SHOPS") return "#local-shops";
+  if (feature.label === "COLLECTORS") return "#discover-collectors";
+  if (feature.label === "MARKETPLACE") return "/trade-list";
 
   return "#upcoming-events";
 }
@@ -29,44 +21,35 @@ function getFeatureTarget(feature) {
 function Community() {
   const [savedEvents, setSavedEvents] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.savedEvents);
+    if (!saved) return [];
 
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return [];
-      }
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return [];
     }
-
-    return [];
   });
 
   const [savedShops, setSavedShops] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.savedShops);
+    if (!saved) return [];
 
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return [];
-      }
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return [];
     }
-
-    return [];
   });
 
   const [followedCollectors, setFollowedCollectors] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.followedCollectors);
+    if (!saved) return [];
 
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return [];
-      }
+    try {
+      return JSON.parse(saved);
+    } catch {
+      return [];
     }
-
-    return [];
   });
 
   const savedEventDetails = upcomingEvents.filter((event) => {
@@ -287,6 +270,8 @@ function Community() {
                   collector.tradeStatus,
                   `Featured: ${collector.featuredCard}`,
                 ]}
+                linkTo={`/community/collector/${collector.id}`}
+                linkText="View Profile"
                 buttonText={isFollowing ? "Following" : "Follow Preview"}
                 buttonClassName={isFollowing ? "saved-event-button" : ""}
                 onButtonClick={() => toggleFollowCollector(collector.id)}
