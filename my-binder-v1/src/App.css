@@ -3239,4 +3239,30 @@ nav a.active {
 
 .saved-event-card {
   border-color: rgba(45, 212, 191, 0.28);
+}.community-feature-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.community-feature-link:hover {
+  text-decoration: none;
+  border-color: rgba(245, 158, 11, 0.42);
+  transform: translateY(-2px);
+}
+
+.community-feature-link > span {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 10px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.community-events-section {
+  scroll-margin-top: 24px;
 }

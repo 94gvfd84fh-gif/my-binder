@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import PageHeader from "../ui/PageHeader";
 import CommunityCard from "../ui/CommunityCard";
 import {
@@ -11,6 +12,22 @@ import {
 const SAVED_EVENTS_KEY = "pocket-deck-saved-events";
 const SAVED_SHOPS_KEY = "pocket-deck-saved-shops";
 const FOLLOWED_COLLECTORS_KEY = "pocket-deck-followed-collectors";
+
+function getFeatureTarget(feature) {
+  if (feature.label === "LOCAL SHOPS") {
+    return "#local-shops";
+  }
+
+  if (feature.label === "COLLECTORS") {
+    return "#discover-collectors";
+  }
+
+  if (feature.label === "MARKETPLACE") {
+    return "/trade-list";
+  }
+
+  return "#upcoming-events";
+}
 
 function Community() {
   const [savedEvents, setSavedEvents] = useState(() => {
@@ -102,13 +119,34 @@ function Community() {
       />
 
       <div className="marketplace-preview">
-        {communityFeatures.map((feature) => (
-          <section className="marketplace-card" key={feature.title}>
-            <p className="page-label">{feature.label}</p>
-            <h2>{feature.title}</h2>
-            <p>{feature.description}</p>
-          </section>
-        ))}
+        {communityFeatures.map((feature) => {
+          const target = getFeatureTarget(feature);
+          const isRouteLink = target.startsWith("/");
+
+          if (isRouteLink) {
+            return (
+              <Link className="marketplace-card community-feature-link" to={target} key={feature.title}>
+                <p className="page-label">{feature.label}</p>
+                <h2>{feature.title}</h2>
+                <p>{feature.description}</p>
+                <span>Open</span>
+              </Link>
+            );
+          }
+
+          return (
+            <a
+              className="marketplace-card community-feature-link"
+              href={target}
+              key={feature.title}
+            >
+              <p className="page-label">{feature.label}</p>
+              <h2>{feature.title}</h2>
+              <p>{feature.description}</p>
+              <span>Jump to section</span>
+            </a>
+          );
+        })}
       </div>
 
       {savedEventDetails.length > 0 && (
@@ -137,7 +175,7 @@ function Community() {
         </section>
       )}
 
-      <section className="community-events-section">
+      <section className="community-events-section" id="upcoming-events">
         <div className="section-header">
           <div>
             <h2>Upcoming Events</h2>
@@ -191,7 +229,7 @@ function Community() {
         </section>
       )}
 
-      <section className="community-events-section">
+      <section className="community-events-section" id="local-shops">
         <div className="section-header">
           <div>
             <h2>Local Shops</h2>
@@ -219,7 +257,7 @@ function Community() {
         </div>
       </section>
 
-      <section className="community-events-section">
+      <section className="community-events-section" id="discover-collectors">
         <div className="section-header">
           <div>
             <h2>Discover Collectors</h2>
