@@ -4,13 +4,16 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="logo">
-        <div className="vault-logo">V</div>
+        <div className="pocket-deck-logo" aria-hidden="true">
+          <span className="logo-card logo-card-back"></span>
+          <span className="logo-card logo-card-front">P</span>
+        </div>
 
         <h1>
-          <span>Vaulted</span>
+          <span>Pocket Deck</span>
         </h1>
 
-        <p>SECURE YOUR COLLECTION</p>
+        <p>A Home for Collectors</p>
       </div>
 
       <nav>
@@ -22,8 +25,8 @@ function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <small>Vaulted v0.4</small>
-        <p>Your collection. Protected.</p>
+        <small>Pocket Deck v0.6</small>
+        <p>Collect. Connect. Trade.</p>
       </div>
     </aside>
   );

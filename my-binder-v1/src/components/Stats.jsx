@@ -12,33 +12,34 @@ function Stats() {
 
   const favoriteCards = cards.filter((card) => card.favorite).length;
 
-  const averageValue =
-    totalCards > 0 ? collectionValue / totalCards : 0;
+  const gradedCards = cards.filter((card) => {
+    return card.grade || card.gradingCompany || card.certNumber;
+  }).length;
 
   return (
     <section className="stats">
       <div className="stat-card">
         <p>TOTAL CARDS</p>
         <h2>{totalCards}</h2>
-        <span>Cards secured in Vaulted</span>
+        <span>Cards in your collection</span>
       </div>
 
       <div className="stat-card">
-        <p>COLLECTION VALUE</p>
+        <p>ESTIMATED VALUE</p>
         <h2>${collectionValue.toLocaleString()}</h2>
-        <span>Total estimated value</span>
+        <span>Based on your saved values</span>
       </div>
 
       <div className="stat-card">
         <p>FAVORITES</p>
         <h2>{favoriteCards}</h2>
-        <span>Showcase-worthy cards</span>
+        <span>Your favorite pulls</span>
       </div>
 
       <div className="stat-card">
-        <p>AVG. CARD VALUE</p>
-        <h2>${averageValue.toFixed(2)}</h2>
-        <span>Average value per card</span>
+        <p>GRADED CARDS</p>
+        <h2>{gradedCards}</h2>
+        <span>Cards with grading details</span>
       </div>
     </section>
   );

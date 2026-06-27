@@ -8,16 +8,21 @@ function CardDetails() {
   const { cards } = useContext(CardContext);
   const [showEditModal, setShowEditModal] = useState(false);
 
-  const card = cards.find((card) => card.id === Number(id));
+  const card = cards.find((card) => Number(card.id) === Number(id));
 
   if (!card) {
     return (
       <div>
-        <Link to="/collection">← Back to Collection</Link>
+        <Link to="/collection" className="back-link">
+          Back to Collection
+        </Link>
         <h1>Card not found</h1>
       </div>
     );
   }
+
+  const estimatedValue = Number(card.value || 0).toLocaleString();
+  const isGraded = card.gradingCompany && card.gradingCompany !== "Raw";
 
   return (
     <div className="card-details-page">
@@ -29,7 +34,7 @@ function CardDetails() {
       )}
 
       <Link to="/collection" className="back-link">
-        ← Back to Collection
+        Back to Collection
       </Link>
 
       <div className="card-details">
@@ -43,73 +48,94 @@ function CardDetails() {
 
         <div className="card-details-info">
           <p className="page-label">CARD DETAILS</p>
-          <h1>{card.name}</h1>
 
-          <button
-            className="primary-button"
-            onClick={() => setShowEditModal(true)}
-          >
-            Edit Card
-          </button>
+          <div className="card-title-row">
+            <div>
+              <h1>{card.name || "Untitled Card"}</h1>
+
+              <p className="card-subtitle">
+                {card.set || "Unknown Set"} • #{card.cardNumber || "-"} •{" "}
+                {card.rarity || "Unknown Rarity"}
+              </p>
+            </div>
+
+            <button
+              className="primary-button"
+              onClick={() => setShowEditModal(true)}
+            >
+              Edit Card
+            </button>
+          </div>
+
+          <div className="detail-highlight-grid">
+            <div>
+              <span>Estimated Value</span>
+              <strong>${estimatedValue}</strong>
+            </div>
+
+            <div>
+              <span>Condition</span>
+              <strong>{card.condition || "-"}</strong>
+            </div>
+
+            <div>
+              <span>Binder</span>
+              <strong>{card.binder || "Main Collection"}</strong>
+            </div>
+          </div>
+
+          {isGraded && (
+            <div className="grading-summary">
+              <strong>
+                {card.gradingCompany} {card.grade || ""}
+              </strong>
+              <span>Cert #{card.certNumber || "-"}</span>
+            </div>
+          )}
 
           <div className="detail-row">
-            <strong>Set:</strong>
-            <span>{card.set}</span>
+            <strong>Set</strong>
+            <span>{card.set || "-"}</span>
           </div>
 
           <div className="detail-row">
-            <strong>Card Number:</strong>
+            <strong>Card Number</strong>
             <span>{card.cardNumber || "-"}</span>
           </div>
 
           <div className="detail-row">
-            <strong>Rarity:</strong>
+            <strong>Rarity</strong>
             <span>{card.rarity || "-"}</span>
           </div>
 
           <div className="detail-row">
-            <strong>Condition:</strong>
-            <span>{card.condition || "-"}</span>
+            <strong>Status</strong>
+            <span>{card.status || "-"}</span>
           </div>
 
           <div className="detail-row">
-            <strong>Status:</strong>
-            <span>{card.status}</span>
-          </div>
-
-          <div className="detail-row">
-            <strong>Binder:</strong>
-            <span>{card.binder || "Main Collection"}</span>
-          </div>
-
-          <div className="detail-row">
-            <strong>Grading Company:</strong>
+            <strong>Grading Company</strong>
             <span>{card.gradingCompany || "Raw"}</span>
           </div>
 
           <div className="detail-row">
-            <strong>Grade:</strong>
+            <strong>Grade</strong>
             <span>{card.grade || "-"}</span>
           </div>
 
           <div className="detail-row">
-            <strong>Certification #:</strong>
+            <strong>Certification #</strong>
             <span>{card.certNumber || "-"}</span>
           </div>
 
           <div className="detail-row">
-            <strong>Estimated Value:</strong>
-            <span>${card.value}</span>
-          </div>
-
-          <div className="detail-row">
-            <strong>Notes:</strong>
-            <span>{card.notes || "No notes added."}</span>
-          </div>
-
-          <div className="detail-row">
-            <strong>Favorite:</strong>
+            <strong>Favorite</strong>
             <span>{card.favorite ? "Yes ★" : "No ☆"}</span>
+          </div>
+
+          <div className="notes-panel">
+            <strong>Notes</strong>
+            <p>{card.notes || "No notes added yet."}</p>
           </div>
         </div>
       </div>

@@ -1,8 +1,13 @@
 import { useContext, useState } from "react";
 import { CardContext } from "../context/CardContext";
+import { searchPokemonCards } from "../services/pokemonApi";
 
 function AddCardModal({ onClose, cardToEdit }) {
   const { cards, setCards } = useContext(CardContext);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const [name, setName] = useState(cardToEdit ? cardToEdit.name : "");
   const [set, setSet] = useState(cardToEdit ? cardToEdit.set : "");
@@ -32,6 +37,28 @@ function AddCardModal({ onClose, cardToEdit }) {
     cardToEdit ? cardToEdit.favorite : false
   );
   const [image, setImage] = useState(cardToEdit ? cardToEdit.image : "");
+
+  async function handleCardSearch() {
+    try {
+      setIsSearching(true);
+      const results = await searchPokemonCards(searchTerm);
+      setSearchResults(results);
+    } catch (error) {
+      alert("Could not search Pokémon cards right now.");
+    } finally {
+      setIsSearching(false);
+    }
+  }
+
+  function selectSearchResult(result) {
+    setName(result.name);
+    setSet(result.set);
+    setCardNumber(result.cardNumber);
+    setRarity(result.rarity);
+    setImage(result.image);
+    setSearchResults([]);
+    setSearchTerm("");
+  }
 
   function handleImageUpload(event) {
     const file = event.target.files[0];
@@ -98,6 +125,49 @@ function AddCardModal({ onClose, cardToEdit }) {
           <h2>{cardToEdit ? "Edit Card" : "Add Card"}</h2>
           <button onClick={onClose}>X</button>
         </div>
+
+        {!cardToEdit && (
+          <div className="form-section">
+            <h3>Smart Search</h3>
+
+            <div className="smart-search-row">
+              <input
+                placeholder="Search Pokémon card ex: Charizard"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+              />
+
+              <button type="button" onClick={handleCardSearch}>
+                {isSearching ? "Searching..." : "Search"}
+              </button>
+            </div>
+
+            {searchResults.length > 0 && (
+              <div className="search-results">
+                {searchResults.map((result) => (
+                  <button
+                    type="button"
+                    className="search-result-card"
+                    key={result.apiId}
+                    onClick={() => selectSearchResult(result)}
+                  >
+                    {result.image && (
+                      <img src={result.image} alt={result.name} />
+                    )}
+
+                    <div>
+                      <strong>{result.name}</strong>
+                      <span>{result.set}</span>
+                      <small>
+                        #{result.cardNumber} • {result.rarity || "Unknown"}
+                      </small>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <form className="add-card-form">
           <div className="form-section">
@@ -166,7 +236,7 @@ function AddCardModal({ onClose, cardToEdit }) {
               <option>Main Collection</option>
               <option>Showcase Binder</option>
               <option>Trade Binder</option>
-              <option>Graded Vault</option>
+              <option>Graded Pocket Deck</option>
               <option>Wishlist</option>
             </select>
           </div>

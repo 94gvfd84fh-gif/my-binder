@@ -1,14 +1,14 @@
 function PageHeader({ label, title, description, action }) {
   return (
-    <div className="page-header">
+    <header className="page-header">
       <div>
-        <p className="page-label">{label}</p>
+        {label && <p className="page-label">{label}</p>}
         <h1>{title}</h1>
-        <p>{description}</p>
+        {description && <p>{description}</p>}
       </div>
 
-      {action}
-    </div>
+      {action && <div className="page-header-action">{action}</div>}
+    </header>
   );
 }
 

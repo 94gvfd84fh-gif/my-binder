@@ -29,13 +29,15 @@ function Collection() {
   }
 
   const filteredCards = cards.filter((card) => {
+    const searchText = search.toLowerCase();
+
     const matchesSearch =
-      card.name.toLowerCase().includes(search.toLowerCase()) ||
-      card.set.toLowerCase().includes(search.toLowerCase()) ||
-      card.status.toLowerCase().includes(search.toLowerCase()) ||
-      (card.rarity || "").toLowerCase().includes(search.toLowerCase()) ||
-      (card.condition || "").toLowerCase().includes(search.toLowerCase()) ||
-      (card.binder || "").toLowerCase().includes(search.toLowerCase());
+      (card.name || "").toLowerCase().includes(searchText) ||
+      (card.set || "").toLowerCase().includes(searchText) ||
+      (card.status || "").toLowerCase().includes(searchText) ||
+      (card.rarity || "").toLowerCase().includes(searchText) ||
+      (card.condition || "").toLowerCase().includes(searchText) ||
+      (card.binder || "").toLowerCase().includes(searchText);
 
     const matchesFilter =
       filter === "All Cards" ||
@@ -48,11 +50,11 @@ function Collection() {
 
   const sortedCards = [...filteredCards].sort((a, b) => {
     if (sort === "Newest") {
-      return b.id - a.id;
+      return Number(b.id) - Number(a.id);
     }
 
     if (sort === "Oldest") {
-      return a.id - b.id;
+      return Number(a.id) - Number(b.id);
     }
 
     if (sort === "Highest Value") {
@@ -64,7 +66,7 @@ function Collection() {
     }
 
     if (sort === "A-Z") {
-      return a.name.localeCompare(b.name);
+      return (a.name || "").localeCompare(b.name || "");
     }
 
     if (sort === "Favorites First") {
@@ -81,9 +83,9 @@ function Collection() {
       )}
 
       <PageHeader
-        label="VAULTED COLLECTION"
-        title="Collection"
-        description="Manage, sort, and organize your cards across Vaulted."
+        label="POCKET DECK COLLECTION"
+        title="Your Cards"
+        description="Search, sort, favorite, and organize every card in your collection."
         action={
           <button
             className="primary-button"
@@ -96,7 +98,7 @@ function Collection() {
 
       <div className="collection-tools">
         <input
-          placeholder="Search name, set, rarity, condition, or binder..."
+          placeholder="Search cards, sets, rarity, condition, status, or binder..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
@@ -126,16 +128,31 @@ function Collection() {
         </select>
       </div>
 
-      <div className="collection-grid">
-        {sortedCards.map((card) => (
-          <CardTile
-            key={card.id}
-            card={card}
-            onDelete={deleteCard}
-            onToggleFavorite={toggleFavorite}
-          />
-        ))}
-      </div>
+      {sortedCards.length > 0 ? (
+        <div className="collection-grid">
+          {sortedCards.map((card) => (
+            <CardTile
+              key={card.id}
+              card={card}
+              onDelete={deleteCard}
+              onToggleFavorite={toggleFavorite}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="empty-state-card">
+          <h2>No cards found</h2>
+          <p>
+            Add a card or adjust your search and filters to keep building your Pocket Deck.
+          </p>
+          <button
+            className="primary-button"
+            onClick={() => setShowAddModal(true)}
+          >
+            + Add Card
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@ function Binder() {
     "Main Collection",
     "Showcase Binder",
     "Trade Binder",
-    "Graded Vault",
+    "Graded Collection",
     "Wishlist",
   ];
 
@@ -25,7 +25,7 @@ function Binder() {
   const start = (page - 1) * cardsPerPage;
   const visibleCards = binderCards.slice(start, start + cardsPerPage);
 
-  const binderSlots = Array.from({ length: 9 }, (_, index) => {
+  const binderSlots = Array.from({ length: cardsPerPage }, (_, index) => {
     return visibleCards[index] || null;
   });
 
@@ -35,29 +35,27 @@ function Binder() {
   }
 
   function nextPage() {
-    if (page < totalPages) {
-      setPage(page + 1);
-    }
+    setPage((currentPage) => Math.min(currentPage + 1, totalPages));
   }
 
   function previousPage() {
-    if (page > 1) {
-      setPage(page - 1);
-    }
+    setPage((currentPage) => Math.max(currentPage - 1, 1));
   }
 
   return (
     <div>
       <PageHeader
-        label="VAULTED BINDERS"
-        title="Binders"
-        description="Organize your collection into digital 9-pocket binders."
+        label="POCKET DECK BINDERS"
+        title="Your Binders"
+        description="Flip through your collection in clean 9-pocket digital pages."
       />
 
       <div className="binder-toolbar">
         <div>
           <h2>{selectedBinder}</h2>
-          <p>{binderCards.length} cards • 9-pocket digital display</p>
+          <p>
+            {binderCards.length} cards • Page {page} of {totalPages}
+          </p>
         </div>
 
         <div className="binder-controls">
@@ -67,19 +65,22 @@ function Binder() {
             ))}
           </select>
 
-          <button onClick={previousPage}>Previous</button>
+          <button onClick={previousPage} disabled={page === 1}>
+            Previous
+          </button>
 
-          <span>
-            Page {page} of {totalPages}
-          </span>
-
-          <button onClick={nextPage}>Next</button>
+          <button onClick={nextPage} disabled={page === totalPages}>
+            Next
+          </button>
         </div>
       </div>
 
       <div className="binder-page">
         {binderSlots.map((card, index) => (
-          <div className="binder-pocket" key={index}>
+          <div
+            className={card ? "binder-pocket" : "binder-pocket empty-pocket"}
+            key={card ? card.id : `empty-${index}`}
+          >
             {card ? (
               <>
                 {card.gradingCompany && card.gradingCompany !== "Raw" && (
@@ -92,12 +93,12 @@ function Binder() {
                   {card.image ? (
                     <img src={card.image} alt={card.name} />
                   ) : (
-                    card.name
+                    <span>{card.name}</span>
                   )}
                 </div>
 
-                <h3>{card.name}</h3>
-                <p>{card.set}</p>
+                <h3>{card.name || "Untitled Card"}</h3>
+                <p>{card.set || "Unknown set"}</p>
 
                 {card.certNumber && (
                   <small className="cert-number">Cert #{card.certNumber}</small>

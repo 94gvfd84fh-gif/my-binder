@@ -3,19 +3,25 @@ import initialCards from "../data/cards";
 
 export const CardContext = createContext();
 
+const STORAGE_KEY = "pocket-deck-cards";
+
 function CardProvider({ children }) {
   const [cards, setCards] = useState(() => {
-    const savedCards = localStorage.getItem("vaultedCards");
+    const savedCards = localStorage.getItem(STORAGE_KEY);
 
     if (savedCards) {
-      return JSON.parse(savedCards);
+      try {
+        return JSON.parse(savedCards);
+      } catch {
+        return initialCards;
+      }
     }
 
     return initialCards;
   });
 
   useEffect(() => {
-    localStorage.setItem("vaultedCards", JSON.stringify(cards));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
   }, [cards]);
 
   return (
