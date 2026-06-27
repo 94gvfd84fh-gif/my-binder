@@ -3,6 +3,7 @@ import PageHeader from "../ui/PageHeader";
 
 const SAVED_EVENTS_KEY = "pocket-deck-saved-events";
 const SAVED_SHOPS_KEY = "pocket-deck-saved-shops";
+const FOLLOWED_COLLECTORS_KEY = "pocket-deck-followed-collectors";
 
 const communityFeatures = [
   {
@@ -103,6 +104,36 @@ const localShops = [
   },
 ];
 
+const collectors = [
+  {
+    id: "vintage-adam",
+    username: "VintageAdam",
+    favoriteTcg: "Pokémon",
+    style: "Vintage holos and WOTC era collector",
+    publicBinders: 4,
+    tradeStatus: "Open to trades",
+    featuredCard: "Charizard Base Set",
+  },
+  {
+    id: "slabqueen",
+    username: "SlabQueen",
+    favoriteTcg: "Sports Cards",
+    style: "Graded rookies, slabs, and modern stars",
+    publicBinders: 3,
+    tradeStatus: "Browsing only",
+    featuredCard: "Luka Dončić Silver",
+  },
+  {
+    id: "onepiecehunter",
+    username: "OnePieceHunter",
+    favoriteTcg: "One Piece",
+    style: "Alt arts, leaders, and sealed product",
+    publicBinders: 2,
+    tradeStatus: "Open to trades",
+    featuredCard: "Manga Shanks",
+  },
+];
+
 function Community() {
   const [savedEvents, setSavedEvents] = useState(() => {
     const saved = localStorage.getItem(SAVED_EVENTS_KEY);
@@ -120,6 +151,20 @@ function Community() {
 
   const [savedShops, setSavedShops] = useState(() => {
     const saved = localStorage.getItem(SAVED_SHOPS_KEY);
+
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [];
+      }
+    }
+
+    return [];
+  });
+
+  const [followedCollectors, setFollowedCollectors] = useState(() => {
+    const saved = localStorage.getItem(FOLLOWED_COLLECTORS_KEY);
 
     if (saved) {
       try {
@@ -158,6 +203,18 @@ function Community() {
     localStorage.setItem(SAVED_SHOPS_KEY, JSON.stringify(updatedSavedShops));
   }
 
+  function toggleFollowCollector(collectorId) {
+    const updatedFollowedCollectors = followedCollectors.includes(collectorId)
+      ? followedCollectors.filter((followedId) => followedId !== collectorId)
+      : [...followedCollectors, collectorId];
+
+    setFollowedCollectors(updatedFollowedCollectors);
+    localStorage.setItem(
+      FOLLOWED_COLLECTORS_KEY,
+      JSON.stringify(updatedFollowedCollectors)
+    );
+  }
+
   return (
     <div>
       <PageHeader
@@ -187,7 +244,10 @@ function Community() {
 
           <div className="community-events-grid">
             {savedEventDetails.map((event) => (
-              <article className="community-event-card saved-event-card" key={event.id}>
+              <article
+                className="community-event-card saved-event-card"
+                key={event.id}
+              >
                 <p className="page-label">{event.type}</p>
                 <h3>{event.title}</h3>
 
@@ -261,7 +321,10 @@ function Community() {
 
           <div className="community-events-grid">
             {savedShopDetails.map((shop) => (
-              <article className="community-event-card saved-event-card" key={shop.id}>
+              <article
+                className="community-event-card saved-event-card"
+                key={shop.id}
+              >
                 <p className="page-label">LOCAL SHOP</p>
                 <h3>{shop.name}</h3>
 
@@ -317,6 +380,43 @@ function Community() {
                   onClick={() => toggleSavedShop(shop.id)}
                 >
                   {isSaved ? "Saved" : "Save Shop"}
+                </button>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="community-events-section">
+        <div className="section-header">
+          <div>
+            <h2>Discover Collectors</h2>
+            <p>Preview collector profiles, trade signals, and public binders.</p>
+          </div>
+        </div>
+
+        <div className="community-events-grid">
+          {collectors.map((collector) => {
+            const isFollowing = followedCollectors.includes(collector.id);
+
+            return (
+              <article className="community-event-card" key={collector.id}>
+                <p className="page-label">{collector.favoriteTcg} COLLECTOR</p>
+                <h3>{collector.username}</h3>
+
+                <div className="event-detail-list">
+                  <span>{collector.style}</span>
+                  <span>{collector.publicBinders} public binders</span>
+                  <span>{collector.tradeStatus}</span>
+                  <span>Featured: {collector.featuredCard}</span>
+                </div>
+
+                <button
+                  type="button"
+                  className={isFollowing ? "saved-event-button" : ""}
+                  onClick={() => toggleFollowCollector(collector.id)}
+                >
+                  {isFollowing ? "Following" : "Follow Preview"}
                 </button>
               </article>
             );
