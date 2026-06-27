@@ -2,6 +2,7 @@ import { useState } from "react";
 import PageHeader from "../ui/PageHeader";
 
 const SAVED_EVENTS_KEY = "pocket-deck-saved-events";
+const SAVED_SHOPS_KEY = "pocket-deck-saved-shops";
 
 const communityFeatures = [
   {
@@ -75,9 +76,50 @@ const upcomingEvents = [
   },
 ];
 
+const localShops = [
+  {
+    id: "golden-empire-card-shop",
+    name: "Golden Empire Card Shop",
+    area: "Sacramento, CA",
+    distance: "4.2 miles away",
+    specialties: "Pokémon, sports cards, slabs, trade nights",
+    eventType: "Weekly trade night",
+  },
+  {
+    id: "capital-city-collectibles",
+    name: "Capital City Collectibles",
+    area: "Roseville, CA",
+    distance: "13 miles away",
+    specialties: "Vintage singles, sealed wax, grading submissions",
+    eventType: "Monthly card show booth",
+  },
+  {
+    id: "hobby-vault",
+    name: "Hobby Vault",
+    area: "Elk Grove, CA",
+    distance: "9.8 miles away",
+    specialties: "TCG singles, supplies, binders, casual play",
+    eventType: "Weekend pack battles",
+  },
+];
+
 function Community() {
   const [savedEvents, setSavedEvents] = useState(() => {
     const saved = localStorage.getItem(SAVED_EVENTS_KEY);
+
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [];
+      }
+    }
+
+    return [];
+  });
+
+  const [savedShops, setSavedShops] = useState(() => {
+    const saved = localStorage.getItem(SAVED_SHOPS_KEY);
 
     if (saved) {
       try {
@@ -94,6 +136,10 @@ function Community() {
     return savedEvents.includes(event.id);
   });
 
+  const savedShopDetails = localShops.filter((shop) => {
+    return savedShops.includes(shop.id);
+  });
+
   function toggleSavedEvent(eventId) {
     const updatedSavedEvents = savedEvents.includes(eventId)
       ? savedEvents.filter((savedEventId) => savedEventId !== eventId)
@@ -101,6 +147,15 @@ function Community() {
 
     setSavedEvents(updatedSavedEvents);
     localStorage.setItem(SAVED_EVENTS_KEY, JSON.stringify(updatedSavedEvents));
+  }
+
+  function toggleSavedShop(shopId) {
+    const updatedSavedShops = savedShops.includes(shopId)
+      ? savedShops.filter((savedShopId) => savedShopId !== shopId)
+      : [...savedShops, shopId];
+
+    setSavedShops(updatedSavedShops);
+    localStorage.setItem(SAVED_SHOPS_KEY, JSON.stringify(updatedSavedShops));
   }
 
   return (
@@ -188,6 +243,80 @@ function Community() {
                   onClick={() => toggleSavedEvent(event.id)}
                 >
                   {isSaved ? "Saved" : "Save Event"}
+                </button>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {savedShopDetails.length > 0 && (
+        <section className="community-events-section saved-events-section">
+          <div className="section-header">
+            <div>
+              <h2>Saved Shops</h2>
+              <p>Local shops you want to revisit.</p>
+            </div>
+          </div>
+
+          <div className="community-events-grid">
+            {savedShopDetails.map((shop) => (
+              <article className="community-event-card saved-event-card" key={shop.id}>
+                <p className="page-label">LOCAL SHOP</p>
+                <h3>{shop.name}</h3>
+
+                <div className="event-detail-list">
+                  <span>{shop.area}</span>
+                  <span>{shop.distance}</span>
+                  <span>{shop.eventType}</span>
+                </div>
+
+                <p>{shop.specialties}</p>
+
+                <button
+                  type="button"
+                  className="saved-event-button"
+                  onClick={() => toggleSavedShop(shop.id)}
+                >
+                  Remove Saved
+                </button>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section className="community-events-section">
+        <div className="section-header">
+          <div>
+            <h2>Local Shops</h2>
+            <p>Support collector-friendly shops near you.</p>
+          </div>
+        </div>
+
+        <div className="community-events-grid">
+          {localShops.map((shop) => {
+            const isSaved = savedShops.includes(shop.id);
+
+            return (
+              <article className="community-event-card" key={shop.id}>
+                <p className="page-label">LOCAL SHOP</p>
+                <h3>{shop.name}</h3>
+
+                <div className="event-detail-list">
+                  <span>{shop.area}</span>
+                  <span>{shop.distance}</span>
+                  <span>{shop.eventType}</span>
+                </div>
+
+                <p>{shop.specialties}</p>
+
+                <button
+                  type="button"
+                  className={isSaved ? "saved-event-button" : ""}
+                  onClick={() => toggleSavedShop(shop.id)}
+                >
+                  {isSaved ? "Saved" : "Save Shop"}
                 </button>
               </article>
             );
