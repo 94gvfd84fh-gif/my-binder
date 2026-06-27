@@ -2,16 +2,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "../ui/PageHeader";
 import CommunityCard from "../ui/CommunityCard";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 import {
   collectors,
   communityFeatures,
   localShops,
   upcomingEvents,
 } from "../data/communityData";
-
-const SAVED_EVENTS_KEY = "pocket-deck-saved-events";
-const SAVED_SHOPS_KEY = "pocket-deck-saved-shops";
-const FOLLOWED_COLLECTORS_KEY = "pocket-deck-followed-collectors";
 
 function getFeatureTarget(feature) {
   if (feature.label === "LOCAL SHOPS") {
@@ -31,7 +28,7 @@ function getFeatureTarget(feature) {
 
 function Community() {
   const [savedEvents, setSavedEvents] = useState(() => {
-    const saved = localStorage.getItem(SAVED_EVENTS_KEY);
+    const saved = localStorage.getItem(STORAGE_KEYS.savedEvents);
 
     if (saved) {
       try {
@@ -45,7 +42,7 @@ function Community() {
   });
 
   const [savedShops, setSavedShops] = useState(() => {
-    const saved = localStorage.getItem(SAVED_SHOPS_KEY);
+    const saved = localStorage.getItem(STORAGE_KEYS.savedShops);
 
     if (saved) {
       try {
@@ -59,7 +56,7 @@ function Community() {
   });
 
   const [followedCollectors, setFollowedCollectors] = useState(() => {
-    const saved = localStorage.getItem(FOLLOWED_COLLECTORS_KEY);
+    const saved = localStorage.getItem(STORAGE_KEYS.followedCollectors);
 
     if (saved) {
       try {
@@ -86,7 +83,10 @@ function Community() {
       : [...savedEvents, eventId];
 
     setSavedEvents(updatedSavedEvents);
-    localStorage.setItem(SAVED_EVENTS_KEY, JSON.stringify(updatedSavedEvents));
+    localStorage.setItem(
+      STORAGE_KEYS.savedEvents,
+      JSON.stringify(updatedSavedEvents)
+    );
   }
 
   function toggleSavedShop(shopId) {
@@ -95,7 +95,10 @@ function Community() {
       : [...savedShops, shopId];
 
     setSavedShops(updatedSavedShops);
-    localStorage.setItem(SAVED_SHOPS_KEY, JSON.stringify(updatedSavedShops));
+    localStorage.setItem(
+      STORAGE_KEYS.savedShops,
+      JSON.stringify(updatedSavedShops)
+    );
   }
 
   function toggleFollowCollector(collectorId) {
@@ -105,7 +108,7 @@ function Community() {
 
     setFollowedCollectors(updatedFollowedCollectors);
     localStorage.setItem(
-      FOLLOWED_COLLECTORS_KEY,
+      STORAGE_KEYS.followedCollectors,
       JSON.stringify(updatedFollowedCollectors)
     );
   }
@@ -125,7 +128,11 @@ function Community() {
 
           if (isRouteLink) {
             return (
-              <Link className="marketplace-card community-feature-link" to={target} key={feature.title}>
+              <Link
+                className="marketplace-card community-feature-link"
+                to={target}
+                key={feature.title}
+              >
                 <p className="page-label">{feature.label}</p>
                 <h2>{feature.title}</h2>
                 <p>{feature.description}</p>

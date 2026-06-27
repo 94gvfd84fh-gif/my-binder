@@ -2,11 +2,9 @@ import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 import PageHeader from "../ui/PageHeader";
 import "../styles/profile.css";
-
-const PROFILE_KEY = "pocket-deck-profile";
-const FOLLOWED_COLLECTORS_KEY = "pocket-deck-followed-collectors";
 
 const defaultProfile = {
   username: "Pocket Deck Collector",
@@ -22,9 +20,7 @@ const defaultProfile = {
 function getSavedCount(key) {
   const saved = localStorage.getItem(key);
 
-  if (!saved) {
-    return 0;
-  }
+  if (!saved) return 0;
 
   try {
     const parsed = JSON.parse(saved);
@@ -52,7 +48,7 @@ function Profile() {
     useState(false);
 
   const [collectorProfile, setCollectorProfile] = useState(() => {
-    const savedProfile = localStorage.getItem(PROFILE_KEY);
+    const savedProfile = localStorage.getItem(STORAGE_KEYS.profile);
 
     if (savedProfile) {
       try {
@@ -68,13 +64,10 @@ function Profile() {
     return defaultProfile;
   });
 
-  const followedCollectors = getSavedCount(FOLLOWED_COLLECTORS_KEY);
+  const followedCollectors = getSavedCount(STORAGE_KEYS.followedCollectors);
 
   function getPrimaryBinder(card) {
-    if (card.status === "Wishlist") {
-      return "Wishlist";
-    }
-
+    if (card.status === "Wishlist") return "Wishlist";
     if (card.primaryBinder) return card.primaryBinder;
     if (card.binder) return card.binder;
 
@@ -110,13 +103,8 @@ function Profile() {
     );
   }
 
-  const ownedCards = cards.filter((card) => {
-    return getPrimaryBinder(card) !== "Wishlist";
-  });
-
-  const wishlistCards = cards.filter((card) => {
-    return getPrimaryBinder(card) === "Wishlist";
-  });
+  const ownedCards = cards.filter((card) => getPrimaryBinder(card) !== "Wishlist");
+  const wishlistCards = cards.filter((card) => getPrimaryBinder(card) === "Wishlist");
 
   const totalCards = ownedCards.length;
 
@@ -150,19 +138,17 @@ function Profile() {
   const displayedFeaturedCard =
     selectedFeaturedCard || favoriteFeaturedCard || newestOwnedCard;
 
-  const publicBinders = binders
-    .filter(isPublicBinder)
-    .map((binderName) => {
-      const cardCount = cards.filter((card) => {
-        return cardBelongsToBinder(card, binderName);
-      }).length;
+  const publicBinders = binders.filter(isPublicBinder).map((binderName) => {
+    const cardCount = cards.filter((card) => {
+      return cardBelongsToBinder(card, binderName);
+    }).length;
 
-      return {
-        name: binderName,
-        cardCount,
-        visibility: getBinderVisibility(binderName),
-      };
-    });
+    return {
+      name: binderName,
+      cardCount,
+      visibility: getBinderVisibility(binderName),
+    };
+  });
 
   function updateProfile(field, value) {
     setCollectorProfile((currentProfile) => {
@@ -171,15 +157,13 @@ function Profile() {
         [field]: value,
       };
 
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(updatedProfile));
+      localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(updatedProfile));
       return updatedProfile;
     });
   }
 
   function replaceCollectorProfile(importedProfile) {
-    if (!importedProfile || typeof importedProfile !== "object") {
-      return;
-    }
+    if (!importedProfile || typeof importedProfile !== "object") return;
 
     const updatedProfile = {
       ...defaultProfile,
@@ -187,7 +171,7 @@ function Profile() {
     };
 
     setCollectorProfile(updatedProfile);
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(updatedProfile));
+    localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(updatedProfile));
   }
 
   function handleAvatarUpload(event) {
