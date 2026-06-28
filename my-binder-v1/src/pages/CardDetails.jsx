@@ -21,6 +21,7 @@ function CardDetails() {
     );
   }
 
+  const cardType = card.cardType || "Pokémon";
   const estimatedValue = Number(card.value || 0).toLocaleString();
   const askingPrice = Number(card.salePrice || 0).toLocaleString();
   const isGraded = card.gradingCompany && card.gradingCompany !== "Raw";
@@ -102,8 +103,8 @@ function CardDetails() {
               <h1>{card.name || "Untitled Card"}</h1>
 
               <p className="card-subtitle">
-                {card.set || "Unknown Set"} • #{card.cardNumber || "-"} •{" "}
-                {card.rarity || "Unknown Rarity"}
+                {cardType} • {card.set || "Unknown Set"} • #
+                {card.cardNumber || "-"} • {card.rarity || "Unknown Rarity"}
               </p>
             </div>
 
@@ -124,6 +125,11 @@ function CardDetails() {
           </div>
 
           <div className="detail-highlight-grid">
+            <div>
+              <span>Card Type</span>
+              <strong>{cardType}</strong>
+            </div>
+
             <div>
               <span>Estimated Value</span>
               <strong>${estimatedValue}</strong>
@@ -167,6 +173,11 @@ function CardDetails() {
               <span>Cert #{card.certNumber || "-"}</span>
             </div>
           )}
+
+          <div className="detail-row">
+            <strong>Card Type</strong>
+            <span>{cardType}</span>
+          </div>
 
           <div className="detail-row">
             <strong>Set</strong>

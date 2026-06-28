@@ -80,6 +80,7 @@ function normalizeCard(card) {
 
   return {
     ...card,
+    cardType: card.cardType || "Pokémon",
     value: Number(card.value || 0),
     salePrice: card.salePrice === undefined ? "" : card.salePrice,
     binder: primaryBinder,

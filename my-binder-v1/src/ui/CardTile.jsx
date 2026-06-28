@@ -12,6 +12,7 @@ function CardTile({
 
   const value = Number(card.value || 0).toLocaleString();
   const salePrice = Number(card.salePrice || 0).toLocaleString();
+
   const isGraded = card.gradingCompany && card.gradingCompany !== "Raw";
   const isForSale = card.status === "For Sale";
   const isForTrade = card.status === "For Trade";
@@ -35,7 +36,9 @@ function CardTile({
 
   return (
     <article
-      className="collection-card"
+      className={
+        isWishlist ? "collection-card wishlist-card" : "collection-card"
+      }
       onClick={openCard}
       role={clickable ? "button" : undefined}
       tabIndex={clickable ? 0 : undefined}
@@ -45,24 +48,65 @@ function CardTile({
         }
       }}
     >
-      {isGraded && (
-        <div className="card-grade-badge">
-          {card.gradingCompany} {card.grade || ""}
-        </div>
-      )}
-
-      <div className="collection-card-image">
-        {card.image ? (
-          <img src={card.image} alt={card.name} />
-        ) : (
-          <span>{card.name}</span>
+      <div className="card-tile-image-wrap">
+        {isGraded && (
+          <div className="card-grade-badge">
+            {card.gradingCompany} {card.grade || ""}
+          </div>
         )}
+
+        {showFavorite && onToggleFavorite && (
+          <button
+            className={
+              card.favorite
+                ? "favorite-button active-favorite"
+                : "favorite-button"
+            }
+            aria-label={
+              card.favorite ? "Remove from favorites" : "Add to favorites"
+            }
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleFavorite(card.id);
+            }}
+          >
+            {card.favorite ? "★" : "☆"}
+          </button>
+        )}
+
+        <div className="collection-card-image">
+          {card.image ? (
+            <img src={card.image} alt={card.name || "Card"} />
+          ) : (
+            <span>{card.name || "Untitled Card"}</span>
+          )}
+        </div>
       </div>
 
       <div className="card-tile-body">
-        <div>
+        <div className="card-title-block">
           <h3>{card.name || "Untitled Card"}</h3>
           <p>{card.set || "Unknown set"}</p>
+        </div>
+
+        <div className="card-status-stack">
+          <small className="card-type-chip">
+            {card.cardType || "Pokémon"}
+          </small>
+
+          {isForSale && (
+            <small className="sale-price-chip">Ask ${salePrice}</small>
+          )}
+
+          {isForTrade && <small className="trade-chip">Open to Trade</small>}
+
+          {isWishlist && (
+            <small className="wishlist-chip">Not collected yet</small>
+          )}
+
+          {!isForSale && !isForTrade && !isWishlist && card.status && (
+            <small className="card-status">{card.status}</small>
+          )}
         </div>
 
         <div className="card-binder-stack">
@@ -82,36 +126,10 @@ function CardTile({
         </div>
 
         <div className="collection-card-footer">
-          <span>${value}</span>
-
-          {showFavorite && onToggleFavorite && (
-            <button
-              className="favorite-button"
-              aria-label={
-                card.favorite ? "Remove from favorites" : "Add to favorites"
-              }
-              onClick={(event) => {
-                event.stopPropagation();
-                onToggleFavorite(card.id);
-              }}
-            >
-              {card.favorite ? "★" : "☆"}
-            </button>
-          )}
-        </div>
-
-        <div className="card-status-stack">
-          {card.status && <small className="card-status">{card.status}</small>}
-
-          {isForSale && (
-            <small className="sale-price-chip">Ask ${salePrice}</small>
-          )}
-
-          {isForTrade && <small className="trade-chip">Open to Trade</small>}
-
-          {isWishlist && (
-            <small className="wishlist-chip">Not collected yet</small>
-          )}
+          <div>
+            <span>Est. Value</span>
+            <strong>${value}</strong>
+          </div>
         </div>
 
         {showDelete && onDelete && (
@@ -122,7 +140,7 @@ function CardTile({
               onDelete(card.id);
             }}
           >
-            Delete
+            Delete Card
           </button>
         )}
       </div>

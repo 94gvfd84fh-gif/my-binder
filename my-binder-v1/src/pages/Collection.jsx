@@ -5,12 +5,27 @@ import AddCardModal from "../components/AddCardModal";
 import PageHeader from "../ui/PageHeader";
 import CardTile from "../ui/CardTile";
 
+const CARD_TYPES = [
+  "All Types",
+  "Pokémon",
+  "Magic: The Gathering",
+  "Yu-Gi-Oh!",
+  "One Piece",
+  "Union Arena",
+  "Baseball",
+  "Basketball",
+  "Football",
+  "Soccer",
+  "Other",
+];
+
 function Collection() {
   const { cards, setCards } = useContext(CardContext);
   const { binders } = useContext(BinderContext);
 
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All Cards");
+  const [typeFilter, setTypeFilter] = useState("All Types");
   const [sort, setSort] = useState("Newest");
   const [showAddModal, setShowAddModal] = useState(false);
 
@@ -72,8 +87,10 @@ function Collection() {
     const primaryBinder = getPrimaryBinder(card);
     const extraBinders = getExtraBinders(card);
     const salePriceText = String(card.salePrice || "");
+    const cardType = card.cardType || "Pokémon";
 
     const matchesSearch =
+      cardType.toLowerCase().includes(searchText) ||
       (card.name || "").toLowerCase().includes(searchText) ||
       (card.set || "").toLowerCase().includes(searchText) ||
       (card.status || "").toLowerCase().includes(searchText) ||
@@ -90,7 +107,10 @@ function Collection() {
       filter === card.status ||
       cardBelongsToBinder(card, filter);
 
-    return matchesSearch && matchesFilter;
+    const matchesType =
+      typeFilter === "All Types" || cardType === typeFilter;
+
+    return matchesSearch && matchesFilter && matchesType;
   });
 
   const sortedCards = [...filteredCards].sort((a, b) => {
@@ -151,10 +171,19 @@ function Collection() {
 
       <div className="collection-tools">
         <input
-          placeholder="Search cards, sets, rarity, condition, status, binder, or price..."
+          placeholder="Search cards, type, set, rarity, condition, status, binder, or price..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
+
+        <select
+          value={typeFilter}
+          onChange={(event) => setTypeFilter(event.target.value)}
+        >
+          {CARD_TYPES.map((type) => (
+            <option key={type}>{type}</option>
+          ))}
+        </select>
 
         <select
           value={filter}

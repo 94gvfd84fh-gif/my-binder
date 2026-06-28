@@ -3,6 +3,19 @@ import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
 import { searchPokemonCards } from "../services/pokemonApi";
 
+const CARD_TYPES = [
+  "Pokémon",
+  "Magic: The Gathering",
+  "Yu-Gi-Oh!",
+  "One Piece",
+  "Union Arena",
+  "Baseball",
+  "Basketball",
+  "Football",
+  "Soccer",
+  "Other",
+];
+
 function AddCardModal({ onClose, cardToEdit }) {
   const { cards, setCards } = useContext(CardContext);
   const { binders } = useContext(BinderContext);
@@ -58,6 +71,9 @@ function AddCardModal({ onClose, cardToEdit }) {
   const [isSearching, setIsSearching] = useState(false);
   const [isExtraBinderOpen, setIsExtraBinderOpen] = useState(false);
 
+  const [cardType, setCardType] = useState(
+    cardToEdit ? cardToEdit.cardType || "Pokémon" : "Pokémon"
+  );
   const [name, setName] = useState(cardToEdit ? cardToEdit.name : "");
   const [set, setSet] = useState(cardToEdit ? cardToEdit.set : "");
   const [cardNumber, setCardNumber] = useState(
@@ -91,6 +107,8 @@ function AddCardModal({ onClose, cardToEdit }) {
   );
   const [image, setImage] = useState(cardToEdit ? cardToEdit.image : "");
 
+  const isPokemon = cardType === "Pokémon";
+
   const primaryBinder =
     status === "Wishlist"
       ? "Wishlist"
@@ -109,7 +127,17 @@ function AddCardModal({ onClose, cardToEdit }) {
       ? extraBinders.length + 1
       : extraBinders.length;
 
+  function handleCardTypeChange(event) {
+    setCardType(event.target.value);
+    setSearchTerm("");
+    setSearchResults([]);
+  }
+
   async function handleCardSearch() {
+    if (!isPokemon) {
+      return;
+    }
+
     try {
       setIsSearching(true);
       const results = await searchPokemonCards(searchTerm);
@@ -122,6 +150,7 @@ function AddCardModal({ onClose, cardToEdit }) {
   }
 
   function selectSearchResult(result) {
+    setCardType("Pokémon");
     setName(result.name);
     setSet(result.set);
     setCardNumber(result.cardNumber);
@@ -192,6 +221,7 @@ function AddCardModal({ onClose, cardToEdit }) {
     const finalExtraBinders = getFinalExtraBinders();
 
     const cardData = {
+      cardType,
       name,
       set,
       cardNumber,
@@ -248,50 +278,70 @@ function AddCardModal({ onClose, cardToEdit }) {
           <button onClick={onClose}>X</button>
         </div>
 
-        {!cardToEdit && (
+        <form className="add-card-form">
           <div className="form-section">
-            <h3>Smart Search</h3>
+            <h3>Card Type</h3>
 
-            <div className="smart-search-row">
-              <input
-                placeholder="Search Pokémon card ex: Charizard"
-                value={searchTerm}
-                onChange={(event) => setSearchTerm(event.target.value)}
-              />
+            <select value={cardType} onChange={handleCardTypeChange}>
+              {CARD_TYPES.map((type) => (
+                <option key={type}>{type}</option>
+              ))}
+            </select>
 
-              <button type="button" onClick={handleCardSearch}>
-                {isSearching ? "Searching..." : "Search"}
-              </button>
-            </div>
+            {!cardToEdit && isPokemon && (
+              <>
+                <h3>Pokémon Smart Search</h3>
 
-            {searchResults.length > 0 && (
-              <div className="search-results">
-                {searchResults.map((result) => (
-                  <button
-                    type="button"
-                    className="search-result-card"
-                    key={result.apiId}
-                    onClick={() => selectSearchResult(result)}
-                  >
-                    {result.image && (
-                      <img src={result.image} alt={result.name} />
-                    )}
+                <div className="smart-search-row">
+                  <input
+                    placeholder="Search Pokémon card ex: Charizard"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                  />
 
-                    <div>
-                      <strong>{result.name}</strong>
-                      <span>{result.set}</span>
-                      <small>
-                        #{result.cardNumber} · {result.rarity || "Unknown"}
-                      </small>
-                    </div>
+                  <button type="button" onClick={handleCardSearch}>
+                    {isSearching ? "Searching..." : "Search"}
                   </button>
-                ))}
+                </div>
+
+                {searchResults.length > 0 && (
+                  <div className="search-results">
+                    {searchResults.map((result) => (
+                      <button
+                        type="button"
+                        className="search-result-card"
+                        key={result.apiId}
+                        onClick={() => selectSearchResult(result)}
+                      >
+                        {result.image && (
+                          <img src={result.image} alt={result.name} />
+                        )}
+
+                        <div>
+                          <strong>{result.name}</strong>
+                          <span>{result.set}</span>
+                          <small>
+                            #{result.cardNumber} · {result.rarity || "Unknown"}
+                          </small>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+
+            {!cardToEdit && !isPokemon && (
+              <div className="manual-entry-note">
+                <strong>Manual Entry</strong>
+                <span>
+                  Add {cardType} cards by entering the details below. Automatic
+                  search for this card type can be added later.
+                </span>
               </div>
             )}
           </div>
-        )}
 
-        <form className="add-card-form">
           <div className="form-section">
             <h3>Basic Information</h3>
 
