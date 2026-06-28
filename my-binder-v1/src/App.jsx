@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
+import NotificationCenter from "./components/NotificationCenter";
 import Dashboard from "./pages/Dashboard";
 import Collection from "./pages/Collection";
 import Binder from "./pages/Binder";
@@ -20,6 +21,10 @@ function App() {
       <Sidebar />
 
       <main className="content">
+        <div className="app-topbar">
+          <NotificationCenter />
+        </div>
+
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/collection" element={<Collection />} />
