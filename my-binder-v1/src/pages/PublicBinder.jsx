@@ -3,7 +3,7 @@ import PageHeader from "../ui/PageHeader";
 import CardTile from "../ui/CardTile";
 import { collectors } from "../data/communityData";
 
-const sampleBinderCards = {
+export const sampleBinderCards = {
   "vintage-adam": [
     {
       id: "vintage-charizard",
@@ -135,13 +135,18 @@ function PublicBinder() {
         {binderCards.length > 0 ? (
           <div className="collection-grid">
             {binderCards.map((card) => (
-              <CardTile
+              <Link
                 key={card.id}
-                card={card}
-                clickable={false}
-                showDelete={false}
-                showFavorite={false}
-              />
+                to={`/community/collector/${collector.id}/card/${card.id}`}
+                className="public-card-link"
+              >
+                <CardTile
+                  card={card}
+                  clickable={false}
+                  showDelete={false}
+                  showFavorite={false}
+                />
+              </Link>
             ))}
           </div>
         ) : (
