@@ -3303,4 +3303,44 @@ nav a.active {
   .community-summary-grid {
     grid-template-columns: 1fr;
   }
+}.trade-request-modal {
+  width: 520px;
+}
+
+.trade-request-card {
+  text-align: center;
+  padding: 18px;
+  margin-bottom: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+}
+
+.trade-request-card h3 {
+  font-size: 26px;
+  margin: 8px 0 4px;
+}
+
+.trade-request-card p {
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.trade-request-message {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  display: block;
+  margin: 16px 0;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.trade-request-submit {
+  width: 100%;
 }

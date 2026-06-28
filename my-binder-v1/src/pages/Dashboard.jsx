@@ -5,7 +5,7 @@ import RecentCards from "../components/RecentCards";
 import CollectionTimeline from "../components/CollectionTimeline";
 import CollectionAnalytics from "../components/CollectionAnalytics";
 import ValueAnalytics from "../components/ValueAnalytics";
-
+import NotificationCenter from "../components/NotificationCenter";
 function Dashboard() {
   return (
     <div>
@@ -22,6 +22,7 @@ function Dashboard() {
       <ValueAnalytics />
       <RecentCards />
       <CollectionTimeline />
+      <NotificationCenter />
     </div>
   );
 }
