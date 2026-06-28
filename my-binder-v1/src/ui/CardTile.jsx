@@ -1,6 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
-function CardTile({ card, onDelete, onToggleFavorite }) {
+function CardTile({
+  card,
+  onDelete,
+  onToggleFavorite,
+  clickable = true,
+  showDelete = true,
+  showFavorite = true,
+}) {
   const navigate = useNavigate();
 
   const value = Number(card.value || 0).toLocaleString();
@@ -10,26 +17,31 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
   const isForTrade = card.status === "For Trade";
   const isWishlist = card.status === "Wishlist";
 
-  const primaryBinder =
-    isWishlist
-      ? "Wishlist"
-      : card.primaryBinder ||
-        card.binder ||
-        (isGraded ? "Graded Collection" : "Main Collection");
+  const primaryBinder = isWishlist
+    ? "Wishlist"
+    : card.primaryBinder ||
+      card.binder ||
+      (isGraded ? "Graded Collection" : "Main Collection");
 
   const extraBinders = Array.isArray(card.extraBinders)
     ? card.extraBinders
     : [];
 
+  function openCard() {
+    if (clickable) {
+      navigate(`/collection/${card.id}`);
+    }
+  }
+
   return (
     <article
       className="collection-card"
-      onClick={() => navigate(`/collection/${card.id}`)}
-      role="button"
-      tabIndex={0}
+      onClick={openCard}
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : undefined}
       onKeyDown={(event) => {
-        if (event.key === "Enter") {
-          navigate(`/collection/${card.id}`);
+        if (clickable && event.key === "Enter") {
+          openCard();
         }
       }}
     >
@@ -72,18 +84,20 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
         <div className="collection-card-footer">
           <span>${value}</span>
 
-          <button
-            className="favorite-button"
-            aria-label={
-              card.favorite ? "Remove from favorites" : "Add to favorites"
-            }
-            onClick={(event) => {
-              event.stopPropagation();
-              onToggleFavorite(card.id);
-            }}
-          >
-            {card.favorite ? "★" : "☆"}
-          </button>
+          {showFavorite && onToggleFavorite && (
+            <button
+              className="favorite-button"
+              aria-label={
+                card.favorite ? "Remove from favorites" : "Add to favorites"
+              }
+              onClick={(event) => {
+                event.stopPropagation();
+                onToggleFavorite(card.id);
+              }}
+            >
+              {card.favorite ? "★" : "☆"}
+            </button>
+          )}
         </div>
 
         <div className="card-status-stack">
@@ -93,24 +107,24 @@ function CardTile({ card, onDelete, onToggleFavorite }) {
             <small className="sale-price-chip">Ask ${salePrice}</small>
           )}
 
-          {isForTrade && (
-            <small className="trade-chip">Open to Trade</small>
-          )}
+          {isForTrade && <small className="trade-chip">Open to Trade</small>}
 
           {isWishlist && (
             <small className="wishlist-chip">Not collected yet</small>
           )}
         </div>
 
-        <button
-          className="delete-button"
-          onClick={(event) => {
-            event.stopPropagation();
-            onDelete(card.id);
-          }}
-        >
-          Delete
-        </button>
+        {showDelete && onDelete && (
+          <button
+            className="delete-button"
+            onClick={(event) => {
+              event.stopPropagation();
+              onDelete(card.id);
+            }}
+          >
+            Delete
+          </button>
+        )}
       </div>
     </article>
   );

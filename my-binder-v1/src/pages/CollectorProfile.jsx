@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import PageHeader from "../ui/PageHeader";
 import { collectors } from "../data/communityData";
+import "../styles/collectorProfile.css";
 
 function CollectorProfile() {
   const { collectorId } = useParams();
@@ -65,7 +66,16 @@ function CollectorProfile() {
 
         <div className="collector-detail-actions">
           <button className="primary-button">Follow Collector</button>
+
+          <Link
+            className="secondary-button"
+            to={`/community/collector/${collector.id}/binder`}
+          >
+            View Trade Binder
+          </Link>
+
           <button className="secondary-button">Request Trade</button>
+
           <Link className="secondary-button" to="/community">
             Back to Community
           </Link>

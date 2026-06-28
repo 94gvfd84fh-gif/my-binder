@@ -10,6 +10,7 @@ import CardDetails from "./pages/CardDetails";
 import Profile from "./pages/Profile";
 import PublicProfile from "./pages/PublicProfile";
 import CollectorProfile from "./pages/CollectorProfile";
+import PublicBinder from "./pages/PublicBinder";
 import "./App.css";
 
 function App() {
@@ -30,6 +31,10 @@ function App() {
           <Route
             path="/community/collector/:collectorId"
             element={<CollectorProfile />}
+          />
+          <Route
+            path="/community/collector/:collectorId/binder"
+            element={<PublicBinder />}
           />
 
           <Route path="/marketplace" element={<Marketplace />} />
