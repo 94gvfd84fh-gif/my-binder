@@ -125,6 +125,23 @@ function Profile() {
     return card.gradingCompany && card.gradingCompany !== "Raw";
   }).length;
 
+  const cardTypeCounts = ownedCards.reduce((counts, card) => {
+    const cardType = card.cardType || "Pokémon";
+
+    return {
+      ...counts,
+      [cardType]: (counts[cardType] || 0) + 1,
+    };
+  }, {});
+
+  const collectionMix = Object.entries(cardTypeCounts)
+    .map(([type, count]) => {
+      return { type, count };
+    })
+    .sort((a, b) => b.count - a.count);
+
+  const topCardType = collectionMix[0]?.type || "No cards yet";
+
   const selectedFeaturedCard = ownedCards.find((card) => {
     return String(card.id) === String(collectorProfile.featuredCardId);
   });
@@ -335,6 +352,11 @@ function Profile() {
             <strong>{collectorProfile.favoriteSet}</strong>
           </div>
 
+          <div>
+            <span>Top Card Type</span>
+            <strong>{topCardType}</strong>
+          </div>
+
           {!isPreviewingPublicProfile && (
             <div>
               <span>Location · Private</span>
@@ -374,6 +396,26 @@ function Profile() {
             <strong>{gradedCards} Cards</strong>
           </div>
         </div>
+
+        {collectionMix.length > 0 && (
+          <div className="profile-collection-mix">
+            <div className="section-header">
+              <div>
+                <h3>Collection Mix</h3>
+                <p>Your collection across card types.</p>
+              </div>
+            </div>
+
+            <div className="profile-mix-list">
+              {collectionMix.map((item) => (
+                <div key={item.type}>
+                  <span>{item.type}</span>
+                  <strong>{item.count}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="collector-social-stats">
           <div>

@@ -5,6 +5,7 @@ import { BinderContext } from "../context/BinderContext";
 import PageHeader from "../ui/PageHeader";
 
 import "../styles/publicProfile.css";
+
 const PROFILE_KEY = "pocket-deck-profile";
 
 const defaultProfile = {
@@ -29,8 +30,10 @@ function PublicProfile() {
     : defaultProfile;
 
   function getPrimaryBinder(card) {
+    if (card.status === "Wishlist") return "Wishlist";
     if (card.primaryBinder) return card.primaryBinder;
     if (card.binder) return card.binder;
+
     if (card.gradingCompany && card.gradingCompany !== "Raw") {
       return "Graded Collection";
     }
@@ -67,6 +70,23 @@ function PublicProfile() {
     return getPrimaryBinder(card) !== "Wishlist";
   });
 
+  const cardTypeCounts = ownedCards.reduce((counts, card) => {
+    const cardType = card.cardType || "Pokémon";
+
+    return {
+      ...counts,
+      [cardType]: (counts[cardType] || 0) + 1,
+    };
+  }, {});
+
+  const collectionMix = Object.entries(cardTypeCounts)
+    .map(([type, count]) => {
+      return { type, count };
+    })
+    .sort((a, b) => b.count - a.count);
+
+  const topCardType = collectionMix[0]?.type || "No cards yet";
+
   const publicBinders = binders
     .filter(isPublicBinder)
     .map((binderName) => {
@@ -93,14 +113,17 @@ function PublicProfile() {
       <PageHeader
         label="PUBLIC PROFILE"
         title={collectorProfile.username}
-        description="A public collector profile preview for Pocket Deck v0.8."
+        description="A public collector profile preview for Pocket Deck."
       />
 
       <section className="public-profile-card">
         <div className="public-profile-hero">
           <div className="collector-avatar">
             {collectorProfile.avatar ? (
-              <img src={collectorProfile.avatar} alt={collectorProfile.username} />
+              <img
+                src={collectorProfile.avatar}
+                alt={collectorProfile.username}
+              />
             ) : (
               <span>{collectorProfile.username.charAt(0)}</span>
             )}
@@ -125,6 +148,11 @@ function PublicProfile() {
           </div>
 
           <div>
+            <span>Top Card Type</span>
+            <strong>{topCardType}</strong>
+          </div>
+
+          <div>
             <span>Owned Cards</span>
             <strong>{ownedCards.length}</strong>
           </div>
@@ -134,6 +162,26 @@ function PublicProfile() {
             <strong>{publicBinders.length}</strong>
           </div>
         </div>
+
+        {collectionMix.length > 0 && (
+          <div className="public-collection-mix">
+            <div className="section-header">
+              <div>
+                <h3>Collection Mix</h3>
+                <p>Card types this collector shares publicly.</p>
+              </div>
+            </div>
+
+            <div className="public-mix-list">
+              {collectionMix.map((item) => (
+                <div key={item.type}>
+                  <span>{item.type}</span>
+                  <strong>{item.count}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {featuredCard && (
           <Link
@@ -152,7 +200,7 @@ function PublicProfile() {
               <span className="page-label">FEATURED CARD</span>
               <h3>{featuredCard.name}</h3>
               <p>{featuredCard.set || "Unknown Set"}</p>
-              <strong>${Number(featuredCard.value || 0).toLocaleString()}</strong>
+              <strong>{featuredCard.cardType || "Pokémon"}</strong>
             </div>
           </Link>
         )}
