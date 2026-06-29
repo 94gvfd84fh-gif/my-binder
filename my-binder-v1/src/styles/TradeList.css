@@ -1,0 +1,24 @@
+.trade-type-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: -14px 0 30px;
+}
+
+.trade-type-strip span,
+.trade-type-pill {
+  width: fit-content;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.16);
+  color: #93c5fd;
+  border: 1px solid rgba(147, 197, 253, 0.26);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.trade-card-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

@@ -10,6 +10,14 @@ function TradeList() {
   const tradeCards = cards.filter((card) => card.status === "For Trade");
   const saleCards = cards.filter((card) => card.status === "For Sale");
 
+  const activeTradeTypes = Array.from(
+    new Set(
+      [...tradeCards, ...saleCards].map((card) => {
+        return card.cardType || "Pokémon";
+      })
+    )
+  );
+
   function getSalePrice(card) {
     return Number(card.salePrice || 0).toLocaleString();
   }
@@ -34,10 +42,23 @@ function TradeList() {
         </div>
 
         <div>
+          <span>Card Types</span>
+          <strong>{activeTradeTypes.length || 0}</strong>
+        </div>
+
+        <div>
           <span>Status</span>
           <strong>Collector Ready</strong>
         </div>
       </section>
+
+      {activeTradeTypes.length > 0 && (
+        <section className="trade-type-strip">
+          {activeTradeTypes.map((type) => (
+            <span key={type}>{type}</span>
+          ))}
+        </section>
+      )}
 
       <section className="trade-section">
         <div className="section-header">
@@ -64,7 +85,13 @@ function TradeList() {
                 </div>
 
                 <div className="trade-card-body">
-                  <span className="trade-status-pill">Open to Trade</span>
+                  <div className="trade-card-pill-row">
+                    <span className="trade-status-pill">Open to Trade</span>
+                    <span className="trade-type-pill">
+                      {card.cardType || "Pokémon"}
+                    </span>
+                  </div>
+
                   <h3>{card.name || "Untitled Card"}</h3>
                   <p>{card.set || "Unknown set"}</p>
 
@@ -109,7 +136,13 @@ function TradeList() {
                 </div>
 
                 <div className="trade-card-body">
-                  <span className="trade-status-pill sale-pill">For Sale</span>
+                  <div className="trade-card-pill-row">
+                    <span className="trade-status-pill sale-pill">For Sale</span>
+                    <span className="trade-type-pill">
+                      {card.cardType || "Pokémon"}
+                    </span>
+                  </div>
+
                   <h3>{card.name || "Untitled Card"}</h3>
                   <p>{card.set || "Unknown set"}</p>
 
