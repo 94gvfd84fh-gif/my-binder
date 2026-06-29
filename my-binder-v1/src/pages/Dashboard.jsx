@@ -5,6 +5,7 @@ import RecentCards from "../components/RecentCards";
 import CollectionTimeline from "../components/CollectionTimeline";
 import CollectionAnalytics from "../components/CollectionAnalytics";
 import ValueAnalytics from "../components/ValueAnalytics";
+import CardTypeAnalytics from "../components/CardTypeAnalytics";
 
 function Dashboard() {
   return (
@@ -19,6 +20,7 @@ function Dashboard() {
       <QuickActions />
       <CommunitySummary />
       <CollectionAnalytics />
+      <CardTypeAnalytics />
       <ValueAnalytics />
       <RecentCards />
       <CollectionTimeline />

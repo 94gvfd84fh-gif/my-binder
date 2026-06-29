@@ -3904,4 +3904,42 @@ nav a.active {
   .collection-tools {
     grid-template-columns: 1fr;
   }
+}/* Card Type Analytics */
+
+.card-type-analytics {
+  margin-top: 40px;
+}
+
+.card-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.card-type-card {
+  padding: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(37, 99, 235, 0.1), transparent 42%),
+    rgba(15, 23, 42, 0.76);
+  box-shadow: var(--shadow-card);
+}
+
+.card-type-card span {
+  display: block;
+  min-height: 36px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card-type-card strong {
+  display: block;
+  margin-top: 12px;
+  color: var(--text-main);
+  font-size: 2rem;
 }
