@@ -27,7 +27,7 @@ function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <small>Pocket Deck v0.8</small>
+        <small>Pocket Deck v0.9</small>
         <p>Collect. Connect. Trade.</p>
       </div>
     </aside>

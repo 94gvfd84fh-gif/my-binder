@@ -282,7 +282,7 @@ function Community() {
       </section>
 
       <div className="marketplace-note">
-        <p className="page-label">V0.9 DIRECTION</p>
+        <p className="page-label">COMMUNITY FOUNDATION</p>
         <h3>A home for collectors</h3>
         <p>
           Pocket Deck is growing beyond collection management into the place

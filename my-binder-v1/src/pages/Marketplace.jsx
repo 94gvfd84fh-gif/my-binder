@@ -4,9 +4,9 @@ function Marketplace() {
   return (
     <div>
       <PageHeader
-        label="COMING IN V0.9"
-        title="Community"
-        description="The next step for Pocket Deck: discover collectors, local events, shops, trades, and marketplace opportunities."
+        label="POCKET DECK MARKETPLACE"
+        title="Marketplace"
+        description="A future place for collectors to buy, sell, trade, and connect through their collections."
       />
 
       <div className="marketplace-preview">
@@ -58,11 +58,11 @@ function Marketplace() {
 
       <div className="marketplace-note">
         <p className="page-label">FOUNDATION READY</p>
-        <h3>v0.8 prepares the community layer</h3>
+        <h3>The marketplace layer is taking shape</h3>
         <p>
-          Public profiles, public binders, trade lists, wishlists, and sale
-          prices are now structured so Pocket Deck can grow into a collector
-          community in v0.9.
+          Public profiles, public binders, trade lists, wishlists, sale prices,
+          and card types are now structured so Pocket Deck can grow into a full
+          collector marketplace and community.
         </p>
       </div>
     </div>

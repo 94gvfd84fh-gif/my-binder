@@ -113,7 +113,7 @@ function PublicProfile() {
       <PageHeader
         label="PUBLIC PROFILE"
         title={collectorProfile.username}
-        description="A public collector profile preview for Pocket Deck."
+        description="Preview your collector identity, featured card, and public binders."
       />
 
       <section className="public-profile-card">
