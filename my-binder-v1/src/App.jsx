@@ -13,6 +13,7 @@ import PublicProfile from "./pages/PublicProfile";
 import CollectorProfile from "./pages/CollectorProfile";
 import PublicBinder from "./pages/PublicBinder";
 import PublicCardDetails from "./pages/PublicCardDetails";
+import Auth from "./pages/Auth";
 import "./App.css";
 
 function App() {
@@ -27,10 +28,11 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/auth" element={<Auth />} />
+
           <Route path="/collection" element={<Collection />} />
           <Route path="/collection/:id" element={<CardDetails />} />
           <Route path="/binder" element={<Binder />} />
-
           <Route path="/trade-list" element={<TradeList />} />
 
           <Route path="/community" element={<Community />} />
@@ -48,7 +50,6 @@ function App() {
           />
 
           <Route path="/marketplace" element={<Marketplace />} />
-
           <Route path="/profile" element={<Profile />} />
           <Route path="/u/collector" element={<PublicProfile />} />
         </Routes>

@@ -23,6 +23,7 @@ function Sidebar() {
         <NavLink to="/trade-list">🔁 Trade & Sale</NavLink>
         <NavLink to="/community">🌐 Community</NavLink>
         <NavLink to="/profile">⚙️ Profile</NavLink>
+        <NavLink to="/auth">🔐 Account</NavLink>
         <NavLink to="/u/collector">👤 Public Profile</NavLink>
       </nav>
 
