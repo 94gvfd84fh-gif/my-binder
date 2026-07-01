@@ -1,4 +1,9 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { AuthContext } from "./AuthContext";
+import {
+  getBinderSettings,
+  saveBinderSettings,
+} from "../services/binderService";
 
 export const BinderContext = createContext();
 
@@ -28,63 +33,71 @@ const defaultBinderVisibility = {
   Wishlist: BINDER_VISIBILITY.PRIVATE,
 };
 
+function getStoredBinders() {
+  const savedBinders = localStorage.getItem(BINDERS_STORAGE_KEY);
+
+  if (savedBinders) {
+    try {
+      const parsedBinders = JSON.parse(savedBinders);
+
+      if (Array.isArray(parsedBinders) && parsedBinders.length > 0) {
+        return parsedBinders;
+      }
+    } catch {
+      return defaultBinders;
+    }
+  }
+
+  return defaultBinders;
+}
+
+function getStoredGoals() {
+  const savedGoals = localStorage.getItem(GOALS_STORAGE_KEY);
+
+  if (savedGoals) {
+    try {
+      const parsedGoals = JSON.parse(savedGoals);
+
+      if (parsedGoals && typeof parsedGoals === "object") {
+        return parsedGoals;
+      }
+    } catch {
+      return {};
+    }
+  }
+
+  return {};
+}
+
+function getStoredVisibility() {
+  const savedVisibility = localStorage.getItem(VISIBILITY_STORAGE_KEY);
+
+  if (savedVisibility) {
+    try {
+      const parsedVisibility = JSON.parse(savedVisibility);
+
+      if (parsedVisibility && typeof parsedVisibility === "object") {
+        return {
+          ...defaultBinderVisibility,
+          ...parsedVisibility,
+        };
+      }
+    } catch {
+      return defaultBinderVisibility;
+    }
+  }
+
+  return defaultBinderVisibility;
+}
+
 function BinderProvider({ children }) {
-  const [binders, setBinders] = useState(() => {
-    const savedBinders = localStorage.getItem(BINDERS_STORAGE_KEY);
+  const { user, authLoading } = useContext(AuthContext);
 
-    if (savedBinders) {
-      try {
-        const parsedBinders = JSON.parse(savedBinders);
-
-        if (Array.isArray(parsedBinders) && parsedBinders.length > 0) {
-          return parsedBinders;
-        }
-      } catch {
-        return defaultBinders;
-      }
-    }
-
-    return defaultBinders;
-  });
-
-  const [binderGoals, setBinderGoals] = useState(() => {
-    const savedGoals = localStorage.getItem(GOALS_STORAGE_KEY);
-
-    if (savedGoals) {
-      try {
-        const parsedGoals = JSON.parse(savedGoals);
-
-        if (parsedGoals && typeof parsedGoals === "object") {
-          return parsedGoals;
-        }
-      } catch {
-        return {};
-      }
-    }
-
-    return {};
-  });
-
-  const [binderVisibility, setBinderVisibility] = useState(() => {
-    const savedVisibility = localStorage.getItem(VISIBILITY_STORAGE_KEY);
-
-    if (savedVisibility) {
-      try {
-        const parsedVisibility = JSON.parse(savedVisibility);
-
-        if (parsedVisibility && typeof parsedVisibility === "object") {
-          return {
-            ...defaultBinderVisibility,
-            ...parsedVisibility,
-          };
-        }
-      } catch {
-        return defaultBinderVisibility;
-      }
-    }
-
-    return defaultBinderVisibility;
-  });
+  const [binders, setBinders] = useState(getStoredBinders);
+  const [binderGoals, setBinderGoals] = useState(getStoredGoals);
+  const [binderVisibility, setBinderVisibility] = useState(getStoredVisibility);
+  const [binderSettingsLoading, setBinderSettingsLoading] = useState(false);
+  const [binderSettingsError, setBinderSettingsError] = useState("");
 
   useEffect(() => {
     localStorage.setItem(BINDERS_STORAGE_KEY, JSON.stringify(binders));
@@ -100,6 +113,67 @@ function BinderProvider({ children }) {
       JSON.stringify(binderVisibility)
     );
   }, [binderVisibility]);
+
+  useEffect(() => {
+    async function loadSupabaseBinderSettings() {
+      if (authLoading || !user) {
+        return;
+      }
+
+      setBinderSettingsLoading(true);
+      setBinderSettingsError("");
+
+      try {
+        const settings = await getBinderSettings(user.id);
+
+        if (settings) {
+          const savedBinders =
+            Array.isArray(settings.binders) && settings.binders.length > 0
+              ? Array.from(new Set([...defaultBinders, ...settings.binders]))
+              : defaultBinders;
+
+          setBinders(savedBinders);
+          setBinderGoals(settings.binder_goals || {});
+          setBinderVisibility({
+            ...defaultBinderVisibility,
+            ...(settings.binder_visibility || {}),
+          });
+        } else {
+          await saveBinderSettings({
+            userId: user.id,
+            binders,
+            binderGoals,
+            binderVisibility,
+          });
+        }
+      } catch (error) {
+        setBinderSettingsError(error.message);
+      }
+
+      setBinderSettingsLoading(false);
+    }
+
+    loadSupabaseBinderSettings();
+  }, [user, authLoading]);
+
+  async function persistBinderSettings(nextBinders, nextGoals, nextVisibility) {
+    if (!user) {
+      return;
+    }
+
+    setBinderSettingsError("");
+
+    try {
+      await saveBinderSettings({
+        userId: user.id,
+        binders: nextBinders,
+        binderGoals: nextGoals,
+        binderVisibility: nextVisibility,
+      });
+    } catch (error) {
+      setBinderSettingsError(error.message);
+    }
+  }
 
   function isDefaultBinder(name) {
     return defaultBinders.some((binder) => {
@@ -118,12 +192,13 @@ function BinderProvider({ children }) {
   }
 
   function setBinderVisibilityStatus(name, visibility) {
-    setBinderVisibility((currentVisibility) => {
-      return {
-        ...currentVisibility,
-        [name]: visibility,
-      };
-    });
+    const updatedVisibility = {
+      ...binderVisibility,
+      [name]: visibility,
+    };
+
+    setBinderVisibility(updatedVisibility);
+    persistBinderSettings(binders, binderGoals, updatedVisibility);
   }
 
   function addBinder(name) {
@@ -133,14 +208,15 @@ function BinderProvider({ children }) {
       return false;
     }
 
-    setBinders([...binders, trimmedName]);
+    const updatedBinders = [...binders, trimmedName];
+    const updatedVisibility = {
+      ...binderVisibility,
+      [trimmedName]: BINDER_VISIBILITY.PRIVATE,
+    };
 
-    setBinderVisibility((currentVisibility) => {
-      return {
-        ...currentVisibility,
-        [trimmedName]: BINDER_VISIBILITY.PRIVATE,
-      };
-    });
+    setBinders(updatedBinders);
+    setBinderVisibility(updatedVisibility);
+    persistBinderSettings(updatedBinders, binderGoals, updatedVisibility);
 
     return true;
   }
@@ -164,26 +240,22 @@ function BinderProvider({ children }) {
       return binder;
     });
 
+    const updatedGoals = { ...binderGoals };
+
+    if (updatedGoals[oldName]) {
+      updatedGoals[trimmedName] = updatedGoals[oldName];
+      delete updatedGoals[oldName];
+    }
+
+    const updatedVisibility = { ...binderVisibility };
+    updatedVisibility[trimmedName] =
+      updatedVisibility[oldName] || BINDER_VISIBILITY.PRIVATE;
+    delete updatedVisibility[oldName];
+
     setBinders(updatedBinders);
-
-    setBinderGoals((currentGoals) => {
-      const updatedGoals = { ...currentGoals };
-
-      if (updatedGoals[oldName]) {
-        updatedGoals[trimmedName] = updatedGoals[oldName];
-        delete updatedGoals[oldName];
-      }
-
-      return updatedGoals;
-    });
-
-    setBinderVisibility((currentVisibility) => {
-      const updatedVisibility = { ...currentVisibility };
-      updatedVisibility[trimmedName] =
-        updatedVisibility[oldName] || BINDER_VISIBILITY.PRIVATE;
-      delete updatedVisibility[oldName];
-      return updatedVisibility;
-    });
+    setBinderGoals(updatedGoals);
+    setBinderVisibility(updatedVisibility);
+    persistBinderSettings(updatedBinders, updatedGoals, updatedVisibility);
 
     return true;
   }
@@ -194,71 +266,64 @@ function BinderProvider({ children }) {
     }
 
     const updatedBinders = binders.filter((binder) => binder !== name);
+
+    const updatedGoals = { ...binderGoals };
+    delete updatedGoals[name];
+
+    const updatedVisibility = { ...binderVisibility };
+    delete updatedVisibility[name];
+
     setBinders(updatedBinders);
-
-    setBinderGoals((currentGoals) => {
-      const updatedGoals = { ...currentGoals };
-      delete updatedGoals[name];
-      return updatedGoals;
-    });
-
-    setBinderVisibility((currentVisibility) => {
-      const updatedVisibility = { ...currentVisibility };
-      delete updatedVisibility[name];
-      return updatedVisibility;
-    });
+    setBinderGoals(updatedGoals);
+    setBinderVisibility(updatedVisibility);
+    persistBinderSettings(updatedBinders, updatedGoals, updatedVisibility);
 
     return true;
   }
 
   function setBinderGoal(name, targetCount) {
     const numericTarget = Number(targetCount);
+    const updatedGoals = { ...binderGoals };
 
-    setBinderGoals((currentGoals) => {
-      const updatedGoals = { ...currentGoals };
-
-      if (!numericTarget || numericTarget < 1) {
-        delete updatedGoals[name];
-        return updatedGoals;
-      }
-
+    if (!numericTarget || numericTarget < 1) {
+      delete updatedGoals[name];
+    } else {
       updatedGoals[name] = numericTarget;
-      return updatedGoals;
-    });
+    }
+
+    setBinderGoals(updatedGoals);
+    persistBinderSettings(binders, updatedGoals, binderVisibility);
   }
 
   function replaceBinders(importedBinders) {
-    if (!Array.isArray(importedBinders) || importedBinders.length === 0) {
-      setBinders(defaultBinders);
-      return;
-    }
+    const updatedBinders =
+      !Array.isArray(importedBinders) || importedBinders.length === 0
+        ? defaultBinders
+        : Array.from(new Set([...defaultBinders, ...importedBinders]));
 
-    const mergedBinders = Array.from(
-      new Set([...defaultBinders, ...importedBinders])
-    );
-
-    setBinders(mergedBinders);
+    setBinders(updatedBinders);
+    persistBinderSettings(updatedBinders, binderGoals, binderVisibility);
   }
 
   function replaceBinderGoals(importedGoals) {
-    if (!importedGoals || typeof importedGoals !== "object") {
-      setBinderGoals({});
-      return;
-    }
+    const updatedGoals =
+      !importedGoals || typeof importedGoals !== "object" ? {} : importedGoals;
 
-    setBinderGoals(importedGoals);
+    setBinderGoals(updatedGoals);
+    persistBinderSettings(binders, updatedGoals, binderVisibility);
   }
 
   function replaceBinderVisibility(importedVisibility) {
-    if (!importedVisibility || typeof importedVisibility !== "object") {
-      setBinderVisibility(defaultBinderVisibility);
-      return;
-    }
+    const updatedVisibility =
+      !importedVisibility || typeof importedVisibility !== "object"
+        ? defaultBinderVisibility
+        : {
+            ...defaultBinderVisibility,
+            ...importedVisibility,
+          };
 
-    setBinderVisibility({
-      ...defaultBinderVisibility,
-      ...importedVisibility,
-    });
+    setBinderVisibility(updatedVisibility);
+    persistBinderSettings(binders, binderGoals, updatedVisibility);
   }
 
   return (
@@ -269,6 +334,8 @@ function BinderProvider({ children }) {
         binderGoals,
         setBinderGoals,
         binderVisibility,
+        binderSettingsLoading,
+        binderSettingsError,
         BINDER_VISIBILITY,
         addBinder,
         renameBinder,
