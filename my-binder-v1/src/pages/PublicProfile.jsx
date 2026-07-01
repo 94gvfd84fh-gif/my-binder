@@ -1,7 +1,9 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
+import { AuthContext } from "../context/AuthContext";
+import { getProfile } from "../services/profileService";
 import PageHeader from "../ui/PageHeader";
 
 import "../styles/publicProfile.css";
@@ -19,15 +21,70 @@ const defaultProfile = {
   featuredCardId: "",
 };
 
+function toAppProfile(profile) {
+  if (!profile) {
+    return defaultProfile;
+  }
+
+  return {
+    ...defaultProfile,
+    username: profile.username || defaultProfile.username,
+    favoriteTcg: profile.favorite_tcg || defaultProfile.favoriteTcg,
+    favoriteSet: profile.favorite_set || defaultProfile.favoriteSet,
+    location: profile.location || defaultProfile.location,
+    collectorSince: profile.collector_since || defaultProfile.collectorSince,
+    bio: profile.bio || defaultProfile.bio,
+    avatar: profile.avatar || "",
+    featuredCardId: profile.featured_card_id || "",
+  };
+}
+
+function getStoredProfile() {
+  const savedProfile = localStorage.getItem(PROFILE_KEY);
+
+  if (savedProfile) {
+    try {
+      return {
+        ...defaultProfile,
+        ...JSON.parse(savedProfile),
+      };
+    } catch {
+      return defaultProfile;
+    }
+  }
+
+  return defaultProfile;
+}
+
 function PublicProfile() {
+  const { user } = useContext(AuthContext);
   const { cards } = useContext(CardContext);
   const { binders, BINDER_VISIBILITY, getBinderVisibility } =
     useContext(BinderContext);
 
-  const savedProfile = localStorage.getItem(PROFILE_KEY);
-  const collectorProfile = savedProfile
-    ? { ...defaultProfile, ...JSON.parse(savedProfile) }
-    : defaultProfile;
+  const [collectorProfile, setCollectorProfile] = useState(getStoredProfile);
+
+  useEffect(() => {
+    async function loadSupabaseProfile() {
+      if (!user) {
+        return;
+      }
+
+      try {
+        const supabaseProfile = await getProfile(user.id);
+
+        if (supabaseProfile) {
+          const appProfile = toAppProfile(supabaseProfile);
+          setCollectorProfile(appProfile);
+          localStorage.setItem(PROFILE_KEY, JSON.stringify(appProfile));
+        }
+      } catch {
+        // Keep the public preview usable even if Supabase profile loading fails.
+      }
+    }
+
+    loadSupabaseProfile();
+  }, [user]);
 
   function getPrimaryBinder(card) {
     if (card.status === "Wishlist") return "Wishlist";

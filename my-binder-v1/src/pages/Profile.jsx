@@ -1,8 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
+import { AuthContext } from "../context/AuthContext";
 import { STORAGE_KEYS } from "../constants/storageKeys";
+import { getProfile, saveProfile } from "../services/profileService";
 import PageHeader from "../ui/PageHeader";
 import "../styles/profile.css";
 
@@ -30,7 +32,58 @@ function getSavedCount(key) {
   }
 }
 
+function toAppProfile(profile) {
+  if (!profile) {
+    return defaultProfile;
+  }
+
+  return {
+    ...defaultProfile,
+    username: profile.username || defaultProfile.username,
+    favoriteTcg: profile.favorite_tcg || defaultProfile.favoriteTcg,
+    favoriteSet: profile.favorite_set || defaultProfile.favoriteSet,
+    location: profile.location || defaultProfile.location,
+    collectorSince: profile.collector_since || defaultProfile.collectorSince,
+    bio: profile.bio || defaultProfile.bio,
+    avatar: profile.avatar || "",
+    featuredCardId: profile.featured_card_id || "",
+  };
+}
+
+function toDatabaseProfile(profile, userId) {
+  return {
+    id: userId,
+    username: profile.username || defaultProfile.username,
+    favorite_tcg: profile.favoriteTcg || "",
+    favorite_set: profile.favoriteSet || "",
+    location: profile.location || "",
+    collector_since: profile.collectorSince || "",
+    bio: profile.bio || "",
+    avatar: profile.avatar || "",
+    featured_card_id: profile.featuredCardId || "",
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function getStoredProfile() {
+  const savedProfile = localStorage.getItem(STORAGE_KEYS.profile);
+
+  if (savedProfile) {
+    try {
+      return {
+        ...defaultProfile,
+        ...JSON.parse(savedProfile),
+      };
+    } catch {
+      return defaultProfile;
+    }
+  }
+
+  return defaultProfile;
+}
+
 function Profile() {
+  const { user } = useContext(AuthContext);
   const { cards, setCards } = useContext(CardContext);
   const {
     binders,
@@ -46,23 +99,35 @@ function Profile() {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isPreviewingPublicProfile, setIsPreviewingPublicProfile] =
     useState(false);
+  const [collectorProfile, setCollectorProfile] = useState(getStoredProfile);
+  const [profileMessage, setProfileMessage] = useState("");
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
-  const [collectorProfile, setCollectorProfile] = useState(() => {
-    const savedProfile = localStorage.getItem(STORAGE_KEYS.profile);
+  useEffect(() => {
+    async function loadSupabaseProfile() {
+      if (!user) {
+        return;
+      }
 
-    if (savedProfile) {
       try {
-        return {
-          ...defaultProfile,
-          ...JSON.parse(savedProfile),
-        };
-      } catch {
-        return defaultProfile;
+        const supabaseProfile = await getProfile(user.id);
+
+        if (supabaseProfile) {
+          const appProfile = toAppProfile(supabaseProfile);
+          setCollectorProfile(appProfile);
+          localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(appProfile));
+          return;
+        }
+
+        await saveProfile(toDatabaseProfile(collectorProfile, user.id));
+        setProfileMessage("Your profile is connected to Supabase.");
+      } catch (error) {
+        setProfileMessage(error.message);
       }
     }
 
-    return defaultProfile;
-  });
+    loadSupabaseProfile();
+  }, [user]);
 
   const followedCollectors = getSavedCount(STORAGE_KEYS.followedCollectors);
 
@@ -167,6 +232,26 @@ function Profile() {
     };
   });
 
+  async function persistProfile(updatedProfile) {
+    localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(updatedProfile));
+
+    if (!user) {
+      return;
+    }
+
+    setIsSavingProfile(true);
+    setProfileMessage("");
+
+    try {
+      await saveProfile(toDatabaseProfile(updatedProfile, user.id));
+      setProfileMessage("Profile saved.");
+    } catch (error) {
+      setProfileMessage(error.message);
+    }
+
+    setIsSavingProfile(false);
+  }
+
   function updateProfile(field, value) {
     setCollectorProfile((currentProfile) => {
       const updatedProfile = {
@@ -174,7 +259,7 @@ function Profile() {
         [field]: value,
       };
 
-      localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(updatedProfile));
+      persistProfile(updatedProfile);
       return updatedProfile;
     });
   }
@@ -188,7 +273,7 @@ function Profile() {
     };
 
     setCollectorProfile(updatedProfile);
-    localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(updatedProfile));
+    persistProfile(updatedProfile);
   }
 
   function handleAvatarUpload(event) {
@@ -288,6 +373,8 @@ function Profile() {
         description="Build your collector identity before Pocket Deck becomes social."
       />
 
+      {profileMessage && <p className="auth-message">{profileMessage}</p>}
+
       <section className="collector-profile-card">
         <div className="collector-profile-top">
           <div className="collector-avatar">
@@ -337,6 +424,10 @@ function Profile() {
           <div className="public-preview-banner">
             This is how your profile will look to other collectors.
           </div>
+        )}
+
+        {isSavingProfile && (
+          <div className="public-preview-banner">Saving profile...</div>
         )}
 
         <p className="collector-bio">"{collectorProfile.bio}"</p>
