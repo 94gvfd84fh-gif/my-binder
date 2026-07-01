@@ -46,7 +46,7 @@ function CollectionAnalytics() {
       <div className="section-header">
         <div>
           <h2>Collection Analytics</h2>
-          <p>A quick read on how your Pocket Deck is organized.</p>
+          <p>A quick read on how your Beacon Collect is organized.</p>
         </div>
       </div>
 

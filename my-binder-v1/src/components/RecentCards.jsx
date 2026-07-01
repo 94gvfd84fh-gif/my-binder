@@ -47,7 +47,7 @@ function RecentCards() {
         <div className="section-header">
           <div>
             <h2>Start Your Collection</h2>
-            <p>Add your first card and Pocket Deck will build your dashboard around it.</p>
+            <p>Add your first card and Beacon Collect will build your dashboard around it.</p>
           </div>
         </div>
 
@@ -93,7 +93,7 @@ function RecentCards() {
           <div className="section-header">
             <div>
               <h2>Recent Additions</h2>
-              <p>The newest owned cards added to your Pocket Deck.</p>
+              <p>The newest owned cards added to your Beacon Collect.</p>
             </div>
           </div>
 

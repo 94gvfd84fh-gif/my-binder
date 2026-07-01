@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "../ui/PageHeader";
 import CommunityCard from "../ui/CommunityCard";
 import { STORAGE_KEYS } from "../constants/storageKeys";
+import { getPublicStoreEvents } from "../services/storeEventService";
 import {
   collectors,
   communityFeatures,
@@ -18,7 +19,29 @@ function getFeatureTarget(feature) {
   return "#upcoming-events";
 }
 
+function normalizeStoreEvent(event) {
+  return {
+    id: `store-${event.id}`,
+    type: event.event_type || "STORE EVENT",
+    title: event.title || "Store Event",
+    date: event.event_date || "",
+    time: event.event_time || "",
+    location: event.location || "",
+    details: event.details || "",
+    flyer: event.event_flyer || "",
+    isStorePosted: true,
+  };
+}
+
+function textIncludes(value, searchText) {
+  return String(value || "").toLowerCase().includes(searchText);
+}
+
 function Community() {
+  const [search, setSearch] = useState("");
+  const [storeEvents, setStoreEvents] = useState([]);
+  const [communityMessage, setCommunityMessage] = useState("");
+
   const [savedEvents, setSavedEvents] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.savedEvents);
     if (!saved) return [];
@@ -52,7 +75,59 @@ function Community() {
     }
   });
 
-  const savedEventDetails = upcomingEvents.filter((event) => {
+  useEffect(() => {
+    async function loadStoreEvents() {
+      try {
+        const publicEvents = await getPublicStoreEvents();
+        setStoreEvents(publicEvents.map(normalizeStoreEvent));
+      } catch (error) {
+        setCommunityMessage(error.message);
+      }
+    }
+
+    loadStoreEvents();
+  }, []);
+
+  const searchText = search.trim().toLowerCase();
+
+  const allEvents = [...storeEvents, ...upcomingEvents];
+
+  const filteredEvents = allEvents.filter((event) => {
+    if (!searchText) return true;
+
+    return (
+      textIncludes(event.title, searchText) ||
+      textIncludes(event.type, searchText) ||
+      textIncludes(event.location, searchText) ||
+      textIncludes(event.details, searchText)
+    );
+  });
+
+  const filteredShops = localShops.filter((shop) => {
+    if (!searchText) return true;
+
+    return (
+      textIncludes(shop.name, searchText) ||
+      textIncludes(shop.area, searchText) ||
+      textIncludes(shop.distance, searchText) ||
+      textIncludes(shop.eventType, searchText) ||
+      textIncludes(shop.specialties, searchText)
+    );
+  });
+
+  const filteredCollectors = collectors.filter((collector) => {
+    if (!searchText) return true;
+
+    return (
+      textIncludes(collector.username, searchText) ||
+      textIncludes(collector.favoriteTcg, searchText) ||
+      textIncludes(collector.style, searchText) ||
+      textIncludes(collector.tradeStatus, searchText) ||
+      textIncludes(collector.featuredCard, searchText)
+    );
+  });
+
+  const savedEventDetails = allEvents.filter((event) => {
     return savedEvents.includes(event.id);
   });
 
@@ -99,10 +174,23 @@ function Community() {
   return (
     <div>
       <PageHeader
-        label="POCKET DECK COMMUNITY"
+        label="BEACON COLLECT COMMUNITY"
         title="Community"
         description="Find collectors, events, shops, trades, and marketplace opportunities around the hobby."
       />
+
+      <div className="community-search-card">
+        <p className="page-label">DISCOVER</p>
+        <h2>Find collectors, shops, and events</h2>
+        <input
+          type="search"
+          placeholder="Search events, shops, collectors, city, or state..."
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+      </div>
+
+      {communityMessage && <p className="auth-message">{communityMessage}</p>}
 
       <div className="marketplace-preview">
         {communityFeatures.map((feature) => {
@@ -169,28 +257,40 @@ function Community() {
         <div className="section-header">
           <div>
             <h2>Upcoming Events</h2>
-            <p>Preview local shows, trade nights, conventions, and shop events.</p>
+            <p>
+              Store-posted events, local shows, trade nights, conventions, and
+              shop events.
+            </p>
           </div>
         </div>
 
-        <div className="community-events-grid">
-          {upcomingEvents.map((event) => {
-            const isSaved = savedEvents.includes(event.id);
+        {filteredEvents.length > 0 ? (
+          <div className="community-events-grid">
+            {filteredEvents.map((event) => {
+              const isSaved = savedEvents.includes(event.id);
 
-            return (
-              <CommunityCard
-                key={event.id}
-                label={event.type}
-                title={event.title}
-                details={[event.date, event.time, event.location]}
-                description={event.details}
-                buttonText={isSaved ? "Saved" : "Save Event"}
-                buttonClassName={isSaved ? "saved-event-button" : ""}
-                onButtonClick={() => toggleSavedEvent(event.id)}
-              />
-            );
-          })}
-        </div>
+              return (
+                <CommunityCard
+                  key={event.id}
+                  label={
+                    event.isStorePosted ? `STORE ${event.type}` : event.type
+                  }
+                  title={event.title}
+                  details={[event.date, event.time, event.location]}
+                  description={event.details}
+                  buttonText={isSaved ? "Saved" : "Save Event"}
+                  buttonClassName={isSaved ? "saved-event-button" : ""}
+                  onButtonClick={() => toggleSavedEvent(event.id)}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="profile-empty-note">
+            <p>No matching events found.</p>
+            <span>Try searching a different city, event type, or shop.</span>
+          </div>
+        )}
       </section>
 
       {savedShopDetails.length > 0 && (
@@ -227,24 +327,31 @@ function Community() {
           </div>
         </div>
 
-        <div className="community-events-grid">
-          {localShops.map((shop) => {
-            const isSaved = savedShops.includes(shop.id);
+        {filteredShops.length > 0 ? (
+          <div className="community-events-grid">
+            {filteredShops.map((shop) => {
+              const isSaved = savedShops.includes(shop.id);
 
-            return (
-              <CommunityCard
-                key={shop.id}
-                label="LOCAL SHOP"
-                title={shop.name}
-                details={[shop.area, shop.distance, shop.eventType]}
-                description={shop.specialties}
-                buttonText={isSaved ? "Saved" : "Save Shop"}
-                buttonClassName={isSaved ? "saved-event-button" : ""}
-                onButtonClick={() => toggleSavedShop(shop.id)}
-              />
-            );
-          })}
-        </div>
+              return (
+                <CommunityCard
+                  key={shop.id}
+                  label="LOCAL SHOP"
+                  title={shop.name}
+                  details={[shop.area, shop.distance, shop.eventType]}
+                  description={shop.specialties}
+                  buttonText={isSaved ? "Saved" : "Save Shop"}
+                  buttonClassName={isSaved ? "saved-event-button" : ""}
+                  onButtonClick={() => toggleSavedShop(shop.id)}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="profile-empty-note">
+            <p>No matching shops found.</p>
+            <span>Try searching by city, area, or shop name.</span>
+          </div>
+        )}
       </section>
 
       <section className="community-events-section" id="discover-collectors">
@@ -255,37 +362,44 @@ function Community() {
           </div>
         </div>
 
-        <div className="community-events-grid">
-          {collectors.map((collector) => {
-            const isFollowing = followedCollectors.includes(collector.id);
+        {filteredCollectors.length > 0 ? (
+          <div className="community-events-grid">
+            {filteredCollectors.map((collector) => {
+              const isFollowing = followedCollectors.includes(collector.id);
 
-            return (
-              <CommunityCard
-                key={collector.id}
-                label={`${collector.favoriteTcg} COLLECTOR`}
-                title={collector.username}
-                details={[
-                  collector.style,
-                  `${collector.publicBinders} public binders`,
-                  collector.tradeStatus,
-                  `Featured: ${collector.featuredCard}`,
-                ]}
-                linkTo={`/community/collector/${collector.id}`}
-                linkText="View Profile"
-                buttonText={isFollowing ? "Following" : "Follow Preview"}
-                buttonClassName={isFollowing ? "saved-event-button" : ""}
-                onButtonClick={() => toggleFollowCollector(collector.id)}
-              />
-            );
-          })}
-        </div>
+              return (
+                <CommunityCard
+                  key={collector.id}
+                  label={`${collector.favoriteTcg} COLLECTOR`}
+                  title={collector.username}
+                  details={[
+                    collector.style,
+                    `${collector.publicBinders} public binders`,
+                    collector.tradeStatus,
+                    `Featured: ${collector.featuredCard}`,
+                  ]}
+                  linkTo={`/community/collector/${collector.id}`}
+                  linkText="View Profile"
+                  buttonText={isFollowing ? "Following" : "Follow Preview"}
+                  buttonClassName={isFollowing ? "saved-event-button" : ""}
+                  onButtonClick={() => toggleFollowCollector(collector.id)}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="profile-empty-note">
+            <p>No matching collectors found.</p>
+            <span>Try searching by name, TCG, trade status, or style.</span>
+          </div>
+        )}
       </section>
 
       <div className="marketplace-note">
         <p className="page-label">COMMUNITY FOUNDATION</p>
         <h3>A home for collectors</h3>
         <p>
-          Pocket Deck is growing beyond collection management into the place
+          Beacon Collect is growing beyond collection management into the place
           collectors use to connect, trade, discover events, support shops, and
           build reputation.
         </p>

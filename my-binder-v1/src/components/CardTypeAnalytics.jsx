@@ -37,7 +37,7 @@ function CardTypeAnalytics() {
       <div className="section-header">
         <div>
           <h2>Card Types</h2>
-          <p>See how your Pocket Deck is spread across different hobbies.</p>
+          <p>See how your Beacon Collect is spread across different hobbies.</p>
         </div>
       </div>
 

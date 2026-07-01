@@ -1,60 +1,81 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { getFeedback, saveFeedback } from "../services/feedbackService";
 import PageHeader from "../ui/PageHeader";
-
-const FEEDBACK_KEY = "pocket-deck-feedback";
-
-function getSavedFeedback() {
-  const saved = localStorage.getItem(FEEDBACK_KEY);
-
-  if (!saved) {
-    return [];
-  }
-
-  try {
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
 
 function Feedback() {
   const { user } = useContext(AuthContext);
   const [feedbackType, setFeedbackType] = useState("Bug");
   const [message, setMessage] = useState("");
-  const [savedFeedback, setSavedFeedback] = useState(getSavedFeedback);
+  const [savedFeedback, setSavedFeedback] = useState([]);
   const [statusMessage, setStatusMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-  function handleSubmit(event) {
+  useEffect(() => {
+    async function loadFeedback() {
+      if (!user) {
+        return;
+      }
+
+      setIsLoading(true);
+      setStatusMessage("");
+
+      try {
+        const feedback = await getFeedback(user.id);
+        setSavedFeedback(feedback);
+      } catch (error) {
+        setStatusMessage(error.message);
+      }
+
+      setIsLoading(false);
+    }
+
+    loadFeedback();
+  }, [user]);
+
+  async function handleSubmit(event) {
     event.preventDefault();
+
+    if (!user) {
+      setStatusMessage("Sign in before sending feedback.");
+      return;
+    }
 
     if (!message.trim()) {
       setStatusMessage("Write a quick note first.");
       return;
     }
 
-    const newFeedback = {
-      id: Date.now(),
-      type: feedbackType,
-      message: message.trim(),
-      email: user?.email || "",
-      createdAt: new Date().toISOString(),
-    };
+    setIsSaving(true);
+    setStatusMessage("");
 
-    const updatedFeedback = [newFeedback, ...savedFeedback];
+    try {
+      const newFeedback = await saveFeedback({
+        userId: user.id,
+        email: user.email,
+        type: feedbackType,
+        message: message.trim(),
+      });
 
-    setSavedFeedback(updatedFeedback);
-    localStorage.setItem(FEEDBACK_KEY, JSON.stringify(updatedFeedback));
+      setSavedFeedback((currentFeedback) => [
+        newFeedback,
+        ...currentFeedback,
+      ]);
 
-    setMessage("");
-    setStatusMessage("Feedback saved. Thank you.");
+      setMessage("");
+      setStatusMessage("Feedback sent. Thank you.");
+    } catch (error) {
+      setStatusMessage(error.message);
+    }
+
+    setIsSaving(false);
   }
 
   return (
     <div>
       <PageHeader
-        label="POCKET DECK BETA"
+        label="BEACON COLLECT BETA"
         title="Feedback"
         description="Share bugs, ideas, polish notes, or anything that feels confusing."
       />
@@ -80,31 +101,41 @@ function Feedback() {
           onChange={(event) => setMessage(event.target.value)}
         ></textarea>
 
-        <button className="primary-button" type="submit">
-          Send Feedback
+        <button className="primary-button" type="submit" disabled={isSaving}>
+          {isSaving ? "Sending..." : "Send Feedback"}
         </button>
 
         {statusMessage && <p className="auth-message">{statusMessage}</p>}
       </form>
 
-      {savedFeedback.length > 0 && (
-        <section className="feedback-list">
-          <div className="section-header">
-            <div>
-              <h2>Saved Feedback</h2>
-              <p>Feedback is saved locally for now.</p>
-            </div>
+      <section className="feedback-list">
+        <div className="section-header">
+          <div>
+            <h2>Submitted Feedback</h2>
+            <p>Your feedback is saved to Beacon Collect.</p>
           </div>
+        </div>
 
-          {savedFeedback.map((item) => (
+        {isLoading ? (
+          <div className="empty-state-card">
+            <h2>Loading feedback</h2>
+            <p>Getting your saved feedback from Beacon Collect.</p>
+          </div>
+        ) : savedFeedback.length > 0 ? (
+          savedFeedback.map((item) => (
             <article className="feedback-item" key={item.id}>
               <span>{item.type}</span>
               <p>{item.message}</p>
-              <small>{new Date(item.createdAt).toLocaleString()}</small>
+              <small>{new Date(item.created_at).toLocaleString()}</small>
             </article>
-          ))}
-        </section>
-      )}
+          ))
+        ) : (
+          <div className="empty-state-card">
+            <h2>No feedback yet</h2>
+            <p>Send your first note when something feels confusing or worth improving.</p>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

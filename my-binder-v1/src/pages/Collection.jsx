@@ -158,7 +158,7 @@ function Collection() {
       )}
 
       <PageHeader
-        label="POCKET DECK COLLECTION"
+        label="BEACON COLLECT COLLECTION"
         title="Your Cards"
         description="Search, sort, favorite, and organize every card in your collection."
         action={
@@ -176,7 +176,7 @@ function Collection() {
       {cardsLoading && (
         <div className="empty-state-card">
           <h2>Updating collection</h2>
-          <p>Saving your Pocket Deck changes.</p>
+          <p>Saving your Beacon Collect changes.</p>
         </div>
       )}
 
@@ -239,7 +239,7 @@ function Collection() {
           <h2>No cards found</h2>
           <p>
             Add a card or adjust your search and filters to keep building your
-            Pocket Deck.
+            Beacon Collect.
           </p>
           <button
             className="primary-button"

@@ -3,17 +3,19 @@ import { NavLink } from "react-router-dom";
 function Sidebar() {
   return (
     <aside className="sidebar">
-      <div className="logo">
-        <div className="pocket-deck-logo" aria-hidden="true">
-          <span className="logo-card logo-card-back"></span>
-          <span className="logo-card logo-card-front">P</span>
+      <div className="logo beacon-brand-lockup">
+        <div className="beacon-logo-mark" aria-hidden="true">
+          <span className="beacon-logo-letter">B</span>
+          <span className="beacon-lighthouse"></span>
+          <span className="beacon-beam beacon-beam-one"></span>
+          <span className="beacon-beam beacon-beam-two"></span>
         </div>
 
         <h1>
-          <span>Pocket Deck</span>
+          <span>Beacon Collect</span>
         </h1>
 
-        <p>A Home for Collectors</p>
+        <p>A Home for Collectors.</p>
       </div>
 
       <nav>
@@ -29,8 +31,8 @@ function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <small>Pocket Deck v0.9</small>
-        <p>Collect. Connect. Trade.</p>
+        <small>Beacon Collect v0.9</small>
+        <p>Find. Track. Connect.</p>
       </div>
     </aside>
   );

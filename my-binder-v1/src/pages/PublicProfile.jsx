@@ -11,7 +11,7 @@ import "../styles/publicProfile.css";
 const PROFILE_KEY = "pocket-deck-profile";
 
 const defaultProfile = {
-  username: "Pocket Deck Collector",
+  username: "Beacon Collector",
   accountType: "Collector",
   favoriteTcg: "Pokémon",
   favoriteSet: "Team Rocket Returns",

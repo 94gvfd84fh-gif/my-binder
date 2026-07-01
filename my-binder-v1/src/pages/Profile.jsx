@@ -5,11 +5,12 @@ import { BinderContext } from "../context/BinderContext";
 import { AuthContext } from "../context/AuthContext";
 import { STORAGE_KEYS } from "../constants/storageKeys";
 import { getProfile, saveProfile } from "../services/profileService";
+import StoreEvents from "../components/StoreEvents";
 import PageHeader from "../ui/PageHeader";
 import "../styles/profile.css";
 
 const defaultProfile = {
-  username: "Pocket Deck Collector",
+  username: "Beacon Collector",
   accountType: "Collector",
   favoriteTcg: "Pokémon",
   favoriteSet: "Team Rocket Returns",
@@ -108,9 +109,7 @@ function Profile() {
 
   useEffect(() => {
     async function loadSupabaseProfile() {
-      if (!user) {
-        return;
-      }
+      if (!user) return;
 
       try {
         const supabaseProfile = await getProfile(user.id);
@@ -238,9 +237,7 @@ function Profile() {
   async function persistProfile(updatedProfile) {
     localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(updatedProfile));
 
-    if (!user) {
-      return;
-    }
+    if (!user) return;
 
     setIsSavingProfile(true);
     setProfileMessage("");
@@ -304,7 +301,7 @@ function Profile() {
 
   function exportCollection() {
     const backup = {
-      app: "Pocket Deck",
+      app: "Beacon Collect",
       backupVersion: 5,
       exportedAt: new Date().toISOString(),
       cards,
@@ -320,7 +317,7 @@ function Profile() {
 
     const link = document.createElement("a");
     link.href = url;
-    link.download = "pocket-deck-backup.json";
+    link.download = "beacon-collect-backup.json";
     link.click();
 
     URL.revokeObjectURL(url);
@@ -348,7 +345,7 @@ function Profile() {
         }
 
         const confirmImport = confirm(
-          "This will replace your current Pocket Deck data with the imported backup. Continue?"
+          "This will replace your current Beacon Collect data with the imported backup. Continue?"
         );
 
         if (!confirmImport) return;
@@ -362,7 +359,7 @@ function Profile() {
           replaceCollectorProfile(importedBackup.collectorProfile);
         }
 
-        alert("Pocket Deck backup imported successfully.");
+        alert("Beacon Collect backup imported successfully.");
       } catch {
         alert("Could not import this file.");
       }
@@ -372,19 +369,15 @@ function Profile() {
     event.target.value = "";
   }
 
-  const accountLabel =
-    collectorProfile.accountType === "Store" ? "STORE" : "COLLECTOR";
+  const isStoreAccount = collectorProfile.accountType === "Store";
+  const accountLabel = isStoreAccount ? "STORE" : "COLLECTOR";
 
   return (
     <div>
       <PageHeader
-        label="POCKET DECK PROFILE"
-        title={
-          collectorProfile.accountType === "Store"
-            ? "Store Profile"
-            : "Collector Profile"
-        }
-        description="Build your Pocket Deck identity before the platform becomes social."
+        label="BEACON COLLECT PROFILE"
+        title={isStoreAccount ? "Store Profile" : "Collector Profile"}
+        description="Build your Beacon Collect identity before the platform becomes social."
       />
 
       {profileMessage && <p className="auth-message">{profileMessage}</p>}
@@ -406,7 +399,7 @@ function Profile() {
             <p className="page-label">{accountLabel}</p>
             <h2>{collectorProfile.username}</h2>
             <p>
-              {collectorProfile.accountType === "Store"
+              {isStoreAccount
                 ? "Store / Shop Account"
                 : `${collectorProfile.favoriteTcg} Collector`}
             </p>
@@ -457,11 +450,7 @@ function Profile() {
           </div>
 
           <div>
-            <span>
-              {collectorProfile.accountType === "Store"
-                ? "Store Since"
-                : "Collector Since"}
-            </span>
+            <span>{isStoreAccount ? "Store Since" : "Collector Since"}</span>
             <strong>{collectorProfile.collectorSince}</strong>
           </div>
 
@@ -607,17 +596,9 @@ function Profile() {
               </label>
 
               <label>
-                <span>
-                  {collectorProfile.accountType === "Store"
-                    ? "Store Name"
-                    : "Username"}
-                </span>
+                <span>{isStoreAccount ? "Store Name" : "Username"}</span>
                 <input
-                  placeholder={
-                    collectorProfile.accountType === "Store"
-                      ? "Store name"
-                      : "Username"
-                  }
+                  placeholder={isStoreAccount ? "Store name" : "Username"}
                   value={collectorProfile.username}
                   onChange={(event) =>
                     updateProfile("username", event.target.value)
@@ -677,17 +658,9 @@ function Profile() {
               </label>
 
               <label>
-                <span>
-                  {collectorProfile.accountType === "Store"
-                    ? "Store Since"
-                    : "Collector Since"}
-                </span>
+                <span>{isStoreAccount ? "Store Since" : "Collector Since"}</span>
                 <input
-                  placeholder={
-                    collectorProfile.accountType === "Store"
-                      ? "Store Since"
-                      : "Collector Since"
-                  }
+                  placeholder={isStoreAccount ? "Store Since" : "Collector Since"}
                   value={collectorProfile.collectorSince}
                   onChange={(event) =>
                     updateProfile("collectorSince", event.target.value)
@@ -696,10 +669,10 @@ function Profile() {
               </label>
 
               <label className="profile-editor-wide">
-                <span>{collectorProfile.accountType === "Store" ? "About" : "Bio"}</span>
+                <span>{isStoreAccount ? "About" : "Bio"}</span>
                 <textarea
                   placeholder={
-                    collectorProfile.accountType === "Store"
+                    isStoreAccount
                       ? "Tell collectors about your shop..."
                       : "Bio"
                   }
@@ -710,9 +683,7 @@ function Profile() {
 
               <div className="profile-editor-wide avatar-actions">
                 <span>
-                  {collectorProfile.accountType === "Store"
-                    ? "Store Logo / Picture"
-                    : "Profile Picture"}
+                  {isStoreAccount ? "Store Logo / Picture" : "Profile Picture"}
                 </span>
 
                 <label className="secondary-button">
@@ -735,11 +706,13 @@ function Profile() {
         )}
       </section>
 
+      {isStoreAccount && !isPreviewingPublicProfile && <StoreEvents />}
+
       {!isPreviewingPublicProfile && (
         <div className="profile-grid">
           <section className="profile-card">
             <p className="page-label">BACKUP</p>
-            <h2>Export Pocket Deck</h2>
+            <h2>Export Beacon Collect</h2>
             <p>
               Download your cards, binders, goals, profile, and visibility
               settings.
@@ -752,7 +725,7 @@ function Profile() {
 
           <section className="profile-card">
             <p className="page-label">RESTORE</p>
-            <h2>Import Pocket Deck</h2>
+            <h2>Import Beacon Collect</h2>
             <p>
               Restore your cards, binders, goals, profile, and visibility
               settings.

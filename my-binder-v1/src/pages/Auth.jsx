@@ -37,7 +37,7 @@ function Auth() {
       return;
     }
 
-    setMessage("Check your email for a Pocket Deck login link.");
+    setMessage("Check your email for a Beacon Collect login link.");
   }
 
   async function handleCreateProfile() {
@@ -60,7 +60,7 @@ function Auth() {
 
       await saveProfile({
         id: user.id,
-        username: "Pocket Deck Collector",
+        username: "Beacon Collector",
         favorite_tcg: "Pokémon",
         favorite_set: "",
         location: "",
@@ -88,9 +88,9 @@ function Auth() {
     return (
       <div>
         <PageHeader
-          label="POCKET DECK ACCOUNT"
+          label="BEACON COLLECT ACCOUNT"
           title="Checking account"
-          description="Loading your Pocket Deck account status."
+          description="Loading your Beacon Collect account status."
         />
       </div>
     );
@@ -100,9 +100,9 @@ function Auth() {
     return (
       <div>
         <PageHeader
-          label="POCKET DECK ACCOUNT"
+          label="BEACON COLLECT ACCOUNT"
           title="You are signed in"
-          description="Your Pocket Deck account connection is working."
+          description="Your Beacon Collect account connection is working."
         />
 
         <div className="auth-card">
@@ -110,7 +110,7 @@ function Auth() {
           <h2>{user.email}</h2>
           <p>
             Supabase authentication is connected. Your collection, profile, and
-            binders can now save to your Pocket Deck account.
+            binders can now save to your Beacon Collect account.
           </p>
 
           <button
@@ -139,9 +139,9 @@ function Auth() {
   return (
     <div>
       <PageHeader
-        label="POCKET DECK ACCOUNT"
+        label="BEACON COLLECT ACCOUNT"
         title="Sign in"
-        description="Use your email to start saving Pocket Deck data to your account."
+        description="Use your email to start saving Beacon Collect data to your account."
       />
 
       <form className="auth-card" onSubmit={handleMagicLink}>

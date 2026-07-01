@@ -26,9 +26,9 @@ function App() {
     return (
       <div className="app-auth-shell">
         <div className="auth-card">
-          <p className="page-label">POCKET DECK</p>
+          <p className="page-label">BEACON COLLECT</p>
           <h2>Loading your account</h2>
-          <p>Checking your Pocket Deck session.</p>
+          <p>Checking your Beacon Collect session.</p>
         </div>
       </div>
     );

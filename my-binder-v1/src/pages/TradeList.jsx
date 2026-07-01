@@ -25,7 +25,7 @@ function TradeList() {
   return (
     <div>
       <PageHeader
-        label="POCKET DECK TRADES"
+        label="BEACON COLLECT TRADES"
         title="Trade & Sale List"
         description="Cards you are open to trading now, plus cards prepared for future marketplace listings."
       />

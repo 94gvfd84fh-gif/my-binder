@@ -85,7 +85,7 @@ function Binder() {
     if (selectedBinder === "Trade Binder") {
       return {
         title: "No trade cards yet",
-        text: "Mark cards as For Trade and Pocket Deck will add them here automatically.",
+        text: "Mark cards as For Trade and Beacon Collect will add them here automatically.",
       };
     }
 
@@ -99,7 +99,7 @@ function Binder() {
     if (selectedBinder === "Main Collection") {
       return {
         title: "No cards in your main collection yet",
-        text: "Add your first owned card from the Collection page to start building Pocket Deck.",
+        text: "Add your first owned card from the Collection page to start building Beacon Collect.",
       };
     }
 
@@ -335,7 +335,7 @@ function Binder() {
   return (
     <div>
       <PageHeader
-        label="POCKET DECK BINDERS"
+        label="BEACON COLLECT BINDERS"
         title="Your Binders"
         description="Create binders for master sets, favorite Pokémon, trades, wishlists, and more."
       />

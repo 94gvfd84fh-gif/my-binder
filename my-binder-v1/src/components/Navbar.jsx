@@ -1,7 +1,7 @@
 function Navbar() {
   return (
     <nav className="navbar">
-      <div className="nav-logo">My Binder</div>
+      <div className="nav-logo">Beacon Collect</div>
 
       <div className="nav-links">
         <a href="#">Dashboard</a>

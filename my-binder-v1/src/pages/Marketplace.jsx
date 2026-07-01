@@ -4,7 +4,7 @@ function Marketplace() {
   return (
     <div>
       <PageHeader
-        label="POCKET DECK MARKETPLACE"
+        label="BEACON COLLECT MARKETPLACE"
         title="Marketplace"
         description="A future place for collectors to buy, sell, trade, and connect through their collections."
       />
@@ -61,7 +61,7 @@ function Marketplace() {
         <h3>The marketplace layer is taking shape</h3>
         <p>
           Public profiles, public binders, trade lists, wishlists, sale prices,
-          and card types are now structured so Pocket Deck can grow into a full
+          and card types are now structured so Beacon Collect can grow into a full
           collector marketplace and community.
         </p>
       </div>
