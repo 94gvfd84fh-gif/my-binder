@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
 import PageHeader from "../ui/PageHeader";
-import "../styles/tradeList.css";
+import "../styles/TradeList.css";
 
 function TradeList() {
   const { cards } = useContext(CardContext);
