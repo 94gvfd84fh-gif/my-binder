@@ -1,54 +1,92 @@
 import { useState } from "react";
 
+const NOTIFICATION_READ_KEY = "pocket-deck-read-notifications";
+
 const notifications = [
   {
-    id: 1,
+    id: "trade-request-preview",
     type: "TRADE",
     icon: "🔁",
     title: "Trade request sent",
     message: "Your trade request preview was created successfully.",
     time: "Just now",
-    unread: true,
   },
   {
-    id: 2,
+    id: "collector-followed",
     type: "SOCIAL",
     icon: "👤",
     title: "Collector followed",
     message: "You followed a collector from Discover Collectors.",
     time: "Today",
-    unread: true,
   },
   {
-    id: 3,
+    id: "saved-event",
     type: "EVENT",
     icon: "📍",
     title: "Saved event",
     message: "Saved community events will appear on your dashboard.",
     time: "Today",
-    unread: false,
   },
 ];
 
+function getReadNotifications() {
+  const saved = localStorage.getItem(NOTIFICATION_READ_KEY);
+
+  if (!saved) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 function NotificationCenter() {
   const [isOpen, setIsOpen] = useState(false);
+  const [readNotifications, setReadNotifications] = useState(getReadNotifications);
 
-  const unreadCount = notifications.filter((notification) => {
-    return notification.unread;
-  }).length;
+  const unreadNotifications = notifications.filter((notification) => {
+    return !readNotifications.includes(notification.id);
+  });
+
+  const unreadCount = unreadNotifications.length;
+
+  function markAllAsRead() {
+    const allNotificationIds = notifications.map((notification) => notification.id);
+
+    setReadNotifications(allNotificationIds);
+    localStorage.setItem(
+      NOTIFICATION_READ_KEY,
+      JSON.stringify(allNotificationIds)
+    );
+  }
+
+  function toggleNotifications() {
+    const nextOpenState = !isOpen;
+
+    setIsOpen(nextOpenState);
+
+    if (nextOpenState) {
+      markAllAsRead();
+    }
+  }
 
   return (
     <div className="notification-dropdown">
       <button
-        type="button"
         className="notification-trigger"
-        onClick={() => setIsOpen(!isOpen)}
+        type="button"
+        onClick={toggleNotifications}
+        aria-label="Notifications"
       >
         <span className="notification-bell">🔔</span>
         <span>Notifications</span>
 
         {unreadCount > 0 && (
-          <strong className="notification-badge">{unreadCount}</strong>
+          <span className="notification-bubble">{unreadCount}</span>
         )}
       </button>
 
@@ -60,45 +98,49 @@ function NotificationCenter() {
               <h3>Notifications</h3>
             </div>
 
-            <span>{unreadCount} unread</span>
+            <span>{unreadCount > 0 ? `${unreadCount} new` : "All caught up"}</span>
           </div>
 
           <div className="notification-list">
-            {notifications.map((notification) => (
-              <article
-                className={
-                  notification.unread
-                    ? "notification-card unread-notification"
-                    : "notification-card"
-                }
-                key={notification.id}
-              >
-                <div className="notification-icon" aria-hidden="true">
-                  {notification.icon}
-                </div>
+            {notifications.map((notification) => {
+              const isUnread = !readNotifications.includes(notification.id);
 
-                <div className="notification-content">
-                  <div className="notification-top-row">
-                    <span className="notification-type">
-                      {notification.type}
-                    </span>
-                    <span className="notification-time">
-                      {notification.time}
-                    </span>
+              return (
+                <article
+                  className={
+                    isUnread
+                      ? "notification-card unread-notification"
+                      : "notification-card"
+                  }
+                  key={notification.id}
+                >
+                  <div className="notification-icon" aria-hidden="true">
+                    {notification.icon}
                   </div>
 
-                  <h3>{notification.title}</h3>
-                  <p>{notification.message}</p>
-                </div>
+                  <div className="notification-content">
+                    <div className="notification-top-row">
+                      <span className="notification-type">
+                        {notification.type}
+                      </span>
+                      <span className="notification-time">
+                        {notification.time}
+                      </span>
+                    </div>
 
-                {notification.unread && (
-                  <span
-                    className="notification-unread-dot"
-                    aria-label="Unread"
-                  ></span>
-                )}
-              </article>
-            ))}
+                    <h3>{notification.title}</h3>
+                    <p>{notification.message}</p>
+                  </div>
+
+                  {isUnread && (
+                    <span
+                      className="notification-unread-dot"
+                      aria-label="Unread"
+                    ></span>
+                  )}
+                </article>
+              );
+            })}
           </div>
         </div>
       )}
