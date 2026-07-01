@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { useContext } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import NotificationCenter from "./components/NotificationCenter";
 import Dashboard from "./pages/Dashboard";
@@ -14,9 +15,35 @@ import CollectorProfile from "./pages/CollectorProfile";
 import PublicBinder from "./pages/PublicBinder";
 import PublicCardDetails from "./pages/PublicCardDetails";
 import Auth from "./pages/Auth";
+import { AuthContext } from "./context/AuthContext";
 import "./App.css";
 
 function App() {
+  const { user, authLoading } = useContext(AuthContext);
+
+  if (authLoading) {
+    return (
+      <div className="app-auth-shell">
+        <div className="auth-card">
+          <p className="page-label">POCKET DECK</p>
+          <h2>Loading your account</h2>
+          <p>Checking your Pocket Deck session.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="app-auth-shell">
+        <Routes>
+          <Route path="/auth" element={<Auth />} />
+          <Route path="*" element={<Navigate to="/auth" replace />} />
+        </Routes>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <Sidebar />
