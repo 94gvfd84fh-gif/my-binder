@@ -17,7 +17,10 @@ export async function getProfile(userId) {
 export async function saveProfile(profile) {
   const { data, error } = await supabase
     .from("profiles")
-    .upsert(profile)
+    .upsert({
+      ...profile,
+      account_type: profile.account_type || profile.accountType || "Collector",
+    })
     .select()
     .single();
 

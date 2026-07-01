@@ -10,6 +10,7 @@ import "../styles/profile.css";
 
 const defaultProfile = {
   username: "Pocket Deck Collector",
+  accountType: "Collector",
   favoriteTcg: "Pokémon",
   favoriteSet: "Team Rocket Returns",
   location: "Sacramento, CA",
@@ -40,6 +41,7 @@ function toAppProfile(profile) {
   return {
     ...defaultProfile,
     username: profile.username || defaultProfile.username,
+    accountType: profile.account_type || profile.accountType || "Collector",
     favoriteTcg: profile.favorite_tcg || defaultProfile.favoriteTcg,
     favoriteSet: profile.favorite_set || defaultProfile.favoriteSet,
     location: profile.location || defaultProfile.location,
@@ -54,6 +56,7 @@ function toDatabaseProfile(profile, userId) {
   return {
     id: userId,
     username: profile.username || defaultProfile.username,
+    account_type: profile.accountType || "Collector",
     favorite_tcg: profile.favoriteTcg || "",
     favorite_set: profile.favoriteSet || "",
     location: profile.location || "",
@@ -270,6 +273,10 @@ function Profile() {
     const updatedProfile = {
       ...defaultProfile,
       ...importedProfile,
+      accountType:
+        importedProfile.accountType ||
+        importedProfile.account_type ||
+        defaultProfile.accountType,
     };
 
     setCollectorProfile(updatedProfile);
@@ -298,7 +305,7 @@ function Profile() {
   function exportCollection() {
     const backup = {
       app: "Pocket Deck",
-      backupVersion: 4,
+      backupVersion: 5,
       exportedAt: new Date().toISOString(),
       cards,
       binders,
@@ -365,12 +372,19 @@ function Profile() {
     event.target.value = "";
   }
 
+  const accountLabel =
+    collectorProfile.accountType === "Store" ? "STORE" : "COLLECTOR";
+
   return (
     <div>
       <PageHeader
         label="POCKET DECK PROFILE"
-        title="Collector Profile"
-        description="Build your collector identity before Pocket Deck becomes social."
+        title={
+          collectorProfile.accountType === "Store"
+            ? "Store Profile"
+            : "Collector Profile"
+        }
+        description="Build your Pocket Deck identity before the platform becomes social."
       />
 
       {profileMessage && <p className="auth-message">{profileMessage}</p>}
@@ -389,9 +403,13 @@ function Profile() {
           </div>
 
           <div>
-            <p className="page-label">COLLECTOR</p>
+            <p className="page-label">{accountLabel}</p>
             <h2>{collectorProfile.username}</h2>
-            <p>{collectorProfile.favoriteTcg} Collector</p>
+            <p>
+              {collectorProfile.accountType === "Store"
+                ? "Store / Shop Account"
+                : `${collectorProfile.favoriteTcg} Collector`}
+            </p>
           </div>
 
           <div className="profile-action-row">
@@ -434,7 +452,16 @@ function Profile() {
 
         <div className="collector-profile-stats">
           <div>
-            <span>Collector Since</span>
+            <span>Account Type</span>
+            <strong>{collectorProfile.accountType}</strong>
+          </div>
+
+          <div>
+            <span>
+              {collectorProfile.accountType === "Store"
+                ? "Store Since"
+                : "Collector Since"}
+            </span>
             <strong>{collectorProfile.collectorSince}</strong>
           </div>
 
@@ -561,15 +588,36 @@ function Profile() {
             <div className="editor-section-header">
               <div>
                 <p className="page-label">EDIT PROFILE</p>
-                <h3>Collector Identity</h3>
+                <h3>Identity</h3>
               </div>
             </div>
 
             <div className="profile-editor-grid">
               <label>
-                <span>Username</span>
+                <span>Account Type</span>
+                <select
+                  value={collectorProfile.accountType}
+                  onChange={(event) =>
+                    updateProfile("accountType", event.target.value)
+                  }
+                >
+                  <option>Collector</option>
+                  <option>Store</option>
+                </select>
+              </label>
+
+              <label>
+                <span>
+                  {collectorProfile.accountType === "Store"
+                    ? "Store Name"
+                    : "Username"}
+                </span>
                 <input
-                  placeholder="Username"
+                  placeholder={
+                    collectorProfile.accountType === "Store"
+                      ? "Store name"
+                      : "Username"
+                  }
                   value={collectorProfile.username}
                   onChange={(event) =>
                     updateProfile("username", event.target.value)
@@ -629,9 +677,17 @@ function Profile() {
               </label>
 
               <label>
-                <span>Collector Since</span>
+                <span>
+                  {collectorProfile.accountType === "Store"
+                    ? "Store Since"
+                    : "Collector Since"}
+                </span>
                 <input
-                  placeholder="Collector Since"
+                  placeholder={
+                    collectorProfile.accountType === "Store"
+                      ? "Store Since"
+                      : "Collector Since"
+                  }
                   value={collectorProfile.collectorSince}
                   onChange={(event) =>
                     updateProfile("collectorSince", event.target.value)
@@ -640,19 +696,27 @@ function Profile() {
               </label>
 
               <label className="profile-editor-wide">
-                <span>Bio</span>
+                <span>{collectorProfile.accountType === "Store" ? "About" : "Bio"}</span>
                 <textarea
-                  placeholder="Bio"
+                  placeholder={
+                    collectorProfile.accountType === "Store"
+                      ? "Tell collectors about your shop..."
+                      : "Bio"
+                  }
                   value={collectorProfile.bio}
                   onChange={(event) => updateProfile("bio", event.target.value)}
                 />
               </label>
 
               <div className="profile-editor-wide avatar-actions">
-                <span>Profile Picture</span>
+                <span>
+                  {collectorProfile.accountType === "Store"
+                    ? "Store Logo / Picture"
+                    : "Profile Picture"}
+                </span>
 
                 <label className="secondary-button">
-                  Upload Profile Picture
+                  Upload Picture
                   <input
                     type="file"
                     accept="image/*"
@@ -662,7 +726,7 @@ function Profile() {
 
                 {collectorProfile.avatar && (
                   <button type="button" onClick={removeAvatar}>
-                    Remove Profile Picture
+                    Remove Picture
                   </button>
                 )}
               </div>
