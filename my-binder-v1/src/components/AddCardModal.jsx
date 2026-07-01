@@ -17,7 +17,7 @@ const CARD_TYPES = [
 ];
 
 function AddCardModal({ onClose, cardToEdit }) {
-  const { cards, setCards } = useContext(CardContext);
+  const { addCard, editCard, cardsError } = useContext(CardContext);
   const { binders } = useContext(BinderContext);
 
   function getStartingPrimaryBinder(card) {
@@ -70,6 +70,7 @@ function AddCardModal({ onClose, cardToEdit }) {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isExtraBinderOpen, setIsExtraBinderOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const [cardType, setCardType] = useState(
     cardToEdit ? cardToEdit.cardType || "Pokémon" : "Pokémon"
@@ -142,7 +143,7 @@ function AddCardModal({ onClose, cardToEdit }) {
       setIsSearching(true);
       const results = await searchPokemonCards(searchTerm);
       setSearchResults(results);
-    } catch (error) {
+    } catch {
       alert("Could not search Pokémon cards right now.");
     } finally {
       setIsSearching(false);
@@ -216,11 +217,17 @@ function AddCardModal({ onClose, cardToEdit }) {
     return `${selectedExtraBinderCount} extra binders selected`;
   }
 
-  function handleSave() {
+  async function handleSave() {
+    if (!name.trim()) {
+      alert("Card name is required.");
+      return;
+    }
+
     const now = new Date().toISOString();
     const finalExtraBinders = getFinalExtraBinders();
 
     const cardData = {
+      ...(cardToEdit || {}),
       cardType,
       name,
       set,
@@ -239,35 +246,21 @@ function AddCardModal({ onClose, cardToEdit }) {
       certNumber,
       favorite,
       image,
+      createdAt: cardToEdit?.createdAt || now,
       updatedAt: now,
     };
 
-    if (cardToEdit) {
-      const updatedCards = cards.map((card) => {
-        if (card.id === cardToEdit.id) {
-          return {
-            ...card,
-            ...cardData,
-            createdAt: card.createdAt || now,
-          };
-        }
+    setIsSaving(true);
 
-        return card;
-      });
+    const savedCard = cardToEdit
+      ? await editCard(cardData)
+      : await addCard(cardData);
 
-      setCards(updatedCards);
+    setIsSaving(false);
+
+    if (savedCard) {
       onClose();
-      return;
     }
-
-    const newCard = {
-      id: Date.now(),
-      ...cardData,
-      createdAt: now,
-    };
-
-    setCards([newCard, ...cards]);
-    onClose();
   }
 
   return (
@@ -524,8 +517,14 @@ function AddCardModal({ onClose, cardToEdit }) {
             </label>
           </div>
 
-          <button type="button" onClick={handleSave}>
-            {cardToEdit ? "Save Changes" : "Save Card"}
+          {cardsError && <p className="auth-message">{cardsError}</p>}
+
+          <button type="button" onClick={handleSave} disabled={isSaving}>
+            {isSaving
+              ? "Saving..."
+              : cardToEdit
+              ? "Save Changes"
+              : "Save Card"}
           </button>
         </form>
       </div>

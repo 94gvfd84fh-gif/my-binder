@@ -20,7 +20,8 @@ const CARD_TYPES = [
 ];
 
 function Collection() {
-  const { cards, setCards } = useContext(CardContext);
+  const { cards, cardsLoading, cardsError, editCard, removeCard } =
+    useContext(CardContext);
   const { binders } = useContext(BinderContext);
 
   const [search, setSearch] = useState("");
@@ -65,21 +66,23 @@ function Collection() {
     return getExtraBinders(card).includes(binderName);
   }
 
-  function deleteCard(id) {
-    const updatedCards = cards.filter((card) => card.id !== id);
-    setCards(updatedCards);
+  async function deleteCard(id) {
+    await removeCard(id);
   }
 
-  function toggleFavorite(id) {
-    const updatedCards = cards.map((card) => {
-      if (card.id === id) {
-        return { ...card, favorite: !card.favorite };
-      }
-
-      return card;
+  async function toggleFavorite(id) {
+    const cardToUpdate = cards.find((card) => {
+      return Number(card.id) === Number(id);
     });
 
-    setCards(updatedCards);
+    if (!cardToUpdate) {
+      return;
+    }
+
+    await editCard({
+      ...cardToUpdate,
+      favorite: !cardToUpdate.favorite,
+    });
   }
 
   const filteredCards = cards.filter((card) => {
@@ -107,8 +110,7 @@ function Collection() {
       filter === card.status ||
       cardBelongsToBinder(card, filter);
 
-    const matchesType =
-      typeFilter === "All Types" || cardType === typeFilter;
+    const matchesType = typeFilter === "All Types" || cardType === typeFilter;
 
     return matchesSearch && matchesFilter && matchesType;
   });
@@ -168,6 +170,15 @@ function Collection() {
           </button>
         }
       />
+
+      {cardsError && <p className="auth-message">{cardsError}</p>}
+
+      {cardsLoading && (
+        <div className="empty-state-card">
+          <h2>Updating collection</h2>
+          <p>Saving your Pocket Deck changes.</p>
+        </div>
+      )}
 
       <div className="collection-tools">
         <input

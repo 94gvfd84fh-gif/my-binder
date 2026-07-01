@@ -1,5 +1,12 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import initialCards from "../data/cards";
+import { AuthContext } from "./AuthContext";
+import {
+  getCards,
+  saveCard,
+  updateCard,
+  deleteCard as deleteSupabaseCard,
+} from "../services/cardService";
 
 export const CardContext = createContext();
 
@@ -42,10 +49,7 @@ function getExtraBinders(card, primaryBinder) {
     extraBinders.push(card.binder);
   }
 
-  if (
-    card.status === "For Trade" &&
-    !extraBinders.includes("Trade Binder")
-  ) {
+  if (card.status === "For Trade" && !extraBinders.includes("Trade Binder")) {
     extraBinders.push("Trade Binder");
   }
 
@@ -99,27 +103,202 @@ function normalizeCards(cardList) {
   return cardList.map(normalizeCard);
 }
 
-function CardProvider({ children }) {
-  const [cards, setCards] = useState(() => {
-    const savedCards = localStorage.getItem(STORAGE_KEY);
+function getLocalCards() {
+  const savedCards = localStorage.getItem(STORAGE_KEY);
 
-    if (savedCards) {
-      try {
-        return normalizeCards(JSON.parse(savedCards));
-      } catch {
-        return normalizeCards(initialCards);
-      }
+  if (savedCards) {
+    try {
+      return normalizeCards(JSON.parse(savedCards));
+    } catch {
+      return normalizeCards(initialCards);
     }
+  }
 
-    return normalizeCards(initialCards);
-  });
+  return normalizeCards(initialCards);
+}
+
+function CardProvider({ children }) {
+  const { user, authLoading } = useContext(AuthContext);
+  const [cards, setCards] = useState(getLocalCards);
+  const [cardsLoading, setCardsLoading] = useState(false);
+  const [cardsError, setCardsError] = useState("");
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
-  }, [cards]);
+    if (!user) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+    }
+  }, [cards, user]);
+
+  useEffect(() => {
+    async function loadSupabaseCards() {
+      if (authLoading) {
+        return;
+      }
+
+      if (!user) {
+        setCards(getLocalCards());
+        return;
+      }
+
+      setCardsLoading(true);
+      setCardsError("");
+
+      try {
+        const supabaseCards = await getCards(user.id);
+
+        if (supabaseCards.length > 0) {
+          setCards(normalizeCards(supabaseCards));
+        }
+      } catch (error) {
+        setCardsError(error.message);
+      }
+
+      setCardsLoading(false);
+    }
+
+    loadSupabaseCards();
+  }, [user, authLoading]);
+
+  async function syncLocalCardsToSupabase() {
+    if (!user) {
+      setCardsError("Sign in before syncing cards.");
+      return;
+    }
+
+    setCardsLoading(true);
+    setCardsError("");
+
+    try {
+      const syncedCards = [];
+
+      for (const card of cards) {
+        const savedCard = await saveCard(card, user.id);
+        syncedCards.push(normalizeCard(savedCard));
+      }
+
+      setCards(syncedCards);
+    } catch (error) {
+      setCardsError(error.message);
+    }
+
+    setCardsLoading(false);
+  }
+
+  async function addCard(card) {
+    const normalizedCard = normalizeCard({
+      ...card,
+      id: card.id || Date.now(),
+      createdAt: card.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    if (!user) {
+      setCards((currentCards) => [normalizedCard, ...currentCards]);
+      return normalizedCard;
+    }
+
+    setCardsLoading(true);
+    setCardsError("");
+
+    try {
+      const savedCard = await saveCard(normalizedCard, user.id);
+      const normalizedSavedCard = normalizeCard(savedCard);
+
+      setCards((currentCards) => [normalizedSavedCard, ...currentCards]);
+      setCardsLoading(false);
+
+      return normalizedSavedCard;
+    } catch (error) {
+      setCardsError(error.message);
+      setCardsLoading(false);
+      return null;
+    }
+  }
+
+  async function editCard(updatedCard) {
+    const normalizedCard = normalizeCard({
+      ...updatedCard,
+      updatedAt: new Date().toISOString(),
+    });
+
+    if (!user) {
+      setCards((currentCards) =>
+        currentCards.map((card) => {
+          if (Number(card.id) === Number(normalizedCard.id)) {
+            return normalizedCard;
+          }
+
+          return card;
+        })
+      );
+
+      return normalizedCard;
+    }
+
+    setCardsLoading(true);
+    setCardsError("");
+
+    try {
+      const savedCard = await updateCard(normalizedCard, user.id);
+      const normalizedSavedCard = normalizeCard(savedCard);
+
+      setCards((currentCards) =>
+        currentCards.map((card) => {
+          if (Number(card.id) === Number(normalizedSavedCard.id)) {
+            return normalizedSavedCard;
+          }
+
+          return card;
+        })
+      );
+
+      setCardsLoading(false);
+      return normalizedSavedCard;
+    } catch (error) {
+      setCardsError(error.message);
+      setCardsLoading(false);
+      return null;
+    }
+  }
+
+  async function removeCard(cardId) {
+    if (!user) {
+      setCards((currentCards) => {
+        return currentCards.filter((card) => Number(card.id) !== Number(cardId));
+      });
+
+      return;
+    }
+
+    setCardsLoading(true);
+    setCardsError("");
+
+    try {
+      await deleteSupabaseCard(cardId, user.id);
+
+      setCards((currentCards) => {
+        return currentCards.filter((card) => Number(card.id) !== Number(cardId));
+      });
+    } catch (error) {
+      setCardsError(error.message);
+    }
+
+    setCardsLoading(false);
+  }
 
   return (
-    <CardContext.Provider value={{ cards, setCards }}>
+    <CardContext.Provider
+      value={{
+        cards,
+        setCards,
+        cardsLoading,
+        cardsError,
+        addCard,
+        editCard,
+        removeCard,
+        syncLocalCardsToSupabase,
+      }}
+    >
       {children}
     </CardContext.Provider>
   );
