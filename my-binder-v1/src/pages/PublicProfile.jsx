@@ -12,6 +12,7 @@ const PROFILE_KEY = "pocket-deck-profile";
 
 const defaultProfile = {
   username: "Pocket Deck Collector",
+  accountType: "Collector",
   favoriteTcg: "Pokémon",
   favoriteSet: "Team Rocket Returns",
   location: "Sacramento, CA",
@@ -29,6 +30,7 @@ function toAppProfile(profile) {
   return {
     ...defaultProfile,
     username: profile.username || defaultProfile.username,
+    accountType: profile.account_type || profile.accountType || "Collector",
     favoriteTcg: profile.favorite_tcg || defaultProfile.favoriteTcg,
     favoriteSet: profile.favorite_set || defaultProfile.favoriteSet,
     location: profile.location || defaultProfile.location,
@@ -165,12 +167,18 @@ function PublicProfile() {
 
   const featuredCard = selectedFeaturedCard || ownedCards[0];
 
+  const isStoreAccount = collectorProfile.accountType === "Store";
+
   return (
     <div>
       <PageHeader
         label="PUBLIC PROFILE"
         title={collectorProfile.username}
-        description="Preview your collector identity, featured card, and public binders."
+        description={
+          isStoreAccount
+            ? "Preview your shop identity, featured cards, and public binders."
+            : "Preview your collector identity, featured card, and public binders."
+        }
       />
 
       <section className="public-profile-card">
@@ -187,7 +195,11 @@ function PublicProfile() {
           </div>
 
           <div>
-            <p className="page-label">{collectorProfile.favoriteTcg} COLLECTOR</p>
+            <p className="page-label">
+              {isStoreAccount
+                ? "STORE / SHOP"
+                : `${collectorProfile.favoriteTcg} COLLECTOR`}
+            </p>
             <h2>{collectorProfile.username}</h2>
             <p>"{collectorProfile.bio}"</p>
           </div>
@@ -195,7 +207,12 @@ function PublicProfile() {
 
         <div className="collector-profile-stats">
           <div>
-            <span>Collector Since</span>
+            <span>Account Type</span>
+            <strong>{collectorProfile.accountType}</strong>
+          </div>
+
+          <div>
+            <span>{isStoreAccount ? "Store Since" : "Collector Since"}</span>
             <strong>{collectorProfile.collectorSince}</strong>
           </div>
 
@@ -225,7 +242,11 @@ function PublicProfile() {
             <div className="section-header">
               <div>
                 <h3>Collection Mix</h3>
-                <p>Card types this collector shares publicly.</p>
+                <p>
+                  {isStoreAccount
+                    ? "Card types this shop shares publicly."
+                    : "Card types this collector shares publicly."}
+                </p>
               </div>
             </div>
 
@@ -266,7 +287,11 @@ function PublicProfile() {
           <div className="section-header">
             <div>
               <h3>Featured Binders</h3>
-              <p>Binders this collector has chosen to share.</p>
+              <p>
+                {isStoreAccount
+                  ? "Binders this shop has chosen to share."
+                  : "Binders this collector has chosen to share."}
+              </p>
             </div>
           </div>
 
@@ -310,7 +335,11 @@ function PublicProfile() {
           ) : (
             <div className="profile-empty-note">
               <p>No public binders yet.</p>
-              <span>This collector has not shared any binders.</span>
+              <span>
+                {isStoreAccount
+                  ? "This shop has not shared any binders."
+                  : "This collector has not shared any binders."}
+              </span>
             </div>
           )}
         </div>
