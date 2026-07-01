@@ -15,6 +15,7 @@ import CollectorProfile from "./pages/CollectorProfile";
 import PublicBinder from "./pages/PublicBinder";
 import PublicCardDetails from "./pages/PublicCardDetails";
 import Auth from "./pages/Auth";
+import Feedback from "./pages/Feedback";
 import { AuthContext } from "./context/AuthContext";
 import "./App.css";
 
@@ -56,7 +57,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/auth" element={<Auth />} />
-
+          <Route path="/feedback" element={<Feedback />} />
           <Route path="/collection" element={<Collection />} />
           <Route path="/collection/:id" element={<CardDetails />} />
           <Route path="/binder" element={<Binder />} />

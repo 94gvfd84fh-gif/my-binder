@@ -25,6 +25,7 @@ function Sidebar() {
         <NavLink to="/profile">⚙️ Profile</NavLink>
         <NavLink to="/auth">🔐 Account</NavLink>
         <NavLink to="/u/collector">👤 Public Profile</NavLink>
+        <NavLink to="/feedback">💬 Feedback</NavLink>
       </nav>
 
       <div className="sidebar-footer">
