@@ -196,4 +196,171 @@
   margin-top: 8px;
   color: var(--text-main);
   font-size: 1.5rem;
+}.store-events-panel {
+  margin-top: 28px;
+  padding: 28px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(245, 158, 11, 0.12), transparent 32%),
+    linear-gradient(145deg, rgba(23, 32, 51, 0.96), rgba(11, 18, 32, 0.96));
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
+}
+
+.store-event-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.store-event-form input,
+.store-event-form select,
+.store-event-form textarea {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.86);
+  color: var(--text-main);
+  padding: 0 14px;
+  font: inherit;
+}
+
+.store-event-form textarea {
+  min-height: 120px;
+  padding: 14px;
+  resize: vertical;
+}
+
+.store-event-wide {
+  grid-column: 1 / -1;
+}
+
+.store-event-form .primary-button {
+  justify-self: start;
+}
+
+.store-events-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.store-event-card {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.store-event-card h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.store-event-card p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.store-event-card span {
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+.store-event-card .delete-button {
+  justify-self: start;
+  margin-top: 6px;
+}
+
+@media (max-width: 760px) {
+  .store-event-form {
+    grid-template-columns: 1fr;
+  }
+
+  .store-events-panel {
+    padding: 22px;
+  }
+}.store-flyer-preview,
+.store-event-flyer {
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  background: rgba(2, 6, 23, 0.42);
+}
+
+.store-flyer-preview {
+  max-width: 360px;
+}
+
+.store-flyer-preview img,
+.store-event-flyer img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.store-event-flyer {
+  margin-bottom: 14px;
+  cursor: zoom-in;
+}
+
+.store-event-flyer button {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.store-event-flyer img {
+  max-height: none;
+  object-fit: contain;
+}
+
+.flyer-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(2, 6, 23, 0.86);
+  backdrop-filter: blur(10px);
+}
+
+.flyer-modal {
+  position: relative;
+  width: min(960px, 96vw);
+  max-height: 92vh;
+  padding: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 22px;
+  background: rgba(15, 23, 42, 0.96);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+}
+
+.flyer-modal img {
+  display: block;
+  width: 100%;
+  max-height: 82vh;
+  object-fit: contain;
+  border-radius: 16px;
+}
+
+.flyer-modal-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 22px;
+  cursor: pointer;
 }
