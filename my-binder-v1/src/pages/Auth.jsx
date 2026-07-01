@@ -1,14 +1,11 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { CardContext } from "../context/CardContext";
 import { supabase } from "../lib/supabaseClient";
 import { getProfile, saveProfile } from "../services/profileService";
 import PageHeader from "../ui/PageHeader";
 
 function Auth() {
   const { user, authLoading } = useContext(AuthContext);
-  const { cards, cardsLoading, cardsError, syncLocalCardsToSupabase } =
-    useContext(CardContext);
 
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -112,8 +109,8 @@ function Auth() {
           <p className="page-label">SIGNED IN</p>
           <h2>{user.email}</h2>
           <p>
-            Supabase authentication is connected. You can now save your profile
-            and sync your collection data to your account.
+            Supabase authentication is connected. Your collection, profile, and
+            binders can now save to your Pocket Deck account.
           </p>
 
           <button
@@ -128,24 +125,12 @@ function Auth() {
           <button
             className="secondary-button"
             type="button"
-            onClick={syncLocalCardsToSupabase}
-            disabled={cardsLoading}
-          >
-            {cardsLoading
-              ? "Syncing Cards..."
-              : `Upload ${cards.length} Local Cards to Supabase`}
-          </button>
-
-          <button
-            className="secondary-button"
-            type="button"
             onClick={handleSignOut}
           >
             Sign Out
           </button>
 
           {message && <p className="auth-message">{message}</p>}
-          {cardsError && <p className="auth-message">{cardsError}</p>}
         </div>
       </div>
     );
