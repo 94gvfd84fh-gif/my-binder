@@ -9,6 +9,7 @@ import RecentCards from "../components/RecentCards";
 import CollectionTimeline from "../components/CollectionTimeline";
 import CollectionAnalytics from "../components/CollectionAnalytics";
 import ValueAnalytics from "../components/ValueAnalytics";
+import BetaCTA from "../components/BetaCTA";
 
 const beaconFeatures = [
   {
@@ -79,6 +80,10 @@ function Dashboard() {
             <Link className="secondary-button" to="/community">
               Explore Features
             </Link>
+
+            <Link className="secondary-button" to="/demo">
+              Load Reel Demo
+            </Link>
           </div>
         </section>
       </div>
@@ -116,6 +121,8 @@ function Dashboard() {
           </div>
         </div>
       </div>
+
+      <BetaCTA />
 
       <section className="beacon-feature-grid" id="features">
         {beaconFeatures.map((feature) => (
