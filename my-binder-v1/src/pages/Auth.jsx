@@ -139,14 +139,48 @@ function Auth() {
   return (
     <div>
       <PageHeader
-        label="BEACON COLLECT ACCOUNT"
-        title="Sign in"
-        description="Use your email to start saving Beacon Collect data to your account."
+        label="BEACON COLLECT BETA"
+        title="Help test Beacon Collect"
+        description="Try the beta in 3 minutes and tell us what feels useful, confusing, or missing."
       />
 
+      <section className="beta-welcome-card">
+        <div className="beta-welcome-copy">
+          <p className="page-label">HOW TO TEST</p>
+          <h2>A quick mission for collectors</h2>
+          <p>
+            Beacon is easiest to improve when testers follow the same simple
+            path. Add a few cards, try the community tools, then leave one note
+            about what should be better.
+          </p>
+        </div>
+
+        <div className="beta-welcome-steps">
+          <div>
+            <span>01</span>
+            <strong>Add a card you own</strong>
+          </div>
+
+          <div>
+            <span>02</span>
+            <strong>Add a wishlist card</strong>
+          </div>
+
+          <div>
+            <span>03</span>
+            <strong>Mark one card for trade</strong>
+          </div>
+
+          <div>
+            <span>04</span>
+            <strong>Leave feedback</strong>
+          </div>
+        </div>
+      </section>
+
       <form className="auth-card" onSubmit={handleMagicLink}>
-        <p className="page-label">MAGIC LINK</p>
-        <h2>Sign in with email</h2>
+        <p className="page-label">SIGN IN TO START TESTING</p>
+        <h2>Enter your email</h2>
         <p>We will send you a secure login link. No password needed.</p>
 
         <input

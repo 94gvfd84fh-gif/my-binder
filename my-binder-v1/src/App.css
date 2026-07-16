@@ -3949,7 +3949,9 @@ nav a.active {
   margin-top: 12px;
   color: var(--text-main);
   font-size: 2rem;
-}.auth-card {
+}
+
+.auth-card {
   max-width: 560px;
   margin: 32px auto 0;
   padding: 32px;
@@ -3999,7 +4001,9 @@ nav a.active {
   background: rgba(34, 197, 94, 0.1);
   border: 1px solid rgba(34, 197, 94, 0.24);
   color: #bbf7d0 !important;
-}.app-auth-shell {
+}
+
+.app-auth-shell {
   min-height: 100vh;
   display: grid;
   place-items: center;
@@ -4690,5 +4694,81 @@ nav a.active {
     width: 100%;
     justify-content: center;
     text-align: center;
+  }
+}
+
+
+/* Beta welcome */
+.beta-welcome-card {
+  max-width: 960px;
+  margin: 32px auto 0;
+  padding: 30px;
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(6, 182, 212, 0.18), transparent 32%),
+    linear-gradient(145deg, rgba(26, 34, 48, 0.94), rgba(13, 17, 23, 0.92));
+  box-shadow: var(--shadow-card);
+}
+
+.beta-welcome-copy {
+  max-width: 760px;
+}
+
+.beta-welcome-copy h2 {
+  margin: 8px 0 12px;
+  color: var(--text-main);
+  font-size: clamp(1.9rem, 4vw, 3rem);
+}
+
+.beta-welcome-copy p {
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.beta-welcome-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.beta-welcome-steps div {
+  min-height: 128px;
+  padding: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.12);
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.58);
+}
+
+.beta-welcome-steps span {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--brand-cyan, #06b6d4);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.beta-welcome-steps strong {
+  display: block;
+  color: var(--text-main);
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 900px) {
+  .beta-welcome-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .beta-welcome-card {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .beta-welcome-steps {
+    grid-template-columns: 1fr;
   }
 }
