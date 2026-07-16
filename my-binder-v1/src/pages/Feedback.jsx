@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { getFeedback, saveFeedback } from "../services/feedbackService";
 import PageHeader from "../ui/PageHeader";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 
 function Feedback() {
   const { user } = useContext(AuthContext);
@@ -63,6 +64,7 @@ function Feedback() {
         ...currentFeedback,
       ]);
 
+      localStorage.setItem(STORAGE_KEYS.betaFeedback, "true");
       setMessage("");
       setStatusMessage("Feedback sent. Thank you.");
     } catch (error) {
@@ -81,7 +83,7 @@ function Feedback() {
       />
 
       <form className="feedback-card" onSubmit={handleSubmit}>
-        <p className="page-label">PRIVATE BETA</p>
+        <p className="page-label">BETA</p>
         <h2>What should we improve?</h2>
 
         <select

@@ -7,4 +7,6 @@ export const STORAGE_KEYS = {
   savedEvents: "pocket-deck-saved-events",
   savedShops: "pocket-deck-saved-shops",
   followedCollectors: "pocket-deck-followed-collectors",
+  betaMission: "beacon-collect-beta-mission",
+  betaFeedback: "beacon-collect-beta-feedback",
 };

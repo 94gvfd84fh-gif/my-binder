@@ -10,6 +10,7 @@ import CollectionTimeline from "../components/CollectionTimeline";
 import CollectionAnalytics from "../components/CollectionAnalytics";
 import ValueAnalytics from "../components/ValueAnalytics";
 import BetaCTA from "../components/BetaCTA";
+import BetaMission from "../components/BetaMission";
 
 const beaconFeatures = [
   {
@@ -52,6 +53,8 @@ function Dashboard() {
         {showAddModal && (
           <AddCardModal onClose={() => setShowAddModal(false)} />
         )}
+
+        <BetaMission />
 
         <section className="onboarding-empty-state beacon-onboarding">
           <div className="beacon-logo-mark beacon-logo-large" aria-hidden="true">
@@ -121,6 +124,8 @@ function Dashboard() {
           </div>
         </div>
       </div>
+
+      <BetaMission />
 
       <BetaCTA />
 
