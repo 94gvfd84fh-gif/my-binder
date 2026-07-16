@@ -30,3 +30,19 @@ export async function saveProfile(profile) {
 
   return data;
 }
+
+export async function getPublicProfiles() {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(
+      "id, username, account_type, favorite_tcg, favorite_set, location, collector_since, bio, avatar, featured_card_id, updated_at"
+    )
+    .order("updated_at", { ascending: false })
+    .limit(80);
+
+  if (error) {
+    throw error;
+  }
+
+  return data || [];
+}
