@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function BetaCTA() {
+function GettingStartedCTA() {
   return (
     <section className="beta-demo-cta">
       <div>
@@ -25,4 +25,4 @@ function BetaCTA() {
   );
 }
 
-export default BetaCTA;
+export default GettingStartedCTA;

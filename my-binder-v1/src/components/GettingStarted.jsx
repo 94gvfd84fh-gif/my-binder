@@ -25,7 +25,7 @@ function readMissionState() {
   }
 }
 
-function BetaMission() {
+function GettingStarted() {
   const { cards } = useContext(CardContext);
   const navigate = useNavigate();
   const [missionState, setMissionState] = useState(readMissionState);
@@ -207,4 +207,4 @@ function BetaMission() {
   );
 }
 
-export default BetaMission;
+export default GettingStarted;

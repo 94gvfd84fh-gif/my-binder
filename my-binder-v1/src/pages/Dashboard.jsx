@@ -9,8 +9,8 @@ import RecentCards from "../components/RecentCards";
 import CollectionTimeline from "../components/CollectionTimeline";
 import CollectionAnalytics from "../components/CollectionAnalytics";
 import ValueAnalytics from "../components/ValueAnalytics";
-import BetaCTA from "../components/BetaCTA";
-import BetaMission from "../components/BetaMission";
+import GettingStartedCTA from "../components/GettingStartedCTA";
+import GettingStarted from "../components/GettingStarted";
 
 const beaconFeatures = [
   {
@@ -54,7 +54,7 @@ function Dashboard() {
           <AddCardModal onClose={() => setShowAddModal(false)} />
         )}
 
-        <BetaMission />
+        <GettingStarted />
 
         <section className="onboarding-empty-state beacon-onboarding">
           <div className="beacon-logo-mark beacon-logo-large" aria-hidden="true">
@@ -122,9 +122,9 @@ function Dashboard() {
         </div>
       </div>
 
-      <BetaMission />
+      <GettingStarted />
 
-      <BetaCTA />
+      <GettingStartedCTA />
 
       <section className="beacon-feature-grid" id="features">
         {beaconFeatures.map((feature) => (
