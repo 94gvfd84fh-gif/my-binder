@@ -33,6 +33,10 @@ function Sidebar() {
       <div className="sidebar-footer">
         <small>Beacon Collect v0.9</small>
         <p>Find. Track. Connect.</p>
+
+        <div className="sidebar-legal-links">
+          <NavLink to="/privacy">Privacy</NavLink>
+        </div>
       </div>
     </aside>
   );

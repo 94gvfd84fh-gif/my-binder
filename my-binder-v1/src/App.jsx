@@ -18,6 +18,7 @@ import PublicCardDetails from "./pages/PublicCardDetails";
 import Auth from "./pages/Auth";
 import Feedback from "./pages/Feedback";
 import DemoSetup from "./pages/DemoSetup";
+import Privacy from "./pages/Privacy";
 import { AuthContext } from "./context/AuthContext";
 import "./App.css";
 
@@ -60,6 +61,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/feedback" element={<Feedback />} />
+          <Route path="/privacy" element={<Privacy />} />
           <Route path="/demo" element={<DemoSetup />} />
           <Route path="/collection" element={<Collection />} />
           <Route path="/collection/:id" element={<CardDetails />} />
