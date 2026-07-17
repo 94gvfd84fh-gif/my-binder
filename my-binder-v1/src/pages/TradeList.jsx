@@ -27,7 +27,7 @@ function TradeList() {
       <PageHeader
         label="BEACON COLLECT TRADES"
         title="Trade & Sale List"
-        description="Cards you are open to trading now, plus cards prepared for future marketplace listings."
+        description="Cards you are open to trading or selling with other collectors."
       />
 
       <section className="trade-list-summary">
@@ -157,7 +157,7 @@ function TradeList() {
         ) : (
           <div className="empty-trade-note">
             <h3>No sale cards yet</h3>
-            <p>Mark cards as For Sale to prepare future marketplace listings.</p>
+            <p>Mark cards as For Sale to prepare collector listings.</p>
           </div>
         )}
       </section>

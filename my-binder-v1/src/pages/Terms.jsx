@@ -19,7 +19,7 @@ const termsSections = [
   {
     title: "Trades and Sales",
     body:
-      "Beacon Collect may help collectors prepare trade lists, sale-ready cards, wishlists, and future marketplace tools. Beacon Collect does not guarantee any trade, sale, buyer, seller, card condition, payment, shipment, or transaction outcome.",
+      "Beacon Collect may help collectors prepare trade lists, sale-ready cards, wishlists, and marketplace activity. Beacon Collect does not guarantee any trade, sale, buyer, seller, card condition, payment, shipment, or transaction outcome.",
   },
   {
     title: "Community Content",

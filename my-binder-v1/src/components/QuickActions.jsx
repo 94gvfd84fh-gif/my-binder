@@ -28,7 +28,7 @@ function QuickActions() {
 
         <Link className="action-card" to="/binder?view=Trade%20Binder">
           <h3>Trade Binder</h3>
-          <p>Check which cards are ready for future trades.</p>
+          <p>Check which cards are ready for trades.</p>
         </Link>
       </div>
     </section>

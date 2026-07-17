@@ -31,7 +31,7 @@ function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <small>Beacon Collect v0.9</small>
+        <small>Beacon Collect</small>
         <p>Find. Track. Connect.</p>
 
         <div className="sidebar-legal-links">

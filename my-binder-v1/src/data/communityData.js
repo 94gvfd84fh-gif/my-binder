@@ -21,13 +21,13 @@ export const communityFeatures = [
     label: "COLLECTORS",
     title: "Discover Collectors",
     description:
-      "Browse public profiles, binders, featured cards, and future reputation signals.",
+      "Browse public profiles, binders, featured cards, and collector activity.",
   },
   {
     label: "MARKETPLACE",
     title: "Buy & Sell",
     description:
-      "Prepare sale-ready cards and future listings powered by your collection.",
+      "Prepare sale-ready cards and listings powered by your collection.",
   },
 ];
 
