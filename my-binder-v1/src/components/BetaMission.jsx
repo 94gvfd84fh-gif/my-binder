@@ -15,13 +15,13 @@ function readMissionState() {
   const savedMission = localStorage.getItem(STORAGE_KEYS.betaMission);
 
   if (!savedMission) {
-    return { started: false, skipped: false, completed: false };
+    return { started: false, completed: false };
   }
 
   try {
     return JSON.parse(savedMission);
   } catch {
-    return { started: false, skipped: false, completed: false };
+    return { started: false, completed: false };
   }
 }
 
@@ -29,6 +29,7 @@ function BetaMission() {
   const { cards } = useContext(CardContext);
   const navigate = useNavigate();
   const [missionState, setMissionState] = useState(readMissionState);
+  const [dismissedThisSession, setDismissedThisSession] = useState(false);
   const [feedbackComplete, setFeedbackComplete] = useState(() => {
     return localStorage.getItem(STORAGE_KEYS.betaFeedback) === "true";
   });
@@ -115,7 +116,7 @@ function BetaMission() {
     setMissionState(completedState);
   }, [missionComplete, missionState]);
 
-  if (missionState.skipped || missionState.completed) {
+  if (dismissedThisSession || missionState.completed) {
     return null;
   }
 
@@ -134,12 +135,8 @@ function BetaMission() {
     navigate(nextStep?.actionTo || "/collection");
   }
 
-  function skipMission() {
-    saveMissionState({
-      ...missionState,
-      skipped: true,
-      skippedAt: new Date().toISOString(),
-    });
+  function hideMissionForNow() {
+    setDismissedThisSession(true);
   }
 
   return (
@@ -198,8 +195,12 @@ function BetaMission() {
           Leave Feedback
         </Link>
 
-        <button className="beta-mission-skip" type="button" onClick={skipMission}>
-          Skip for now
+        <button
+          className="beta-mission-skip"
+          type="button"
+          onClick={hideMissionForNow}
+        >
+          Hide for now
         </button>
       </div>
     </section>
