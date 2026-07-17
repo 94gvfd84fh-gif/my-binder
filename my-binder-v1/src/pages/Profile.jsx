@@ -122,7 +122,7 @@ function Profile() {
         }
 
         await saveProfile(toDatabaseProfile(collectorProfile, user.id));
-        setProfileMessage("Your profile is connected to Supabase.");
+        setProfileMessage("Your profile is saved to your account.");
       } catch (error) {
         setProfileMessage(error.message);
       }
