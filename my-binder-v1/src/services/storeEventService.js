@@ -28,6 +28,21 @@ export async function getPublicStoreEvents() {
   return data || [];
 }
 
+export async function getPublicStoreEventsByStore(storeId) {
+  const { data, error } = await supabase
+    .from("store_events")
+    .select("*")
+    .eq("store_id", storeId)
+    .eq("is_public", true)
+    .order("event_date", { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+
+  return data || [];
+}
+
 export async function createStoreEvent(event, storeId) {
   const { data, error } = await supabase
     .from("store_events")

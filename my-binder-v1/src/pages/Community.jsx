@@ -65,6 +65,7 @@ function profileToCollector(profile) {
     tradeStatus: profile.location ? "Located in " + profile.location : "Open to connect",
     featuredCard: profile.featuredCard,
     isSupabaseProfile: true,
+    linkTo: "/community/profile/" + profile.profileId,
   };
 }
 
@@ -77,6 +78,7 @@ function profileToShop(profile) {
     specialties: profile.bio,
     eventType: "Posts card shows, trade nights, and shop events",
     isSupabaseProfile: true,
+    linkTo: "/community/profile/" + profile.profileId,
   };
 }
 
@@ -427,6 +429,8 @@ function Community() {
                 title={shop.name}
                 details={[shop.area, shop.distance, shop.eventType]}
                 description={shop.specialties}
+                linkTo={shop.linkTo}
+                linkText="View Store"
                 buttonText="Remove Saved"
                 buttonClassName="saved-event-button"
                 onButtonClick={() => toggleSavedShop(shop.id)}
@@ -457,6 +461,8 @@ function Community() {
                     title={shop.name}
                     details={[shop.area, shop.distance, shop.eventType]}
                     description={shop.specialties}
+                    linkTo={shop.linkTo}
+                    linkText="View Store"
                     buttonText={isSaved ? "Saved" : "Save Shop"}
                     buttonClassName={isSaved ? "saved-event-button" : ""}
                     onButtonClick={() => toggleSavedShop(shop.id)}

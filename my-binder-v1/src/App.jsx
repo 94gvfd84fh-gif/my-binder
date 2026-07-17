@@ -12,6 +12,7 @@ import CardDetails from "./pages/CardDetails";
 import Profile from "./pages/Profile";
 import PublicProfile from "./pages/PublicProfile";
 import CollectorProfile from "./pages/CollectorProfile";
+import CommunityProfile from "./pages/CommunityProfile";
 import PublicBinder from "./pages/PublicBinder";
 import PublicCardDetails from "./pages/PublicCardDetails";
 import Auth from "./pages/Auth";
@@ -66,6 +67,10 @@ function App() {
           <Route path="/trade-list" element={<TradeList />} />
 
           <Route path="/community" element={<Community />} />
+          <Route
+            path="/community/profile/:profileId"
+            element={<CommunityProfile />}
+          />
           <Route
             path="/community/collector/:collectorId"
             element={<CollectorProfile />}

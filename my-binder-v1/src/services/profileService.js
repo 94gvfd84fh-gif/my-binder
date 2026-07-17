@@ -46,3 +46,20 @@ export async function getPublicProfiles() {
 
   return data || [];
 }
+
+
+export async function getPublicProfile(profileId) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(
+      "id, username, account_type, favorite_tcg, favorite_set, location, collector_since, bio, avatar, featured_card_id, updated_at"
+    )
+    .eq("id", profileId)
+    .single();
+
+  if (error && error.code !== "PGRST116") {
+    throw error;
+  }
+
+  return data;
+}
