@@ -2,9 +2,9 @@ import PageHeader from "../ui/PageHeader";
 
 const termsSections = [
   {
-    title: "Beta Product",
+    title: "Product Changes",
     body:
-      "Beacon Collect is currently in beta. Features may change, break, improve, or be removed as the product is tested and refined.",
+      "Beacon Collect will continue to evolve. Features may change, improve, or be removed as the product grows.",
   },
   {
     title: "Your Account",
@@ -39,7 +39,7 @@ const termsSections = [
   {
     title: "Account Suspension",
     body:
-      "Beacon Collect may limit, suspend, or remove accounts or content that violates these terms, harms the community, creates legal risk, or abuses the beta.",
+      "Beacon Collect may limit, suspend, or remove accounts or content that violates these terms, harms the community, creates legal risk, or abuses the app.",
   },
   {
     title: "Changes to Terms",
@@ -59,7 +59,7 @@ function Terms() {
       <PageHeader
         label="BEACON COLLECT"
         title="Terms of Use"
-        description="Simple rules for using Beacon Collect during beta."
+        description="Simple rules for using Beacon Collect."
       />
 
       <section className="legal-page-card">
@@ -68,7 +68,7 @@ function Terms() {
           <h2>July 16, 2026</h2>
           <p>
             These terms explain the basic expectations for using Beacon Collect.
-            They are written for the beta and will evolve with the product.
+            They will evolve with the product.
           </p>
         </div>
 

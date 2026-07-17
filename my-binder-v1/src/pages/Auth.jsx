@@ -139,19 +139,19 @@ function Auth() {
   return (
     <div>
       <PageHeader
-        label="BEACON COLLECT BETA"
-        title="Help test Beacon Collect"
-        description="Try the beta in 3 minutes and tell us what feels useful, confusing, or missing."
+        label="BEACON COLLECT"
+        title="Start using Beacon Collect"
+        description="Sign in to save your collection, profile, binders, and community activity."
       />
 
       <section className="beta-welcome-card">
         <div className="beta-welcome-copy">
-          <p className="page-label">HOW TO TEST</p>
-          <h2>A quick mission for collectors</h2>
+          <p className="page-label">GET STARTED</p>
+          <h2>Start collecting in minutes</h2>
           <p>
-            Beacon is easiest to improve when testers follow the same simple
-            path. Add a few cards, try the community tools, then leave one note
-            about what should be better.
+            Add a few cards, organize what you are chasing, explore the
+            community tools, and leave feedback whenever something could be
+            better.
           </p>
         </div>
 
@@ -179,7 +179,7 @@ function Auth() {
       </section>
 
       <form className="auth-card" onSubmit={handleMagicLink}>
-        <p className="page-label">SIGN IN TO START TESTING</p>
+        <p className="page-label">SIGN IN TO START</p>
         <h2>Enter your email</h2>
         <p>We will send you a secure login link. No password needed.</p>
 

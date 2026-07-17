@@ -77,13 +77,13 @@ function Feedback() {
   return (
     <div>
       <PageHeader
-        label="BEACON COLLECT BETA"
+        label="BEACON COLLECT"
         title="Feedback"
         description="Share bugs, ideas, polish notes, or anything that feels confusing."
       />
 
       <form className="feedback-card" onSubmit={handleSubmit}>
-        <p className="page-label">BETA</p>
+        <p className="page-label">FEEDBACK</p>
         <h2>What should we improve?</h2>
 
         <select

@@ -77,7 +77,7 @@ function Dashboard() {
               type="button"
               onClick={() => setShowAddModal(true)}
             >
-              Join the Beta
+              Start Collecting
             </button>
 
             <Link className="secondary-button" to="/community">
@@ -106,7 +106,7 @@ function Dashboard() {
 
           <div className="beacon-hero-actions">
             <Link className="primary-button" to="/collection">
-              Join the Beta
+              Start Collecting
             </Link>
 
             <Link className="secondary-button" to="/community">

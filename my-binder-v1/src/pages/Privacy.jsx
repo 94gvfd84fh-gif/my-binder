@@ -22,19 +22,19 @@ const policySections = [
       "If you create a collector or store profile, information like your username, account type, favorite TCG, location, bio, avatar, public binders, and posted store events may be shown in community discovery or public profile views.",
   },
   {
-    title: "Feedback and Beta Testing",
+    title: "Feedback",
     body:
-      "If you submit feedback, Beacon Collect stores your message, feedback type, and account email so we can understand what to improve during beta testing.",
+      "If you submit feedback, Beacon Collect stores your message, feedback type, and account email so we can understand what to improve.",
   },
   {
     title: "Local Device Storage",
     body:
-      "Beacon Collect may use local storage in your browser to remember app preferences, mission progress, saved events, followed collectors, saved shops, and temporary collection data when you are not signed in.",
+      "Beacon Collect may use local storage in your browser to remember app preferences, setup progress, saved events, followed collectors, saved shops, and temporary collection data when you are not signed in.",
   },
   {
     title: "How We Use Data",
     body:
-      "We use data to run the app, save your collection, show your public profile choices, improve beta features, troubleshoot issues, and develop future collector tools.",
+      "We use data to run the app, save your collection, show your public profile choices, improve product features, troubleshoot issues, and develop future collector tools.",
   },
   {
     title: "Data Deletion",
@@ -54,7 +54,7 @@ function Privacy() {
       <PageHeader
         label="BEACON COLLECT"
         title="Privacy Policy"
-        description="How Beacon Collect handles account, collection, profile, and community data during beta."
+        description="How Beacon Collect handles account, collection, profile, and community data."
       />
 
       <section className="legal-page-card">
@@ -62,8 +62,8 @@ function Privacy() {
           <p className="page-label">LAST UPDATED</p>
           <h2>July 16, 2026</h2>
           <p>
-            This privacy policy is written for the Beacon Collect beta. It is a
-            plain-language overview of what the app collects and why.
+            This privacy policy explains what Beacon Collect collects, how the
+            app uses that information, and how your account data is handled.
           </p>
         </div>
 
@@ -77,10 +77,10 @@ function Privacy() {
         </div>
 
         <div className="legal-note">
-          <p className="page-label">BETA NOTE</p>
+          <p className="page-label">PRODUCT NOTE</p>
           <p>
-            Beacon Collect is still in beta. Features, data fields, and public
-            profile controls may change as the product improves.
+            Beacon Collect will continue to improve. Features, data fields, and
+            public profile controls may change as the product grows.
           </p>
         </div>
       </section>

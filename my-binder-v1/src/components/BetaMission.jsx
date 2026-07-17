@@ -68,28 +68,28 @@ function BetaMission() {
   const missionSteps = [
     {
       title: "Add one card you own",
-      description: "Test the core collection flow.",
+      description: "Start with a card already in your collection.",
       complete: hasOwnedCard,
       actionLabel: "Add Card",
       actionTo: "/collection",
     },
     {
       title: "Add one wishlist card",
-      description: "Make sure chase cards feel clear.",
+      description: "Track a card you are chasing.",
       complete: hasWishlistCard,
       actionLabel: "Open Collection",
       actionTo: "/collection",
     },
     {
       title: "Mark one card for trade",
-      description: "Help test the trade list foundation.",
+      description: "Prepare your first trade signal.",
       complete: hasTradeCard,
       actionLabel: "Trade List",
       actionTo: "/trade-list",
     },
     {
       title: "Leave feedback",
-      description: "Tell us what was confusing or exciting.",
+      description: "Tell us what would make Beacon more useful.",
       complete: feedbackComplete,
       actionLabel: "Send Feedback",
       actionTo: "/feedback",
@@ -146,15 +146,18 @@ function BetaMission() {
     <section className="beta-mission-card">
       <div className="beta-mission-header">
         <div>
-          <p className="page-label">BETA MISSION</p>
-          <h2>Help test Beacon in under 3 minutes</h2>
+          <p className="page-label">GETTING STARTED</p>
+          <h2>Set up Beacon in a few minutes</h2>
           <p>
-            New testers need a clear path. Complete these four quick actions so
-            we can see where Beacon feels smooth and where it needs polish.
+            Add your first cards, organize what you're chasing, and turn Beacon
+            into your collection hub.
           </p>
         </div>
 
-        <div className="beta-mission-progress" aria-label="Beta mission progress">
+        <div
+          className="beta-mission-progress"
+          aria-label="Getting started progress"
+        >
           <strong>{completedSteps}/4</strong>
           <span>complete</span>
         </div>
@@ -188,7 +191,7 @@ function BetaMission() {
 
       <div className="beta-mission-actions">
         <button className="primary-button" type="button" onClick={startMission}>
-          {missionState.started ? "Continue Beta Mission" : "Start Beta Mission"}
+          {missionState.started ? "Continue Setup" : "Start Setup"}
         </button>
 
         <Link className="secondary-button" to="/feedback">
