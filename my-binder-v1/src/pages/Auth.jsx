@@ -53,7 +53,7 @@ function Auth() {
       const existingProfile = await getProfile(user.id);
 
       if (existingProfile) {
-        setMessage("Your Supabase profile already exists.");
+        setMessage("Your Beacon profile is already set up.");
         setIsSavingProfile(false);
         return;
       }
@@ -71,7 +71,7 @@ function Auth() {
         updated_at: new Date().toISOString(),
       });
 
-      setMessage("Your Supabase profile was created.");
+      setMessage("Your Beacon profile is ready.");
     } catch (error) {
       setMessage(error.message);
     }
@@ -101,16 +101,15 @@ function Auth() {
       <div>
         <PageHeader
           label="BEACON COLLECT ACCOUNT"
-          title="You are signed in"
-          description="Your Beacon Collect account connection is working."
+          title="Your account is ready"
+          description="You can now save your collection, profile, binders, and community activity."
         />
 
         <div className="auth-card">
           <p className="page-label">SIGNED IN</p>
           <h2>{user.email}</h2>
           <p>
-            Supabase authentication is connected. Your collection, profile, and
-            binders can now save to your Beacon Collect account.
+            You are signed in. Set up your collector profile, then start adding cards, binders, wishlist items, and community activity.
           </p>
 
           <button
@@ -119,7 +118,7 @@ function Auth() {
             onClick={handleCreateProfile}
             disabled={isSavingProfile}
           >
-            {isSavingProfile ? "Saving Profile..." : "Create Supabase Profile"}
+            {isSavingProfile ? "Setting Up Profile..." : "Set Up Profile"}
           </button>
 
           <button
