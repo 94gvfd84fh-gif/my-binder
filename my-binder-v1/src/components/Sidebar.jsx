@@ -36,6 +36,7 @@ function Sidebar() {
 
         <div className="sidebar-legal-links">
           <NavLink to="/privacy">Privacy</NavLink>
+          <NavLink to="/terms">Terms</NavLink>
         </div>
       </div>
     </aside>

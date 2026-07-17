@@ -19,6 +19,7 @@ import Auth from "./pages/Auth";
 import Feedback from "./pages/Feedback";
 import DemoSetup from "./pages/DemoSetup";
 import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import { AuthContext } from "./context/AuthContext";
 import "./App.css";
 
@@ -62,6 +63,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/demo" element={<DemoSetup />} />
           <Route path="/collection" element={<Collection />} />
           <Route path="/collection/:id" element={<CardDetails />} />
