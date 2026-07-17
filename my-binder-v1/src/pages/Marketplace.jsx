@@ -6,7 +6,7 @@ function Marketplace() {
       <PageHeader
         label="BEACON COLLECT MARKETPLACE"
         title="Marketplace"
-        description="A future place for collectors to buy, sell, trade, and connect through their collections."
+        description="Prepare sale-ready cards, trade lists, wishlists, and collector connections in one place."
       />
 
       <div className="marketplace-preview">
@@ -14,8 +14,7 @@ function Marketplace() {
           <p className="page-label">MARKETPLACE</p>
           <h2>Buy & Sell Cards</h2>
           <p>
-            Turn sale-ready cards into future listings with asking prices,
-            condition, grading, and card details already attached.
+            Prepare cards for sale with asking prices, condition, grading, and card details already attached.
           </p>
         </section>
 
@@ -24,7 +23,7 @@ function Marketplace() {
           <h2>Match With Collectors</h2>
           <p>
             Use trade lists, public binders, and wishlists to find collectors
-            who are chasing what you have.
+            who are chasing what you have now.
           </p>
         </section>
 
@@ -51,18 +50,16 @@ function Marketplace() {
           <h2>Discover Profiles</h2>
           <p>
             Browse public collector profiles, featured cards, public binders,
-            and future reputation signals.
+            and collection activity.
           </p>
         </section>
       </div>
 
       <div className="marketplace-note">
         <p className="page-label">FOUNDATION READY</p>
-        <h3>The marketplace layer is taking shape</h3>
+        <h3>Your trade and sale foundation is ready</h3>
         <p>
-          Public profiles, public binders, trade lists, wishlists, sale prices,
-          and card types are now structured so Beacon Collect can grow into a full
-          collector marketplace and community.
+          Public profiles, public binders, trade lists, wishlists, sale prices, and card types are ready to support collector-to-collector discovery.
         </p>
       </div>
     </div>

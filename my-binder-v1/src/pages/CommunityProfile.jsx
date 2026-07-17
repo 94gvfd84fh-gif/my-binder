@@ -20,7 +20,7 @@ function toProfileView(profile) {
     collectorSince: profile.collector_since || "Not set yet",
     bio: profile.bio || "This Beacon profile is still being filled out.",
     avatar: profile.avatar || "",
-    featuredCard: profile.favorite_set || "Featured card coming soon",
+    featuredCard: profile.favorite_set || "Featured card not set yet",
   };
 }
 
