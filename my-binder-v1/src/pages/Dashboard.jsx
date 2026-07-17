@@ -84,9 +84,6 @@ function Dashboard() {
               Explore Features
             </Link>
 
-            <Link className="secondary-button" to="/demo">
-              Load Reel Demo
-            </Link>
           </div>
         </section>
       </div>
