@@ -143,8 +143,8 @@ function Auth() {
         description="Sign in to save your collection, profile, binders, and community activity."
       />
 
-      <section className="beta-welcome-card">
-        <div className="beta-welcome-copy">
+      <section className="getting-started-welcome-card">
+        <div className="getting-started-welcome-copy">
           <p className="page-label">GET STARTED</p>
           <h2>Start collecting in minutes</h2>
           <p>
@@ -154,7 +154,7 @@ function Auth() {
           </p>
         </div>
 
-        <div className="beta-welcome-steps">
+        <div className="getting-started-welcome-steps">
           <div>
             <span>01</span>
             <strong>Add a card you own</strong>

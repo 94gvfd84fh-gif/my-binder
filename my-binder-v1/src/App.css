@@ -4492,8 +4492,8 @@ nav a.active {
 }
 
 
-/* Reel demo and beta CTA */
-.beta-demo-cta,
+/* Getting started CTA */
+.getting-started-cta,
 .demo-setup-card {
   border: 1px solid rgba(37, 99, 235, 0.36);
   background:
@@ -4503,7 +4503,7 @@ nav a.active {
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
 }
 
-.beta-demo-cta {
+.getting-started-cta {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -4512,14 +4512,14 @@ nav a.active {
   padding: 28px;
 }
 
-.beta-demo-cta h2,
+.getting-started-cta h2,
 .demo-setup-card h2 {
   margin: 8px 0 10px;
   color: var(--text-primary, #ffffff);
   letter-spacing: -0.04em;
 }
 
-.beta-demo-cta p:not(.page-label),
+.getting-started-cta p:not(.page-label),
 .demo-setup-card p:not(.page-label) {
   color: var(--text-secondary, #94a3b8);
   max-width: 720px;
@@ -4537,15 +4537,15 @@ nav a.active {
 }
 
 @media (max-width: 760px) {
-  .beta-demo-cta {
+  .getting-started-cta {
     align-items: flex-start;
     flex-direction: column;
   }
 }
 
 
-/* Beta mission */
-.beta-mission-card {
+/* Getting started */
+.getting-started-card {
   margin: 28px 0;
   padding: 28px;
   border: 1px solid rgba(37, 99, 235, 0.34);
@@ -4556,7 +4556,7 @@ nav a.active {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
 }
 
-.beta-mission-header {
+.getting-started-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -4564,18 +4564,18 @@ nav a.active {
   margin-bottom: 24px;
 }
 
-.beta-mission-header h2 {
+.getting-started-header h2 {
   margin: 8px 0 10px;
   font-size: clamp(1.7rem, 3vw, 2.4rem);
   color: var(--text-main, #ffffff);
 }
 
-.beta-mission-header p {
+.getting-started-header p {
   max-width: 760px;
   color: var(--text-muted, #94a3b8);
 }
 
-.beta-mission-progress {
+.getting-started-progress {
   min-width: 132px;
   padding: 16px;
   border: 1px solid rgba(6, 182, 212, 0.28);
@@ -4584,26 +4584,26 @@ nav a.active {
   background: rgba(6, 182, 212, 0.08);
 }
 
-.beta-mission-progress strong {
+.getting-started-progress strong {
   display: block;
   font-size: 2rem;
   color: #ffffff;
 }
 
-.beta-mission-progress span {
+.getting-started-progress span {
   color: var(--text-muted, #94a3b8);
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
 
-.beta-mission-steps {
+.getting-started-steps {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
 }
 
-.beta-mission-step {
+.getting-started-step {
   display: grid;
   grid-template-columns: 42px 1fr;
   gap: 14px;
@@ -4614,12 +4614,12 @@ nav a.active {
   background: rgba(15, 23, 42, 0.56);
 }
 
-.beta-mission-step.complete {
+.getting-started-step.complete {
   border-color: rgba(6, 182, 212, 0.48);
   background: rgba(6, 182, 212, 0.09);
 }
 
-.beta-mission-step-number {
+.getting-started-step-number {
   display: grid;
   place-items: center;
   width: 42px;
@@ -4630,29 +4630,29 @@ nav a.active {
   font-weight: 800;
 }
 
-.beta-mission-step.complete .beta-mission-step-number {
+.getting-started-step.complete .getting-started-step-number {
   background: linear-gradient(135deg, #2563eb, #06b6d4);
 }
 
-.beta-mission-step h3 {
+.getting-started-step h3 {
   margin: 0 0 8px;
   font-size: 1rem;
   color: #ffffff;
 }
 
-.beta-mission-step p {
+.getting-started-step p {
   margin: 0 0 12px;
   color: var(--text-muted, #94a3b8);
   font-size: 0.95rem;
 }
 
-.beta-mission-step a {
+.getting-started-step a {
   color: #38bdf8;
   font-weight: 700;
   text-decoration: none;
 }
 
-.beta-mission-actions {
+.getting-started-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -4660,7 +4660,7 @@ nav a.active {
   margin-top: 22px;
 }
 
-.beta-mission-skip {
+.getting-started-skip {
   border: 1px solid rgba(148, 163, 184, 0.22);
   border-radius: 999px;
   padding: 12px 18px;
@@ -4669,36 +4669,36 @@ nav a.active {
   cursor: pointer;
 }
 
-.beta-mission-skip:hover {
+.getting-started-skip:hover {
   color: #ffffff;
   border-color: rgba(6, 182, 212, 0.5);
 }
 
 @media (max-width: 1100px) {
-  .beta-mission-steps {
+  .getting-started-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 720px) {
-  .beta-mission-card {
+  .getting-started-card {
     padding: 20px;
     border-radius: 22px;
   }
 
-  .beta-mission-header {
+  .getting-started-header {
     flex-direction: column;
   }
 
-  .beta-mission-progress {
+  .getting-started-progress {
     width: 100%;
   }
 
-  .beta-mission-steps {
+  .getting-started-steps {
     grid-template-columns: 1fr;
   }
 
-  .beta-mission-actions > * {
+  .getting-started-actions > * {
     width: 100%;
     justify-content: center;
     text-align: center;
@@ -4706,8 +4706,8 @@ nav a.active {
 }
 
 
-/* Beta welcome */
-.beta-welcome-card {
+/* Getting started welcome */
+.getting-started-welcome-card {
   max-width: 960px;
   margin: 32px auto 0;
   padding: 30px;
@@ -4719,29 +4719,29 @@ nav a.active {
   box-shadow: var(--shadow-card);
 }
 
-.beta-welcome-copy {
+.getting-started-welcome-copy {
   max-width: 760px;
 }
 
-.beta-welcome-copy h2 {
+.getting-started-welcome-copy h2 {
   margin: 8px 0 12px;
   color: var(--text-main);
   font-size: clamp(1.9rem, 4vw, 3rem);
 }
 
-.beta-welcome-copy p {
+.getting-started-welcome-copy p {
   color: var(--text-muted);
   line-height: 1.7;
 }
 
-.beta-welcome-steps {
+.getting-started-welcome-steps {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
   margin-top: 24px;
 }
 
-.beta-welcome-steps div {
+.getting-started-welcome-steps div {
   min-height: 128px;
   padding: 18px;
   border: 1px solid rgba(226, 232, 240, 0.12);
@@ -4749,7 +4749,7 @@ nav a.active {
   background: rgba(15, 23, 42, 0.58);
 }
 
-.beta-welcome-steps span {
+.getting-started-welcome-steps span {
   display: block;
   margin-bottom: 18px;
   color: var(--brand-cyan, #06b6d4);
@@ -4757,7 +4757,7 @@ nav a.active {
   letter-spacing: 0.12em;
 }
 
-.beta-welcome-steps strong {
+.getting-started-welcome-steps strong {
   display: block;
   color: var(--text-main);
   font-size: 1.05rem;
@@ -4765,18 +4765,18 @@ nav a.active {
 }
 
 @media (max-width: 900px) {
-  .beta-welcome-steps {
+  .getting-started-welcome-steps {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 560px) {
-  .beta-welcome-card {
+  .getting-started-welcome-card {
     padding: 22px;
     border-radius: 22px;
   }
 
-  .beta-welcome-steps {
+  .getting-started-welcome-steps {
     grid-template-columns: 1fr;
   }
 }

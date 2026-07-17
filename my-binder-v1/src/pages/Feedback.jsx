@@ -64,7 +64,7 @@ function Feedback() {
         ...currentFeedback,
       ]);
 
-      localStorage.setItem(STORAGE_KEYS.betaFeedback, "true");
+      localStorage.setItem(STORAGE_KEYS.gettingStartedFeedback, "true");
       setMessage("");
       setStatusMessage("Feedback sent. Thank you.");
     } catch (error) {

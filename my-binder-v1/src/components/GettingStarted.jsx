@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
-import { STORAGE_KEYS } from "../constants/storageKeys";
+import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from "../constants/storageKeys";
 
 function getPrimaryBinder(card) {
   if (card.status === "Wishlist") {
@@ -12,7 +12,9 @@ function getPrimaryBinder(card) {
 }
 
 function readMissionState() {
-  const savedMission = localStorage.getItem(STORAGE_KEYS.betaMission);
+  const savedMission =
+    localStorage.getItem(STORAGE_KEYS.gettingStarted) ||
+    localStorage.getItem(LEGACY_STORAGE_KEYS.gettingStarted);
 
   if (!savedMission) {
     return { started: false, completed: false };
@@ -31,13 +33,17 @@ function GettingStarted() {
   const [missionState, setMissionState] = useState(readMissionState);
   const [dismissedThisSession, setDismissedThisSession] = useState(false);
   const [feedbackComplete, setFeedbackComplete] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.betaFeedback) === "true";
+    return (
+      localStorage.getItem(STORAGE_KEYS.gettingStartedFeedback) === "true" ||
+      localStorage.getItem(LEGACY_STORAGE_KEYS.gettingStartedFeedback) === "true"
+    );
   });
 
   useEffect(() => {
     function syncFeedbackState() {
       setFeedbackComplete(
-        localStorage.getItem(STORAGE_KEYS.betaFeedback) === "true"
+        localStorage.getItem(STORAGE_KEYS.gettingStartedFeedback) === "true" ||
+          localStorage.getItem(LEGACY_STORAGE_KEYS.gettingStartedFeedback) === "true"
       );
     }
 
@@ -112,7 +118,7 @@ function GettingStarted() {
       completedAt: new Date().toISOString(),
     };
 
-    localStorage.setItem(STORAGE_KEYS.betaMission, JSON.stringify(completedState));
+    localStorage.setItem(STORAGE_KEYS.gettingStarted, JSON.stringify(completedState));
     setMissionState(completedState);
   }, [missionComplete, missionState]);
 
@@ -121,7 +127,7 @@ function GettingStarted() {
   }
 
   function saveMissionState(nextState) {
-    localStorage.setItem(STORAGE_KEYS.betaMission, JSON.stringify(nextState));
+    localStorage.setItem(STORAGE_KEYS.gettingStarted, JSON.stringify(nextState));
     setMissionState(nextState);
   }
 
@@ -140,8 +146,8 @@ function GettingStarted() {
   }
 
   return (
-    <section className="beta-mission-card">
-      <div className="beta-mission-header">
+    <section className="getting-started-card">
+      <div className="getting-started-header">
         <div>
           <p className="page-label">GETTING STARTED</p>
           <h2>Set up Beacon in a few minutes</h2>
@@ -152,7 +158,7 @@ function GettingStarted() {
         </div>
 
         <div
-          className="beta-mission-progress"
+          className="getting-started-progress"
           aria-label="Getting started progress"
         >
           <strong>{completedSteps}/4</strong>
@@ -160,17 +166,17 @@ function GettingStarted() {
         </div>
       </div>
 
-      <div className="beta-mission-steps">
+      <div className="getting-started-steps">
         {missionSteps.map((step, index) => (
           <article
             className={
               step.complete
-                ? "beta-mission-step complete"
-                : "beta-mission-step"
+                ? "getting-started-step complete"
+                : "getting-started-step"
             }
             key={step.title}
           >
-            <div className="beta-mission-step-number">
+            <div className="getting-started-step-number">
               {step.complete ? "✓" : index + 1}
             </div>
 
@@ -186,7 +192,7 @@ function GettingStarted() {
         ))}
       </div>
 
-      <div className="beta-mission-actions">
+      <div className="getting-started-actions">
         <button className="primary-button" type="button" onClick={startMission}>
           {missionState.started ? "Continue Setup" : "Start Setup"}
         </button>
@@ -196,7 +202,7 @@ function GettingStarted() {
         </Link>
 
         <button
-          className="beta-mission-skip"
+          className="getting-started-skip"
           type="button"
           onClick={hideMissionForNow}
         >

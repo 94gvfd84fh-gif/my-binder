@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function GettingStartedCTA() {
   return (
-    <section className="beta-demo-cta">
+    <section className="getting-started-cta">
       <div>
         <p className="page-label">GET STARTED</p>
         <h2>Build your collection with Beacon Collect</h2>
@@ -12,7 +12,7 @@ function GettingStartedCTA() {
         </p>
       </div>
 
-      <div className="beta-demo-actions">
+      <div className="getting-started-cta-actions">
         <Link className="primary-button" to="/collection">
           Open Collection
         </Link>
