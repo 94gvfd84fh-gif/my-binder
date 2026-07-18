@@ -238,12 +238,6 @@ function CardProvider({ children }) {
     setCardsLoading(false);
   }
 
-  function loadDemoCards() {
-    const demoCards = normalizeCards(initialCards);
-    setCards(demoCards);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(demoCards));
-  }
-
   async function syncLocalCardsToSupabase() {
     if (!user) {
       setCardsError("Sign in before syncing cards.");
@@ -279,7 +273,6 @@ function CardProvider({ children }) {
         addCard,
         editCard,
         removeCard,
-        loadDemoCards,
         syncLocalCardsToSupabase,
       }}
     >
