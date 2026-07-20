@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { supabase } from "../lib/supabaseClient";
-import { getProfile, saveProfile } from "../services/profileService";
 import PageHeader from "../ui/PageHeader";
 
 function Auth() {
@@ -10,7 +10,6 @@ function Auth() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   async function handleMagicLink(event) {
     event.preventDefault();
@@ -38,45 +37,6 @@ function Auth() {
     }
 
     setMessage("Check your email for a Beacon Collect login link.");
-  }
-
-  async function handleCreateProfile() {
-    if (!user) {
-      setMessage("You need to sign in first.");
-      return;
-    }
-
-    setIsSavingProfile(true);
-    setMessage("");
-
-    try {
-      const existingProfile = await getProfile(user.id);
-
-      if (existingProfile) {
-        setMessage("Your Beacon profile is already set up.");
-        setIsSavingProfile(false);
-        return;
-      }
-
-      await saveProfile({
-        id: user.id,
-        username: "Beacon Collector",
-        favorite_tcg: "Pokémon",
-        favorite_set: "",
-        location: "",
-        collector_since: "",
-        bio: "",
-        avatar: "",
-        featured_card_id: "",
-        updated_at: new Date().toISOString(),
-      });
-
-      setMessage("Your Beacon profile is ready.");
-    } catch (error) {
-      setMessage(error.message);
-    }
-
-    setIsSavingProfile(false);
   }
 
   async function handleSignOut() {
@@ -109,17 +69,12 @@ function Auth() {
           <p className="page-label">SIGNED IN</p>
           <h2>{user.email}</h2>
           <p>
-            You are signed in. Set up your collector profile, then start adding cards, binders, wishlist items, and community activity.
+            You are signed in. Manage your profile, collection, binders, wishlist items, and community activity from your Beacon account.
           </p>
 
-          <button
-            className="primary-button"
-            type="button"
-            onClick={handleCreateProfile}
-            disabled={isSavingProfile}
-          >
-            {isSavingProfile ? "Setting Up Profile..." : "Set Up Profile"}
-          </button>
+          <Link className="primary-button" to="/profile">
+            Open Profile
+          </Link>
 
           <button
             className="secondary-button"

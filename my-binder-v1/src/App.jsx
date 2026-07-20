@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import NotificationCenter from "./components/NotificationCenter";
@@ -19,11 +19,38 @@ import Auth from "./pages/Auth";
 import Feedback from "./pages/Feedback";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Onboarding from "./pages/Onboarding";
 import { AuthContext } from "./context/AuthContext";
+import { getProfile } from "./services/profileService";
 import "./App.css";
 
 function App() {
   const { user, authLoading } = useContext(AuthContext);
+  const [hasProfile, setHasProfile] = useState(false);
+  const [isCheckingProfile, setIsCheckingProfile] = useState(true);
+
+  useEffect(() => {
+    async function checkProfile() {
+      if (!user) {
+        setHasProfile(false);
+        setIsCheckingProfile(false);
+        return;
+      }
+
+      setIsCheckingProfile(true);
+
+      try {
+        const profile = await getProfile(user.id);
+        setHasProfile(Boolean(profile));
+      } catch {
+        setHasProfile(true);
+      }
+
+      setIsCheckingProfile(false);
+    }
+
+    checkProfile();
+  }, [user]);
 
   if (authLoading) {
     return (
@@ -48,6 +75,32 @@ function App() {
     );
   }
 
+  if (isCheckingProfile) {
+    return (
+      <div className="app-auth-shell">
+        <div className="auth-card">
+          <p className="page-label">BEACON COLLECT</p>
+          <h2>Loading your profile</h2>
+          <p>Getting your Beacon profile ready.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasProfile) {
+    return (
+      <div className="app-auth-shell">
+        <Routes>
+          <Route
+            path="/onboarding"
+            element={<Onboarding onComplete={() => setHasProfile(true)} />}
+          />
+          <Route path="*" element={<Navigate to="/onboarding" replace />} />
+        </Routes>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <Sidebar />
@@ -60,6 +113,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/onboarding" element={<Navigate to="/" replace />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />

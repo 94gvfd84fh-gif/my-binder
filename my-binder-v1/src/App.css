@@ -4959,3 +4959,127 @@ nav a.active {
     border-radius: 22px;
   }
 }
+
+
+/* First-time onboarding */
+.onboarding-profile-card {
+  max-width: 920px;
+  margin: 0 auto 48px;
+  padding: 32px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(26, 34, 48, 0.96), rgba(13, 17, 23, 0.98));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+}
+
+.onboarding-profile-intro {
+  max-width: 680px;
+  margin-bottom: 28px;
+}
+
+.onboarding-profile-intro h2 {
+  margin: 0 0 10px;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+}
+
+.onboarding-profile-intro p:not(.page-label) {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.onboarding-profile-form {
+  display: grid;
+  gap: 20px;
+}
+
+.onboarding-profile-form label {
+  display: grid;
+  gap: 10px;
+  color: var(--text-main);
+  font-weight: 800;
+}
+
+.onboarding-profile-form input,
+.onboarding-profile-form select,
+.onboarding-profile-form textarea {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.72);
+  color: var(--text-main);
+  font: inherit;
+  padding: 15px 16px;
+  outline: none;
+}
+
+.onboarding-profile-form textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.onboarding-profile-form input:focus,
+.onboarding-profile-form select:focus,
+.onboarding-profile-form textarea:focus {
+  border-color: rgba(37, 99, 235, 0.78);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.16);
+}
+
+.onboarding-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.onboarding-choice-grid button {
+  min-height: 118px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--text-main);
+  padding: 18px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.onboarding-choice-grid button:hover,
+.onboarding-choice-grid button.active-choice {
+  transform: translateY(-2px);
+  border-color: rgba(6, 182, 212, 0.72);
+  background: linear-gradient(145deg, rgba(37, 99, 235, 0.22), rgba(6, 182, 212, 0.1));
+}
+
+.onboarding-choice-grid span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+
+.onboarding-choice-grid small {
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.onboarding-profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+@media (max-width: 720px) {
+  .onboarding-profile-card {
+    padding: 22px;
+    border-radius: 20px;
+  }
+
+  .onboarding-choice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .onboarding-profile-actions > * {
+    width: 100%;
+  }
+}
