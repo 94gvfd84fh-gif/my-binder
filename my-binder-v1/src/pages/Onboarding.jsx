@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { supabase } from "../lib/supabaseClient";
-import { saveProfile } from "../services/profileService";
+import { getProfileByUsername, saveProfile } from "../services/profileService";
 import PageHeader from "../ui/PageHeader";
 
 const collectingOptions = [
@@ -36,10 +36,17 @@ function Onboarding({ onComplete }) {
       return;
     }
 
-    const cleanUsername = username.trim();
+    const cleanUsername = username.trim().toLowerCase();
 
     if (!cleanUsername) {
       setMessage("Choose a username first.");
+      return;
+    }
+
+    if (!/^[a-z0-9._-]{3,24}$/.test(cleanUsername)) {
+      setMessage(
+        "Usernames must be 3-24 characters and can use letters, numbers, dots, underscores, or hyphens."
+      );
       return;
     }
 
@@ -47,6 +54,14 @@ function Onboarding({ onComplete }) {
     setMessage("");
 
     try {
+      const existingUsername = await getProfileByUsername(cleanUsername);
+
+      if (existingUsername && existingUsername.id !== user.id) {
+        setMessage("That username is already taken. Try another one.");
+        setIsSaving(false);
+        return;
+      }
+
       await saveProfile({
         id: user.id,
         username: cleanUsername,
@@ -91,7 +106,8 @@ function Onboarding({ onComplete }) {
           <h2>Make Beacon yours</h2>
           <p>
             Your username and account type help power community search, public
-            profiles, store events, and collector discovery.
+            profiles, store events, and collector discovery. Usernames are unique
+            and become part of how people recognize you.
           </p>
         </div>
 
@@ -102,7 +118,7 @@ function Onboarding({ onComplete }) {
               type="text"
               placeholder="Example: vintageadam"
               value={username}
-              onChange={(event) => setUsername(event.target.value)}
+              onChange={(event) => setUsername(event.target.value.toLowerCase())}
             />
           </label>
 

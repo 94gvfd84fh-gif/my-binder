@@ -63,3 +63,18 @@ export async function getPublicProfile(profileId) {
 
   return data;
 }
+
+
+export async function getProfileByUsername(username) {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, username")
+    .ilike("username", username)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
