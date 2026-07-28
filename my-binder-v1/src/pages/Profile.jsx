@@ -107,6 +107,9 @@ function Profile() {
   const [profileMessage, setProfileMessage] = useState("");
   const [isSavingProfile, setIsSavingProfile] = useState(false);
 
+  const isStoreAccount = collectorProfile.accountType === "Store";
+  const accountLabel = isStoreAccount ? "STORE ACCOUNT" : "COLLECTOR ACCOUNT";
+
   useEffect(() => {
     async function loadSupabaseProfile() {
       if (!user) return;
@@ -170,8 +173,13 @@ function Profile() {
     );
   }
 
-  const ownedCards = cards.filter((card) => getPrimaryBinder(card) !== "Wishlist");
-  const wishlistCards = cards.filter((card) => getPrimaryBinder(card) === "Wishlist");
+  const ownedCards = cards.filter((card) => {
+    return getPrimaryBinder(card) !== "Wishlist";
+  });
+
+  const wishlistCards = cards.filter((card) => {
+    return getPrimaryBinder(card) === "Wishlist";
+  });
 
   const totalCards = ownedCards.length;
 
@@ -369,15 +377,16 @@ function Profile() {
     event.target.value = "";
   }
 
-  const isStoreAccount = collectorProfile.accountType === "Store";
-  const accountLabel = isStoreAccount ? "STORE" : "COLLECTOR";
-
   return (
     <div>
       <PageHeader
         label="BEACON COLLECT PROFILE"
         title={isStoreAccount ? "Store Profile" : "Collector Profile"}
-        description="Build your Beacon Collect identity before the platform becomes social."
+        description={
+          isStoreAccount
+            ? "Manage your store identity, public presence, and posted events."
+            : "Manage your collector identity, public profile, and collection summary."
+        }
       />
 
       {profileMessage && <p className="auth-message">{profileMessage}</p>}
@@ -400,7 +409,7 @@ function Profile() {
             <h2>{collectorProfile.username}</h2>
             <p>
               {isStoreAccount
-                ? "Store / Shop Account"
+                ? "Shop, event host, or collector business"
                 : `${collectorProfile.favoriteTcg} Collector`}
             </p>
           </div>
@@ -412,6 +421,7 @@ function Profile() {
 
             <button
               className="secondary-button"
+              type="button"
               onClick={() => {
                 setIsPreviewingPublicProfile(!isPreviewingPublicProfile);
                 setIsEditingProfile(false);
@@ -423,6 +433,7 @@ function Profile() {
             {!isPreviewingPublicProfile && (
               <button
                 className="primary-button"
+                type="button"
                 onClick={() => setIsEditingProfile(!isEditingProfile)}
               >
                 {isEditingProfile ? "Done" : "Edit Profile"}
@@ -455,12 +466,12 @@ function Profile() {
           </div>
 
           <div>
-            <span>Favorite Set</span>
+            <span>{isStoreAccount ? "Main Focus" : "Favorite Set"}</span>
             <strong>{collectorProfile.favoriteSet}</strong>
           </div>
 
           <div>
-            <span>Top Card Type</span>
+            <span>{isStoreAccount ? "Shop Category" : "Top Card Type"}</span>
             <strong>{topCardType}</strong>
           </div>
 
@@ -504,12 +515,26 @@ function Profile() {
           </div>
         </div>
 
+        {isStoreAccount && !isPreviewingPublicProfile && (
+          <div className="profile-empty-note store-profile-note">
+            <p>Store tools are enabled.</p>
+            <span>
+              You can post trade nights, card shows, shop events, and flyers
+              below. Collector accounts will not see these posting tools.
+            </span>
+          </div>
+        )}
+
         {collectionMix.length > 0 && (
           <div className="profile-collection-mix">
             <div className="section-header">
               <div>
-                <h3>Collection Mix</h3>
-                <p>Your collection across card types.</p>
+                <h3>{isStoreAccount ? "Store Inventory Mix" : "Collection Mix"}</h3>
+                <p>
+                  {isStoreAccount
+                    ? "A quick read on what your store account has listed."
+                    : "Your collection across card types."}
+                </p>
               </div>
             </div>
 
@@ -536,8 +561,8 @@ function Profile() {
           </div>
 
           <div>
-            <strong>New Collector</strong>
-            <span>Trade Rating</span>
+            <strong>{isStoreAccount ? "Store Account" : "New Collector"}</strong>
+            <span>{isStoreAccount ? "Account Status" : "Trade Rating"}</span>
           </div>
         </div>
 
@@ -577,7 +602,7 @@ function Profile() {
             <div className="editor-section-header">
               <div>
                 <p className="page-label">EDIT PROFILE</p>
-                <h3>Identity</h3>
+                <h3>{isStoreAccount ? "Store Identity" : "Collector Identity"}</h3>
               </div>
             </div>
 
@@ -607,9 +632,13 @@ function Profile() {
               </label>
 
               <label>
-                <span>Favorite TCG</span>
+                <span>{isStoreAccount ? "Store Focus" : "Favorite TCG"}</span>
                 <input
-                  placeholder="Favorite TCG"
+                  placeholder={
+                    isStoreAccount
+                      ? "Pokemon, sports cards, One Piece..."
+                      : "Favorite TCG"
+                  }
                   value={collectorProfile.favoriteTcg}
                   onChange={(event) =>
                     updateProfile("favoriteTcg", event.target.value)
@@ -618,9 +647,11 @@ function Profile() {
               </label>
 
               <label>
-                <span>Favorite Set</span>
+                <span>{isStoreAccount ? "Main Specialty" : "Favorite Set"}</span>
                 <input
-                  placeholder="Favorite Set"
+                  placeholder={
+                    isStoreAccount ? "Vintage, slabs, wax, trades..." : "Favorite Set"
+                  }
                   value={collectorProfile.favoriteSet}
                   onChange={(event) =>
                     updateProfile("favoriteSet", event.target.value)
@@ -647,9 +678,9 @@ function Profile() {
               </label>
 
               <label>
-                <span>Location</span>
+                <span>{isStoreAccount ? "Store Location" : "Location"}</span>
                 <input
-                  placeholder="Location"
+                  placeholder={isStoreAccount ? "City, State" : "Location"}
                   value={collectorProfile.location}
                   onChange={(event) =>
                     updateProfile("location", event.target.value)
@@ -669,12 +700,12 @@ function Profile() {
               </label>
 
               <label className="profile-editor-wide">
-                <span>{isStoreAccount ? "About" : "Bio"}</span>
+                <span>{isStoreAccount ? "About Your Store" : "Bio"}</span>
                 <textarea
                   placeholder={
                     isStoreAccount
-                      ? "Tell collectors about your shop..."
-                      : "Bio"
+                      ? "Tell collectors about your shop, events, specialties, and community..."
+                      : "Tell collectors what you collect..."
                   }
                   value={collectorProfile.bio}
                   onChange={(event) => updateProfile("bio", event.target.value)}
