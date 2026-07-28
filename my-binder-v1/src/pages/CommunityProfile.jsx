@@ -2,15 +2,30 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import PageHeader from "../ui/PageHeader";
 import CommunityCard from "../ui/CommunityCard";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 import { getPublicProfile } from "../services/profileService";
 import { getPublicStoreEventsByStore } from "../services/storeEventService";
 import "../styles/collectorProfile.css";
+
+function getSavedItems(key) {
+  const saved = localStorage.getItem(key);
+
+  if (!saved) return [];
+
+  try {
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
 
 function toProfileView(profile) {
   const accountType = profile.account_type || "Collector";
   const isStore = accountType === "Store";
 
   return {
+    id: profile.id,
     accountType,
     isStore,
     name: profile.username || (isStore ? "Beacon Store" : "Beacon Collector"),
@@ -26,13 +41,14 @@ function toProfileView(profile) {
 
 function normalizeStoreEvent(event) {
   return {
-    id: event.id,
-    type: event.event_type || "STORE EVENT",
+    id: "store-event-" + event.id,
+    type: event.event_type || "Store Event",
     title: event.title || "Store Event",
     date: event.event_date || "",
     time: event.event_time || "",
     location: event.location || "",
     details: event.details || "",
+    flyer: event.event_flyer || "",
   };
 }
 
@@ -42,6 +58,12 @@ function CommunityProfile() {
   const [storeEvents, setStoreEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [savedEvents, setSavedEvents] = useState(() =>
+    getSavedItems(STORAGE_KEYS.savedEvents)
+  );
+  const [savedStores, setSavedStores] = useState(() =>
+    getSavedItems(STORAGE_KEYS.savedShops)
+  );
 
   useEffect(() => {
     async function loadProfile() {
@@ -74,6 +96,30 @@ function CommunityProfile() {
     loadProfile();
   }, [profileId]);
 
+  function toggleSavedEvent(eventId) {
+    const updatedSavedEvents = savedEvents.includes(eventId)
+      ? savedEvents.filter((savedEventId) => savedEventId !== eventId)
+      : [...savedEvents, eventId];
+
+    setSavedEvents(updatedSavedEvents);
+    localStorage.setItem(
+      STORAGE_KEYS.savedEvents,
+      JSON.stringify(updatedSavedEvents)
+    );
+  }
+
+  function toggleSavedStore(storeId) {
+    const updatedSavedStores = savedStores.includes(storeId)
+      ? savedStores.filter((savedStoreId) => savedStoreId !== storeId)
+      : [...savedStores, storeId];
+
+    setSavedStores(updatedSavedStores);
+    localStorage.setItem(
+      STORAGE_KEYS.savedShops,
+      JSON.stringify(updatedSavedStores)
+    );
+  }
+
   if (isLoading) {
     return (
       <div>
@@ -102,6 +148,8 @@ function CommunityProfile() {
     );
   }
 
+  const isStoreSaved = savedStores.includes(profile.id);
+
   return (
     <div>
       <PageHeader
@@ -128,7 +176,9 @@ function CommunityProfile() {
 
           <div>
             <p className="page-label">
-              {profile.isStore ? "BEACON STORE" : profile.favoriteTcg + " COLLECTOR"}
+              {profile.isStore
+                ? "BEACON STORE"
+                : profile.favoriteTcg + " COLLECTOR"}
             </p>
             <h2>{profile.name}</h2>
             <p>{profile.bio}</p>
@@ -162,11 +212,26 @@ function CommunityProfile() {
             <span>Account Type</span>
             <strong>{profile.accountType}</strong>
           </div>
+
+          {profile.isStore && (
+            <div>
+              <span>Posted Events</span>
+              <strong>{storeEvents.length}</strong>
+            </div>
+          )}
         </div>
 
         <div className="collector-detail-actions">
-          <button className="primary-button" type="button">
-            {profile.isStore ? "Save Shop" : "Follow"}
+          <button
+            className={isStoreSaved ? "secondary-button" : "primary-button"}
+            type="button"
+            onClick={() => toggleSavedStore(profile.id)}
+          >
+            {profile.isStore
+              ? isStoreSaved
+                ? "Saved Shop"
+                : "Save Shop"
+              : "Follow"}
           </button>
 
           <Link className="secondary-button" to="/community">
@@ -186,15 +251,24 @@ function CommunityProfile() {
 
           {storeEvents.length > 0 ? (
             <div className="community-events-grid">
-              {storeEvents.map((event) => (
-                <CommunityCard
-                  key={event.id}
-                  label={event.type}
-                  title={event.title}
-                  details={[event.date, event.time, event.location]}
-                  description={event.details}
-                />
-              ))}
+              {storeEvents.map((event) => {
+                const isSaved = savedEvents.includes(event.id);
+
+                return (
+                  <CommunityCard
+                    key={event.id}
+                    label={"STORE " + event.type}
+                    title={event.title}
+                    details={[event.date, event.time, event.location]}
+                    description={event.details}
+                    image={event.flyer}
+                    imageAlt={`${event.title} flyer`}
+                    buttonText={isSaved ? "Saved" : "Save Event"}
+                    buttonClassName={isSaved ? "saved-event-button" : ""}
+                    onButtonClick={() => toggleSavedEvent(event.id)}
+                  />
+                );
+              })}
             </div>
           ) : (
             <div className="profile-empty-note">
