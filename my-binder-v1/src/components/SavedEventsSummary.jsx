@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { STORAGE_KEYS } from "../constants/storageKeys";
 import { upcomingEvents } from "../data/communityData";
+import { getPublicStoreEvents } from "../services/storeEventService";
 
 function getSavedItems(key) {
   const saved = localStorage.getItem(key);
@@ -15,10 +17,37 @@ function getSavedItems(key) {
   }
 }
 
+function normalizeStoreEvent(event) {
+  return {
+    id: "store-event-" + event.id,
+    title: event.title || "Store Event",
+    date: event.event_date || "",
+    time: event.event_time || "",
+    location: event.location || "",
+    type: event.event_type || "Store Event",
+  };
+}
+
 function SavedEventsSummary() {
+  const [storeEvents, setStoreEvents] = useState([]);
   const savedEventIds = getSavedItems(STORAGE_KEYS.savedEvents);
 
-  const savedEvents = upcomingEvents.filter((event) => {
+  useEffect(() => {
+    async function loadStoreEvents() {
+      try {
+        const publicEvents = await getPublicStoreEvents();
+        setStoreEvents(publicEvents.map(normalizeStoreEvent));
+      } catch {
+        setStoreEvents([]);
+      }
+    }
+
+    loadStoreEvents();
+  }, []);
+
+  const allEvents = [...storeEvents, ...upcomingEvents];
+
+  const savedEvents = allEvents.filter((event) => {
     return savedEventIds.includes(event.id);
   });
 
@@ -64,11 +93,11 @@ function SavedEventsSummary() {
           <Link className="saved-event-row" to="/community" key={event.id}>
             <div>
               <strong>{event.title}</strong>
-              <span>{event.location}</span>
+              <span>{event.location || "Location not set"}</span>
             </div>
 
             <small>
-              {event.date} · {event.time}
+              {event.date || "Date not set"} · {event.time || "Time not set"}
             </small>
           </Link>
         ))}
