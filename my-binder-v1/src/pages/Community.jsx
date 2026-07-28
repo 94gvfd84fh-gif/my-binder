@@ -358,6 +358,8 @@ function Community() {
                 title={event.title}
                 details={[event.date, event.time, event.location]}
                 description={event.details}
+                image={event.flyer}
+                imageAlt={`${event.title} flyer`}
                 buttonText="Remove Saved"
                 buttonClassName="saved-event-button"
                 onButtonClick={() => toggleSavedEvent(event.id)}
@@ -397,6 +399,8 @@ function Community() {
                     title={event.title}
                     details={[event.date, event.time, event.location]}
                     description={event.details}
+                    image={event.flyer}
+                    imageAlt={`${event.title} flyer`}
                     buttonText={isSaved ? "Saved" : "Save Event"}
                     buttonClassName={isSaved ? "saved-event-button" : ""}
                     onButtonClick={() => toggleSavedEvent(event.id)}
