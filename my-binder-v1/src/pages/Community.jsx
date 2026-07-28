@@ -12,20 +12,20 @@ import {
   upcomingEvents,
 } from "../data/communityData";
 
-const communityFilters = ["All", "Collectors", "Shops", "Events", "Trade Nights"];
+const communityFilters = ["All", "Collectors", "Stores", "Events", "Trade Nights"];
 
 function getFeatureTarget(feature) {
-  if (feature.label === "LOCAL SHOPS") return "#local-shops";
-  if (feature.label === "COLLECTORS") return "#discover-collectors";
+  if (feature.label === "LOCAL SHOPS") return "#stores";
+  if (feature.label === "COLLECTORS") return "#collectors";
   if (feature.label === "MARKETPLACE") return "/trade-list";
 
-  return "#upcoming-events";
+  return "#events";
 }
 
 function normalizeStoreEvent(event) {
   return {
-    id: "store-" + event.id,
-    type: event.event_type || "STORE EVENT",
+    id: "store-event-" + event.id,
+    type: event.event_type || "Store Event",
     title: event.title || "Store Event",
     date: event.event_date || "",
     time: event.event_time || "",
@@ -62,14 +62,16 @@ function profileToCollector(profile) {
     favoriteTcg: profile.favoriteTcg,
     style: profile.bio,
     publicBinders: "Public",
-    tradeStatus: profile.location ? "Located in " + profile.location : "Open to connect",
+    tradeStatus: profile.location
+      ? "Located in " + profile.location
+      : "Open to connect",
     featuredCard: profile.featuredCard,
     isSupabaseProfile: true,
     linkTo: "/community/profile/" + profile.profileId,
   };
 }
 
-function profileToShop(profile) {
+function profileToStore(profile) {
   return {
     id: profile.id,
     name: profile.username,
@@ -99,6 +101,19 @@ function matchesSearch(fields, searchText) {
   return fields.some((field) => textIncludes(field, searchText));
 }
 
+function getSavedItems(key) {
+  const saved = localStorage.getItem(key);
+
+  if (!saved) return [];
+
+  try {
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 function Community() {
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
@@ -106,38 +121,17 @@ function Community() {
   const [publicProfiles, setPublicProfiles] = useState([]);
   const [communityMessage, setCommunityMessage] = useState("");
 
-  const [savedEvents, setSavedEvents] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.savedEvents);
-    if (!saved) return [];
+  const [savedEvents, setSavedEvents] = useState(() =>
+    getSavedItems(STORAGE_KEYS.savedEvents)
+  );
 
-    try {
-      return JSON.parse(saved);
-    } catch {
-      return [];
-    }
-  });
+  const [savedStores, setSavedStores] = useState(() =>
+    getSavedItems(STORAGE_KEYS.savedShops)
+  );
 
-  const [savedShops, setSavedShops] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.savedShops);
-    if (!saved) return [];
-
-    try {
-      return JSON.parse(saved);
-    } catch {
-      return [];
-    }
-  });
-
-  const [followedCollectors, setFollowedCollectors] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.followedCollectors);
-    if (!saved) return [];
-
-    try {
-      return JSON.parse(saved);
-    } catch {
-      return [];
-    }
-  });
+  const [followedCollectors, setFollowedCollectors] = useState(() =>
+    getSavedItems(STORAGE_KEYS.followedCollectors)
+  );
 
   useEffect(() => {
     async function loadCommunityDiscovery() {
@@ -153,7 +147,7 @@ function Community() {
         setPublicProfiles(profiles.map(normalizeProfile));
       } catch {
         setCommunityMessage(
-          "Community discovery is available. Some sample results are included while more collectors and shops join Beacon."
+          "Community discovery is available. Some sample results are included while more collectors and stores join Beacon."
         );
       }
     }
@@ -162,25 +156,27 @@ function Community() {
   }, []);
 
   const searchText = search.trim().toLowerCase();
-  const realCollectorProfiles = publicProfiles
+
+  const liveCollectors = publicProfiles
     .filter((profile) => profile.accountType !== "Store")
     .map(profileToCollector);
-  const realStoreProfiles = publicProfiles
+
+  const liveStores = publicProfiles
     .filter((profile) => profile.accountType === "Store")
-    .map(profileToShop);
+    .map(profileToStore);
 
   const allEvents = [...storeEvents, ...upcomingEvents];
-  const allShops = [...realStoreProfiles, ...localShops];
+  const allStores = [...liveStores, ...localShops];
   const allCollectors = [
-    ...realCollectorProfiles,
+    ...liveCollectors,
     ...collectors.map(normalizeMockCollector),
   ];
 
-  const isAllFilter = activeFilter === "All";
+  const showAll = activeFilter === "All";
+  const showCollectors = showAll || activeFilter === "Collectors";
+  const showStores = showAll || activeFilter === "Stores";
   const showEvents =
-    isAllFilter || activeFilter === "Events" || activeFilter === "Trade Nights";
-  const showShops = isAllFilter || activeFilter === "Shops";
-  const showCollectors = isAllFilter || activeFilter === "Collectors";
+    showAll || activeFilter === "Events" || activeFilter === "Trade Nights";
 
   const filteredEvents = allEvents.filter((event) => {
     const matchesFilter =
@@ -195,9 +191,9 @@ function Community() {
     );
   });
 
-  const filteredShops = allShops.filter((shop) => {
+  const filteredStores = allStores.filter((store) => {
     return matchesSearch(
-      [shop.name, shop.area, shop.distance, shop.eventType, shop.specialties],
+      [store.name, store.area, store.distance, store.eventType, store.specialties],
       searchText
     );
   });
@@ -217,15 +213,15 @@ function Community() {
 
   const visibleResultCount =
     (showEvents ? filteredEvents.length : 0) +
-    (showShops ? filteredShops.length : 0) +
+    (showStores ? filteredStores.length : 0) +
     (showCollectors ? filteredCollectors.length : 0);
 
   const savedEventDetails = allEvents.filter((event) => {
     return savedEvents.includes(event.id);
   });
 
-  const savedShopDetails = allShops.filter((shop) => {
-    return savedShops.includes(shop.id);
+  const savedStoreDetails = allStores.filter((store) => {
+    return savedStores.includes(store.id);
   });
 
   function toggleSavedEvent(eventId) {
@@ -240,15 +236,15 @@ function Community() {
     );
   }
 
-  function toggleSavedShop(shopId) {
-    const updatedSavedShops = savedShops.includes(shopId)
-      ? savedShops.filter((savedShopId) => savedShopId !== shopId)
-      : [...savedShops, shopId];
+  function toggleSavedStore(storeId) {
+    const updatedSavedStores = savedStores.includes(storeId)
+      ? savedStores.filter((savedStoreId) => savedStoreId !== storeId)
+      : [...savedStores, storeId];
 
-    setSavedShops(updatedSavedShops);
+    setSavedStores(updatedSavedStores);
     localStorage.setItem(
       STORAGE_KEYS.savedShops,
-      JSON.stringify(updatedSavedShops)
+      JSON.stringify(updatedSavedStores)
     );
   }
 
@@ -269,19 +265,20 @@ function Community() {
       <PageHeader
         label="BEACON COLLECT COMMUNITY"
         title="Community"
-        description="Find collectors, events, shops, trades, and marketplace opportunities around the hobby."
+        description="Search collectors, stores, card shows, trade nights, and local hobby events."
       />
 
-      <div className="community-search-card">
+      <section className="community-search-card">
         <p className="page-label">DISCOVER</p>
-        <h2>Search collectors, shops, and events</h2>
+        <h2>Find collectors, stores, and events</h2>
         <p>
-          Search store-posted events, public Beacon profiles, local shops, and collector activity as the community grows.
+          Search by username, store name, city, card type, event type, or trade
+          night.
         </p>
 
         <input
           type="search"
-          placeholder="Search collectors, shops, events, cities, cards, or trade nights..."
+          placeholder="Search Sacramento, trade night, Pokemon, shops, collectors..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
@@ -301,10 +298,11 @@ function Community() {
 
         <div className="community-result-summary">
           <span>{visibleResultCount} results</span>
-          <span>{publicProfiles.length} live profiles</span>
-          <span>{storeEvents.length} store-posted events</span>
+          <span>{liveCollectors.length} live collectors</span>
+          <span>{liveStores.length} store profiles</span>
+          <span>{storeEvents.length} store events</span>
         </div>
-      </div>
+      </section>
 
       {communityMessage && <p className="auth-message">{communityMessage}</p>}
 
@@ -370,10 +368,14 @@ function Community() {
       )}
 
       {showEvents && (
-        <section className="community-events-section" id="upcoming-events">
+        <section className="community-events-section" id="events">
           <div className="section-header">
             <div>
-              <h2>{activeFilter === "Trade Nights" ? "Trade Nights" : "Upcoming Events"}</h2>
+              <h2>
+                {activeFilter === "Trade Nights"
+                  ? "Trade Nights"
+                  : "Upcoming Events"}
+              </h2>
               <p>
                 Store-posted events, local shows, trade nights, conventions, and
                 shop events.
@@ -405,81 +407,81 @@ function Community() {
           ) : (
             <div className="profile-empty-note">
               <p>No matching events found.</p>
-              <span>Try searching a different city, event type, or shop.</span>
+              <span>Try searching a different city, event type, or store.</span>
             </div>
           )}
         </section>
       )}
 
-      {savedShopDetails.length > 0 && (
+      {savedStoreDetails.length > 0 && (
         <section className="community-events-section saved-events-section">
           <div className="section-header">
             <div>
-              <h2>Saved Shops</h2>
-              <p>Local shops you want to revisit.</p>
+              <h2>Saved Stores</h2>
+              <p>Stores and shops you want to revisit.</p>
             </div>
           </div>
 
           <div className="community-events-grid">
-            {savedShopDetails.map((shop) => (
+            {savedStoreDetails.map((store) => (
               <CommunityCard
-                key={shop.id}
-                label={shop.isSupabaseProfile ? "BEACON STORE" : "LOCAL SHOP"}
-                title={shop.name}
-                details={[shop.area, shop.distance, shop.eventType]}
-                description={shop.specialties}
-                linkTo={shop.linkTo}
+                key={store.id}
+                label={store.isSupabaseProfile ? "BEACON STORE" : "LOCAL SHOP"}
+                title={store.name}
+                details={[store.area, store.distance, store.eventType]}
+                description={store.specialties}
+                linkTo={store.linkTo}
                 linkText="View Store"
                 buttonText="Remove Saved"
                 buttonClassName="saved-event-button"
-                onButtonClick={() => toggleSavedShop(shop.id)}
+                onButtonClick={() => toggleSavedStore(store.id)}
               />
             ))}
           </div>
         </section>
       )}
 
-      {showShops && (
-        <section className="community-events-section" id="local-shops">
+      {showStores && (
+        <section className="community-events-section" id="stores">
           <div className="section-header">
             <div>
-              <h2>Local Shops</h2>
-              <p>Search store profiles and collector-friendly shops.</p>
+              <h2>Stores & Shops</h2>
+              <p>Find Beacon store profiles and collector-friendly shops.</p>
             </div>
           </div>
 
-          {filteredShops.length > 0 ? (
+          {filteredStores.length > 0 ? (
             <div className="community-events-grid">
-              {filteredShops.map((shop) => {
-                const isSaved = savedShops.includes(shop.id);
+              {filteredStores.map((store) => {
+                const isSaved = savedStores.includes(store.id);
 
                 return (
                   <CommunityCard
-                    key={shop.id}
-                    label={shop.isSupabaseProfile ? "BEACON STORE" : "LOCAL SHOP"}
-                    title={shop.name}
-                    details={[shop.area, shop.distance, shop.eventType]}
-                    description={shop.specialties}
-                    linkTo={shop.linkTo}
+                    key={store.id}
+                    label={store.isSupabaseProfile ? "BEACON STORE" : "LOCAL SHOP"}
+                    title={store.name}
+                    details={[store.area, store.distance, store.eventType]}
+                    description={store.specialties}
+                    linkTo={store.linkTo}
                     linkText="View Store"
-                    buttonText={isSaved ? "Saved" : "Save Shop"}
+                    buttonText={isSaved ? "Saved" : "Save Store"}
                     buttonClassName={isSaved ? "saved-event-button" : ""}
-                    onButtonClick={() => toggleSavedShop(shop.id)}
+                    onButtonClick={() => toggleSavedStore(store.id)}
                   />
                 );
               })}
             </div>
           ) : (
             <div className="profile-empty-note">
-              <p>No matching shops found.</p>
-              <span>Try searching by city, area, or shop name.</span>
+              <p>No matching stores found.</p>
+              <span>Try searching by city, area, or store name.</span>
             </div>
           )}
         </section>
       )}
 
       {showCollectors && (
-        <section className="community-events-section" id="discover-collectors">
+        <section className="community-events-section" id="collectors">
           <div className="section-header">
             <div>
               <h2>Discover Collectors</h2>
@@ -535,9 +537,8 @@ function Community() {
         <p className="page-label">COMMUNITY FOUNDATION</p>
         <h3>A home for collectors</h3>
         <p>
-          Beacon Collect is growing beyond collection management into the place
-          collectors use to connect, trade, discover events, support shops, and
-          build reputation.
+          Beacon Collect is becoming the place collectors use to connect, trade,
+          discover events, support shops, and build reputation.
         </p>
       </div>
     </div>
