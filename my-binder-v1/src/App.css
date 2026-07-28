@@ -5148,4 +5148,34 @@ nav a.active {
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.92);
   color: var(--text-main);
+}.community-search-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(180px, 0.8fr) minmax(160px, 0.6fr);
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.community-search-grid input,
+.community-search-grid select {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.78);
+  color: var(--text-main);
+  font: inherit;
+  outline: none;
+}
+
+.community-search-grid input:focus,
+.community-search-grid select:focus {
+  border-color: rgba(37, 99, 235, 0.72);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+}
+
+@media (max-width: 860px) {
+  .community-search-grid {
+    grid-template-columns: 1fr;
+  }
 }

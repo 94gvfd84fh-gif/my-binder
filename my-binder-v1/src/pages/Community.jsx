@@ -13,6 +13,7 @@ import {
 } from "../data/communityData";
 
 const communityFilters = ["All", "Collectors", "Stores", "Events", "Trade Nights"];
+const distanceOptions = ["Any distance", "10 miles", "25 miles", "50 miles", "100 miles"];
 
 function getFeatureTarget(feature) {
   if (feature.label === "LOCAL SHOPS") return "#stores";
@@ -65,6 +66,7 @@ function profileToCollector(profile) {
     tradeStatus: profile.location
       ? "Located in " + profile.location
       : "Open to connect",
+    location: profile.location,
     featuredCard: profile.featuredCard,
     isSupabaseProfile: true,
     linkTo: "/community/profile/" + profile.profileId,
@@ -87,6 +89,7 @@ function profileToStore(profile) {
 function normalizeMockCollector(collector) {
   return {
     ...collector,
+    location: collector.tradeStatus || "",
     linkTo: "/community/collector/" + collector.id,
   };
 }
@@ -99,6 +102,12 @@ function matchesSearch(fields, searchText) {
   if (!searchText) return true;
 
   return fields.some((field) => textIncludes(field, searchText));
+}
+
+function matchesLocation(fields, locationText) {
+  if (!locationText) return true;
+
+  return fields.some((field) => textIncludes(field, locationText));
 }
 
 function getSavedItems(key) {
@@ -116,6 +125,8 @@ function getSavedItems(key) {
 
 function Community() {
   const [search, setSearch] = useState("");
+  const [locationSearch, setLocationSearch] = useState("");
+  const [distanceFilter, setDistanceFilter] = useState("Any distance");
   const [activeFilter, setActiveFilter] = useState("All");
   const [storeEvents, setStoreEvents] = useState([]);
   const [publicProfiles, setPublicProfiles] = useState([]);
@@ -156,6 +167,7 @@ function Community() {
   }, []);
 
   const searchText = search.trim().toLowerCase();
+  const locationText = locationSearch.trim().toLowerCase();
 
   const liveCollectors = publicProfiles
     .filter((profile) => profile.accountType !== "Store")
@@ -187,27 +199,32 @@ function Community() {
       matchesSearch(
         [event.title, event.type, event.location, event.details, event.date],
         searchText
-      )
+      ) &&
+      matchesLocation([event.location, event.details], locationText)
     );
   });
 
   const filteredStores = allStores.filter((store) => {
-    return matchesSearch(
-      [store.name, store.area, store.distance, store.eventType, store.specialties],
-      searchText
+    return (
+      matchesSearch(
+        [store.name, store.area, store.distance, store.eventType, store.specialties],
+        searchText
+      ) && matchesLocation([store.area, store.distance], locationText)
     );
   });
 
   const filteredCollectors = allCollectors.filter((collector) => {
-    return matchesSearch(
-      [
-        collector.username,
-        collector.favoriteTcg,
-        collector.style,
-        collector.tradeStatus,
-        collector.featuredCard,
-      ],
-      searchText
+    return (
+      matchesSearch(
+        [
+          collector.username,
+          collector.favoriteTcg,
+          collector.style,
+          collector.tradeStatus,
+          collector.featuredCard,
+        ],
+        searchText
+      ) && matchesLocation([collector.location, collector.tradeStatus], locationText)
     );
   });
 
@@ -276,12 +293,30 @@ function Community() {
           night.
         </p>
 
-        <input
-          type="search"
-          placeholder="Search Sacramento, trade night, Pokemon, shops, collectors..."
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
+        <div className="community-search-grid">
+          <input
+            type="search"
+            placeholder="Search Pokemon, shops, collectors, trade nights..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+
+          <input
+            type="search"
+            placeholder="City or ZIP"
+            value={locationSearch}
+            onChange={(event) => setLocationSearch(event.target.value)}
+          />
+
+          <select
+            value={distanceFilter}
+            onChange={(event) => setDistanceFilter(event.target.value)}
+          >
+            {distanceOptions.map((option) => (
+              <option key={option}>{option}</option>
+            ))}
+          </select>
+        </div>
 
         <div className="community-filter-pills" aria-label="Community filters">
           {communityFilters.map((filter) => (
@@ -301,6 +336,7 @@ function Community() {
           <span>{liveCollectors.length} live collectors</span>
           <span>{liveStores.length} store profiles</span>
           <span>{storeEvents.length} store events</span>
+          <span>{distanceFilter}</span>
         </div>
       </section>
 
