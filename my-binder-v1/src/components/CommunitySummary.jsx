@@ -1,25 +1,11 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { STORAGE_KEYS } from "../constants/storageKeys";
-
-function getSavedCount(key) {
-  const saved = localStorage.getItem(key);
-
-  if (!saved) {
-    return 0;
-  }
-
-  try {
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed.length : 0;
-  } catch {
-    return 0;
-  }
-}
+import { UserPreferencesContext } from "../context/UserPreferencesContext";
 
 function CommunitySummary() {
-  const savedEvents = getSavedCount(STORAGE_KEYS.savedEvents);
-  const savedShops = getSavedCount(STORAGE_KEYS.savedShops);
-  const followedCollectors = getSavedCount(STORAGE_KEYS.followedCollectors);
+  const { savedEvents, savedShops, followedCollectors } = useContext(
+    UserPreferencesContext
+  );
 
   return (
     <section className="community-summary">
@@ -37,17 +23,17 @@ function CommunitySummary() {
       <div className="community-summary-grid">
         <div>
           <span>Saved Events</span>
-          <strong>{savedEvents}</strong>
+          <strong>{savedEvents.length}</strong>
         </div>
 
         <div>
           <span>Saved Shops</span>
-          <strong>{savedShops}</strong>
+          <strong>{savedShops.length}</strong>
         </div>
 
         <div>
           <span>Following</span>
-          <strong>{followedCollectors}</strong>
+          <strong>{followedCollectors.length}</strong>
         </div>
       </div>
     </section>

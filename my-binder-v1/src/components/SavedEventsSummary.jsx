@@ -1,21 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { STORAGE_KEYS } from "../constants/storageKeys";
+import { UserPreferencesContext } from "../context/UserPreferencesContext";
 import { upcomingEvents } from "../data/communityData";
 import { getPublicStoreEvents } from "../services/storeEventService";
-
-function getSavedItems(key) {
-  const saved = localStorage.getItem(key);
-
-  if (!saved) return [];
-
-  try {
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
 
 function normalizeStoreEvent(event) {
   return {
@@ -30,7 +17,7 @@ function normalizeStoreEvent(event) {
 
 function SavedEventsSummary() {
   const [storeEvents, setStoreEvents] = useState([]);
-  const savedEventIds = getSavedItems(STORAGE_KEYS.savedEvents);
+  const { savedEvents: savedEventIds } = useContext(UserPreferencesContext);
 
   useEffect(() => {
     async function loadStoreEvents() {

@@ -1,24 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import PageHeader from "../ui/PageHeader";
 import CommunityCard from "../ui/CommunityCard";
-import { STORAGE_KEYS } from "../constants/storageKeys";
+import { UserPreferencesContext } from "../context/UserPreferencesContext";
 import { getPublicProfile } from "../services/profileService";
 import { getPublicStoreEventsByStore } from "../services/storeEventService";
 import "../styles/collectorProfile.css";
-
-function getSavedItems(key) {
-  const saved = localStorage.getItem(key);
-
-  if (!saved) return [];
-
-  try {
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
 
 function toProfileView(profile) {
   const accountType = profile.account_type || "Collector";
@@ -58,12 +45,12 @@ function CommunityProfile() {
   const [storeEvents, setStoreEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
-  const [savedEvents, setSavedEvents] = useState(() =>
-    getSavedItems(STORAGE_KEYS.savedEvents)
-  );
-  const [savedStores, setSavedStores] = useState(() =>
-    getSavedItems(STORAGE_KEYS.savedShops)
-  );
+  const {
+    savedEvents,
+    savedStores,
+    toggleSavedEvent,
+    toggleSavedStore,
+  } = useContext(UserPreferencesContext);
 
   useEffect(() => {
     async function loadProfile() {
@@ -95,30 +82,6 @@ function CommunityProfile() {
 
     loadProfile();
   }, [profileId]);
-
-  function toggleSavedEvent(eventId) {
-    const updatedSavedEvents = savedEvents.includes(eventId)
-      ? savedEvents.filter((savedEventId) => savedEventId !== eventId)
-      : [...savedEvents, eventId];
-
-    setSavedEvents(updatedSavedEvents);
-    localStorage.setItem(
-      STORAGE_KEYS.savedEvents,
-      JSON.stringify(updatedSavedEvents)
-    );
-  }
-
-  function toggleSavedStore(storeId) {
-    const updatedSavedStores = savedStores.includes(storeId)
-      ? savedStores.filter((savedStoreId) => savedStoreId !== storeId)
-      : [...savedStores, storeId];
-
-    setSavedStores(updatedSavedStores);
-    localStorage.setItem(
-      STORAGE_KEYS.savedShops,
-      JSON.stringify(updatedSavedStores)
-    );
-  }
 
   if (isLoading) {
     return (

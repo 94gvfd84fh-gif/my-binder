@@ -1,21 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { STORAGE_KEYS } from "../constants/storageKeys";
+import { UserPreferencesContext } from "../context/UserPreferencesContext";
 import { localShops } from "../data/communityData";
 import { getPublicProfiles } from "../services/profileService";
-
-function getSavedItems(key) {
-  const saved = localStorage.getItem(key);
-
-  if (!saved) return [];
-
-  try {
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
 
 function profileToStore(profile) {
   return {
@@ -30,7 +17,7 @@ function profileToStore(profile) {
 
 function SavedStoresSummary() {
   const [storeProfiles, setStoreProfiles] = useState([]);
-  const savedStoreIds = getSavedItems(STORAGE_KEYS.savedShops);
+  const { savedShops: savedStoreIds } = useContext(UserPreferencesContext);
 
   useEffect(() => {
     async function loadStores() {

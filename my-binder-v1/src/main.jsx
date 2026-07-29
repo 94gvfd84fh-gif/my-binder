@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import CardProvider from "./context/CardContext";
 import BinderProvider from "./context/BinderContext";
 import AuthProvider from "./context/AuthContext";
+import UserPreferencesProvider from "./context/UserPreferencesContext";
 import "./styles/design.css";
 import "./index.css";
 import App from "./App.jsx";
@@ -14,7 +15,9 @@ createRoot(document.getElementById("root")).render(
       <AuthProvider>
         <CardProvider>
           <BinderProvider>
-            <App />
+            <UserPreferencesProvider>
+              <App />
+            </UserPreferencesProvider>
           </BinderProvider>
         </CardProvider>
       </AuthProvider>

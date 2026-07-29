@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "../ui/PageHeader";
 import CommunityCard from "../ui/CommunityCard";
-import { STORAGE_KEYS } from "../constants/storageKeys";
+import { UserPreferencesContext } from "../context/UserPreferencesContext";
 import { getPublicProfiles } from "../services/profileService";
 import { getPublicStoreEvents } from "../services/storeEventService";
 import {
@@ -110,19 +110,6 @@ function matchesLocation(fields, locationText) {
   return fields.some((field) => textIncludes(field, locationText));
 }
 
-function getSavedItems(key) {
-  const saved = localStorage.getItem(key);
-
-  if (!saved) return [];
-
-  try {
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
 function Community() {
   const [search, setSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
@@ -132,17 +119,14 @@ function Community() {
   const [publicProfiles, setPublicProfiles] = useState([]);
   const [communityMessage, setCommunityMessage] = useState("");
 
-  const [savedEvents, setSavedEvents] = useState(() =>
-    getSavedItems(STORAGE_KEYS.savedEvents)
-  );
-
-  const [savedStores, setSavedStores] = useState(() =>
-    getSavedItems(STORAGE_KEYS.savedShops)
-  );
-
-  const [followedCollectors, setFollowedCollectors] = useState(() =>
-    getSavedItems(STORAGE_KEYS.followedCollectors)
-  );
+  const {
+    savedEvents,
+    savedStores,
+    followedCollectors,
+    toggleSavedEvent,
+    toggleSavedStore,
+    toggleFollowCollector,
+  } = useContext(UserPreferencesContext);
 
   useEffect(() => {
     async function loadCommunityDiscovery() {
@@ -240,42 +224,6 @@ function Community() {
   const savedStoreDetails = allStores.filter((store) => {
     return savedStores.includes(store.id);
   });
-
-  function toggleSavedEvent(eventId) {
-    const updatedSavedEvents = savedEvents.includes(eventId)
-      ? savedEvents.filter((savedEventId) => savedEventId !== eventId)
-      : [...savedEvents, eventId];
-
-    setSavedEvents(updatedSavedEvents);
-    localStorage.setItem(
-      STORAGE_KEYS.savedEvents,
-      JSON.stringify(updatedSavedEvents)
-    );
-  }
-
-  function toggleSavedStore(storeId) {
-    const updatedSavedStores = savedStores.includes(storeId)
-      ? savedStores.filter((savedStoreId) => savedStoreId !== storeId)
-      : [...savedStores, storeId];
-
-    setSavedStores(updatedSavedStores);
-    localStorage.setItem(
-      STORAGE_KEYS.savedShops,
-      JSON.stringify(updatedSavedStores)
-    );
-  }
-
-  function toggleFollowCollector(collectorId) {
-    const updatedFollowedCollectors = followedCollectors.includes(collectorId)
-      ? followedCollectors.filter((followedId) => followedId !== collectorId)
-      : [...followedCollectors, collectorId];
-
-    setFollowedCollectors(updatedFollowedCollectors);
-    localStorage.setItem(
-      STORAGE_KEYS.followedCollectors,
-      JSON.stringify(updatedFollowedCollectors)
-    );
-  }
 
   return (
     <div>

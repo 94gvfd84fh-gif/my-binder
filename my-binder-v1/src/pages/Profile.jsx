@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
 import { AuthContext } from "../context/AuthContext";
+import { UserPreferencesContext } from "../context/UserPreferencesContext";
 import { STORAGE_KEYS } from "../constants/storageKeys";
 import { getProfile, saveProfile } from "../services/profileService";
 import StoreEvents from "../components/StoreEvents";
@@ -20,19 +21,6 @@ const defaultProfile = {
   avatar: "",
   featuredCardId: "",
 };
-
-function getSavedCount(key) {
-  const saved = localStorage.getItem(key);
-
-  if (!saved) return 0;
-
-  try {
-    const parsed = JSON.parse(saved);
-    return Array.isArray(parsed) ? parsed.length : 0;
-  } catch {
-    return 0;
-  }
-}
 
 function toAppProfile(profile) {
   if (!profile) {
@@ -89,6 +77,7 @@ function getStoredProfile() {
 function Profile() {
   const { user } = useContext(AuthContext);
   const { cards, replaceCards } = useContext(CardContext);
+  const { followedCollectors } = useContext(UserPreferencesContext);
   const {
     binders,
     binderGoals,
@@ -133,8 +122,6 @@ function Profile() {
 
     loadSupabaseProfile();
   }, [user]);
-
-  const followedCollectors = getSavedCount(STORAGE_KEYS.followedCollectors);
 
   function getPrimaryBinder(card) {
     if (card.status === "Wishlist") return "Wishlist";
@@ -561,7 +548,7 @@ function Profile() {
           </div>
 
           <div>
-            <strong>{followedCollectors}</strong>
+            <strong>{followedCollectors.length}</strong>
             <span>Following</span>
           </div>
 
