@@ -2,6 +2,7 @@ import Stats from "../components/Stats";
 import QuickActions from "../components/QuickActions";
 import CommunitySummary from "../components/CommunitySummary";
 import SavedEventsSummary from "../components/SavedEventsSummary";
+import SavedStoresSummary from "../components/SavedStoresSummary";
 import RecentCards from "../components/RecentCards";
 import CollectionTimeline from "../components/CollectionTimeline";
 import CollectionAnalytics from "../components/CollectionAnalytics";
@@ -20,6 +21,7 @@ function Dashboard() {
       <QuickActions />
       <CommunitySummary />
       <SavedEventsSummary />
+      <SavedStoresSummary />
       <CollectionAnalytics />
       <ValueAnalytics />
       <RecentCards />
