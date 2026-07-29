@@ -4,18 +4,97 @@ import { AuthContext } from "../context/AuthContext";
 import { supabase } from "../lib/supabaseClient";
 import PageHeader from "../ui/PageHeader";
 
+const authFeatures = [
+  "Track collections, binders, wishlists, and values",
+  "Create a collector or store profile",
+  "Save events, shops, and community activity",
+];
+
 function Auth() {
   const { user, authLoading } = useContext(AuthContext);
 
+  const [authMode, setAuthMode] = useState("signup");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  async function handleMagicLink(event) {
+  const isSignup = authMode === "signup";
+
+  function getCleanEmail() {
+    return email.trim().toLowerCase();
+  }
+
+  function validateEmailAndPassword() {
+    if (!getCleanEmail()) {
+      setMessage("Enter your email first.");
+      return false;
+    }
+
+    if (!password) {
+      setMessage("Enter your password.");
+      return false;
+    }
+
+    if (password.length < 8) {
+      setMessage("Your password needs to be at least 8 characters.");
+      return false;
+    }
+
+    if (isSignup && password !== confirmPassword) {
+      setMessage("Passwords do not match.");
+      return false;
+    }
+
+    return true;
+  }
+
+  async function handlePasswordAuth(event) {
     event.preventDefault();
 
-    if (!email.trim()) {
-      setMessage("Enter your email first.");
+    if (!validateEmailAndPassword()) {
+      return;
+    }
+
+    setIsSending(true);
+    setMessage("");
+
+    const authRequest = isSignup
+      ? supabase.auth.signUp({
+          email: getCleanEmail(),
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth`,
+          },
+        })
+      : supabase.auth.signInWithPassword({
+          email: getCleanEmail(),
+          password,
+        });
+
+    const { error } = await authRequest;
+
+    setIsSending(false);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    if (isSignup) {
+      setMessage(
+        "Account created. Check your email if Beacon asks you to confirm your address."
+      );
+      return;
+    }
+
+    setMessage("Signed in successfully.");
+  }
+
+  async function handleMagicLink() {
+    if (!getCleanEmail()) {
+      setMessage("Enter your email first, then request a login link.");
       return;
     }
 
@@ -23,7 +102,7 @@ function Auth() {
     setMessage("");
 
     const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
+      email: getCleanEmail(),
       options: {
         emailRedirectTo: `${window.location.origin}/auth`,
       },
@@ -65,24 +144,31 @@ function Auth() {
           description="You can now save your collection, profile, binders, and community activity."
         />
 
-        <div className="auth-card">
+        <div className="auth-card signed-in-card">
           <p className="page-label">SIGNED IN</p>
           <h2>{user.email}</h2>
           <p>
-            You are signed in. Manage your profile, collection, binders, wishlist items, and community activity from your Beacon account.
+            Your Beacon account is active. Manage your profile, collection,
+            binders, wishlist items, and community activity from one place.
           </p>
 
-          <Link className="primary-button" to="/profile">
-            Open Profile
-          </Link>
+          <div className="auth-action-row">
+            <Link className="primary-button" to="/profile">
+              Open Profile
+            </Link>
 
-          <button
-            className="secondary-button"
-            type="button"
-            onClick={handleSignOut}
-          >
-            Sign Out
-          </button>
+            <Link className="secondary-button" to="/">
+              Go to Dashboard
+            </Link>
+
+            <button
+              className="secondary-button"
+              type="button"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </button>
+          </div>
 
           {message && <p className="auth-message">{message}</p>}
         </div>
@@ -94,62 +180,122 @@ function Auth() {
     <div>
       <PageHeader
         label="BEACON COLLECT"
-        title="Start using Beacon Collect"
-        description="Sign in to save your collection, profile, binders, and community activity."
+        title="Create your account"
+        description="Sign up to track your collection, build your profile, and connect with the collector community."
       />
 
-      <section className="getting-started-welcome-card">
-        <div className="getting-started-welcome-copy">
-          <p className="page-label">GET STARTED</p>
-          <h2>Start collecting in minutes</h2>
+      <section className="auth-launch-layout">
+        <div className="auth-brand-panel">
+          <p className="page-label">A HOME FOR COLLECTORS</p>
+          <h2>Everything your hobby needs, under one roof.</h2>
           <p>
-            Add a few cards, organize what you are chasing, explore the
-            community tools, and leave feedback whenever something could be
-            better.
+            Beacon Collect helps collectors and stores organize collections,
+            share profiles, discover events, and build community around the
+            cards they love.
           </p>
-        </div>
 
-        <div className="getting-started-welcome-steps">
-          <div>
-            <span>01</span>
-            <strong>Add a card you own</strong>
-          </div>
-
-          <div>
-            <span>02</span>
-            <strong>Add a wishlist card</strong>
-          </div>
-
-          <div>
-            <span>03</span>
-            <strong>Mark one card for trade</strong>
-          </div>
-
-          <div>
-            <span>04</span>
-            <strong>Leave feedback</strong>
+          <div className="auth-feature-list">
+            {authFeatures.map((feature) => (
+              <div key={feature}>
+                <span aria-hidden="true">✓</span>
+                <strong>{feature}</strong>
+              </div>
+            ))}
           </div>
         </div>
+
+        <form className="auth-card" onSubmit={handlePasswordAuth}>
+          <div className="auth-tabs" aria-label="Account action">
+            <button
+              className={isSignup ? "active-auth-tab" : ""}
+              type="button"
+              onClick={() => {
+                setAuthMode("signup");
+                setMessage("");
+              }}
+            >
+              Create Account
+            </button>
+
+            <button
+              className={!isSignup ? "active-auth-tab" : ""}
+              type="button"
+              onClick={() => {
+                setAuthMode("signin");
+                setMessage("");
+              }}
+            >
+              Sign In
+            </button>
+          </div>
+
+          <p className="page-label">
+            {isSignup ? "NEW ACCOUNT" : "WELCOME BACK"}
+          </p>
+
+          <h2>{isSignup ? "Join Beacon Collect" : "Sign in to Beacon"}</h2>
+
+          <p>
+            {isSignup
+              ? "Create an account with your email and password. Then you will set your username and account type."
+              : "Use the email and password connected to your Beacon account."}
+          </p>
+
+          <label className="auth-field">
+            <span>Email</span>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="email"
+            />
+          </label>
+
+          <label className="auth-field">
+            <span>Password</span>
+            <input
+              type="password"
+              placeholder="At least 8 characters"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete={isSignup ? "new-password" : "current-password"}
+            />
+          </label>
+
+          {isSignup && (
+            <label className="auth-field">
+              <span>Confirm password</span>
+              <input
+                type="password"
+                placeholder="Re-enter your password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                autoComplete="new-password"
+              />
+            </label>
+          )}
+
+          <button className="primary-button" type="submit" disabled={isSending}>
+            {isSending
+              ? "Working..."
+              : isSignup
+                ? "Create Account"
+                : "Sign In"}
+          </button>
+
+          <button
+            className="auth-link-button"
+            type="button"
+            onClick={handleMagicLink}
+            disabled={isSending}
+          >
+            Email me a login link instead
+          </button>
+
+          {message && <p className="auth-message">{message}</p>}
+        </form>
       </section>
-
-      <form className="auth-card" onSubmit={handleMagicLink}>
-        <p className="page-label">SIGN IN TO START</p>
-        <h2>Enter your email</h2>
-        <p>We will send you a secure login link. No password needed.</p>
-
-        <input
-          type="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-        />
-
-        <button className="primary-button" type="submit" disabled={isSending}>
-          {isSending ? "Sending..." : "Send Login Link"}
-        </button>
-
-        {message && <p className="auth-message">{message}</p>}
-      </form>
     </div>
   );
 }
