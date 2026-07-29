@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./AuthContext";
+import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from "../constants/storageKeys";
 import {
   getBinderSettings,
   saveBinderSettings,
@@ -7,9 +8,12 @@ import {
 
 export const BinderContext = createContext();
 
-const BINDERS_STORAGE_KEY = "pocket-deck-binders";
-const GOALS_STORAGE_KEY = "pocket-deck-binder-goals";
-const VISIBILITY_STORAGE_KEY = "pocket-deck-binder-visibility";
+const BINDERS_STORAGE_KEY = STORAGE_KEYS.binders;
+const GOALS_STORAGE_KEY = STORAGE_KEYS.binderGoals;
+const VISIBILITY_STORAGE_KEY = STORAGE_KEYS.binderVisibility;
+const LEGACY_BINDERS_STORAGE_KEY = LEGACY_STORAGE_KEYS.binders;
+const LEGACY_GOALS_STORAGE_KEY = LEGACY_STORAGE_KEYS.binderGoals;
+const LEGACY_VISIBILITY_STORAGE_KEY = LEGACY_STORAGE_KEYS.binderVisibility;
 
 export const BINDER_VISIBILITY = {
   PRIVATE: "Private",
@@ -34,7 +38,9 @@ const defaultBinderVisibility = {
 };
 
 function getStoredBinders() {
-  const savedBinders = localStorage.getItem(BINDERS_STORAGE_KEY);
+  const savedBinders =
+    localStorage.getItem(BINDERS_STORAGE_KEY) ||
+    localStorage.getItem(LEGACY_BINDERS_STORAGE_KEY);
 
   if (savedBinders) {
     try {
@@ -52,7 +58,9 @@ function getStoredBinders() {
 }
 
 function getStoredGoals() {
-  const savedGoals = localStorage.getItem(GOALS_STORAGE_KEY);
+  const savedGoals =
+    localStorage.getItem(GOALS_STORAGE_KEY) ||
+    localStorage.getItem(LEGACY_GOALS_STORAGE_KEY);
 
   if (savedGoals) {
     try {
@@ -70,7 +78,9 @@ function getStoredGoals() {
 }
 
 function getStoredVisibility() {
-  const savedVisibility = localStorage.getItem(VISIBILITY_STORAGE_KEY);
+  const savedVisibility =
+    localStorage.getItem(VISIBILITY_STORAGE_KEY) ||
+    localStorage.getItem(LEGACY_VISIBILITY_STORAGE_KEY);
 
   if (savedVisibility) {
     try {

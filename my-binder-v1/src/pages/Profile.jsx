@@ -4,7 +4,7 @@ import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
 import { AuthContext } from "../context/AuthContext";
 import { UserPreferencesContext } from "../context/UserPreferencesContext";
-import { STORAGE_KEYS } from "../constants/storageKeys";
+import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from "../constants/storageKeys";
 import { getProfile, saveProfile } from "../services/profileService";
 import StoreEvents from "../components/StoreEvents";
 import PageHeader from "../ui/PageHeader";
@@ -58,7 +58,9 @@ function toDatabaseProfile(profile, userId) {
 }
 
 function getStoredProfile() {
-  const savedProfile = localStorage.getItem(STORAGE_KEYS.profile);
+  const savedProfile =
+    localStorage.getItem(STORAGE_KEYS.profile) ||
+    localStorage.getItem(LEGACY_STORAGE_KEYS.profile);
 
   if (savedProfile) {
     try {

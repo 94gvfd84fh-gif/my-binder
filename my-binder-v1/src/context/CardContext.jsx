@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import initialCards from "../data/cards";
 import { AuthContext } from "./AuthContext";
+import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from "../constants/storageKeys";
 import {
   getCards,
   saveCard,
@@ -10,7 +11,8 @@ import {
 
 export const CardContext = createContext();
 
-const STORAGE_KEY = "pocket-deck-cards";
+const STORAGE_KEY = STORAGE_KEYS.cards;
+const LEGACY_STORAGE_KEY = LEGACY_STORAGE_KEYS.cards;
 
 function getPrimaryBinder(card) {
   if (card.status === "Wishlist") {
@@ -100,7 +102,8 @@ function normalizeCards(cardList) {
 }
 
 function getLocalCards() {
-  const savedCards = localStorage.getItem(STORAGE_KEY);
+  const savedCards =
+    localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
 
   if (savedCards) {
     try {

@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
 import { AuthContext } from "../context/AuthContext";
+import { LEGACY_STORAGE_KEYS, STORAGE_KEYS } from "../constants/storageKeys";
 import { getProfile } from "../services/profileService";
 import PageHeader from "../ui/PageHeader";
 
 import "../styles/publicProfile.css";
 
-const PROFILE_KEY = "pocket-deck-profile";
+const PROFILE_KEY = STORAGE_KEYS.profile;
+const LEGACY_PROFILE_KEY = LEGACY_STORAGE_KEYS.profile;
 
 const defaultProfile = {
   username: "Beacon Collector",
@@ -42,7 +44,8 @@ function toAppProfile(profile) {
 }
 
 function getStoredProfile() {
-  const savedProfile = localStorage.getItem(PROFILE_KEY);
+  const savedProfile =
+    localStorage.getItem(PROFILE_KEY) || localStorage.getItem(LEGACY_PROFILE_KEY);
 
   if (savedProfile) {
     try {
