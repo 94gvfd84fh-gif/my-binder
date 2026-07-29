@@ -430,7 +430,10 @@ function Profile() {
         style={{ "--profile-accent": collectorProfile.profileAccentColor }}
       >
         {collectorProfile.profileBanner && (
-          <div className="profile-banner-preview">
+          <div
+            className="profile-banner-preview"
+            style={{ backgroundImage: `url(${collectorProfile.profileBanner})` }}
+          >
             <img src={collectorProfile.profileBanner} alt="Profile banner" />
           </div>
         )}
