@@ -779,6 +779,8 @@ function Profile() {
                       <option>Showcase Blue</option>
                       <option>Collector Gold</option>
                       <option>Neon Cyan</option>
+                      <option>Card Shop</option>
+                      <option>Vintage Vault</option>
                     </select>
                   </label>
 
@@ -804,6 +806,7 @@ function Profile() {
                       <option>Classic</option>
                       <option>Showcase</option>
                       <option>Compact</option>
+                      <option>Gallery</option>
                     </select>
                   </label>
 
@@ -817,6 +820,15 @@ function Profile() {
                       }
                     />
                   </label>
+                </div>
+
+                <div className="profile-style-preview" aria-hidden="true">
+                  <div className="style-preview-banner"></div>
+                  <div>
+                    <span>{collectorProfile.profileTheme}</span>
+                    <strong>{collectorProfile.profileLayout}</strong>
+                    <p>{collectorProfile.profileTagline || "Your collector style preview"}</p>
+                  </div>
                 </div>
 
                 <div className="avatar-actions banner-actions">
