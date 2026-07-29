@@ -5,7 +5,7 @@ import { BinderContext } from "../context/BinderContext";
 import PageHeader from "../ui/PageHeader";
 
 function Binder() {
-  const { cards, setCards } = useContext(CardContext);
+  const { cards, editCard } = useContext(CardContext);
   const {
     binders,
     binderGoals,
@@ -182,7 +182,7 @@ function Binder() {
     setPage(1);
   }
 
-  function handleRenameBinder(event) {
+  async function handleRenameBinder(event) {
     event.preventDefault();
 
     const trimmedName = renameBinderName.trim();
@@ -196,25 +196,29 @@ function Binder() {
       return;
     }
 
-    const updatedCards = cards.map((card) => {
-      const extraBinders = getExtraBinders(card).map((binderName) => {
-        return binderName === selectedBinder ? trimmedName : binderName;
-      });
-
-      return {
-        ...card,
-        extraBinders,
-        updatedAt: new Date().toISOString(),
-      };
+    const cardsToUpdate = cards.filter((card) => {
+      return getExtraBinders(card).includes(selectedBinder);
     });
 
-    setCards(updatedCards);
+    await Promise.all(
+      cardsToUpdate.map((card) => {
+        const extraBinders = getExtraBinders(card).map((binderName) => {
+          return binderName === selectedBinder ? trimmedName : binderName;
+        });
+
+        return editCard({
+          ...card,
+          extraBinders,
+          updatedAt: new Date().toISOString(),
+        });
+      })
+    );
     setSelectedBinder(trimmedName);
     setRenameBinderName("");
     setPage(1);
   }
 
-  function handleDeleteBinder() {
+  async function handleDeleteBinder() {
     const confirmDelete = confirm(
       `Delete "${selectedBinder}"? Cards will be removed from this custom binder only.`
     );
@@ -228,19 +232,23 @@ function Binder() {
       return;
     }
 
-    const updatedCards = cards.map((card) => {
-      const extraBinders = getExtraBinders(card).filter((binderName) => {
-        return binderName !== selectedBinder;
-      });
-
-      return {
-        ...card,
-        extraBinders,
-        updatedAt: new Date().toISOString(),
-      };
+    const cardsToUpdate = cards.filter((card) => {
+      return getExtraBinders(card).includes(selectedBinder);
     });
 
-    setCards(updatedCards);
+    await Promise.all(
+      cardsToUpdate.map((card) => {
+        const extraBinders = getExtraBinders(card).filter((binderName) => {
+          return binderName !== selectedBinder;
+        });
+
+        return editCard({
+          ...card,
+          extraBinders,
+          updatedAt: new Date().toISOString(),
+        });
+      })
+    );
     setSelectedBinder("Main Collection");
     setRenameBinderName("");
     setPage(1);
@@ -255,73 +263,58 @@ function Binder() {
     setGoalInput("");
   }
 
-  function handleAddCardToBinder(event) {
+  async function handleAddCardToBinder(event) {
     event.preventDefault();
 
     if (!cardToAdd || selectedBinderIsDefault) return;
 
     const now = new Date().toISOString();
+    const card = cards.find((currentCard) => String(currentCard.id) === cardToAdd);
 
-    const updatedCards = cards.map((card) => {
-      if (String(card.id) !== cardToAdd) {
-        return card;
-      }
+    if (!card) return;
 
-      const extraBinders = getExtraBinders(card);
+    const extraBinders = getExtraBinders(card);
 
-      return {
-        ...card,
-        extraBinders: Array.from(new Set([...extraBinders, selectedBinder])),
-        updatedAt: now,
-      };
+    await editCard({
+      ...card,
+      extraBinders: Array.from(new Set([...extraBinders, selectedBinder])),
+      updatedAt: now,
     });
-
-    setCards(updatedCards);
     setCardToAdd("");
     setPage(1);
   }
 
-  function removeCardFromCurrentBinder(cardId) {
+  async function removeCardFromCurrentBinder(cardId) {
     const now = new Date().toISOString();
+    const card = cards.find((currentCard) => currentCard.id === cardId);
 
-    const updatedCards = cards.map((card) => {
-      if (card.id !== cardId) {
-        return card;
-      }
+    if (!card) return;
 
-      const extraBinders = getExtraBinders(card).filter((binderName) => {
-        return binderName !== selectedBinder;
-      });
-
-      return {
-        ...card,
-        extraBinders,
-        updatedAt: now,
-      };
+    const extraBinders = getExtraBinders(card).filter((binderName) => {
+      return binderName !== selectedBinder;
     });
 
-    setCards(updatedCards);
+    await editCard({
+      ...card,
+      extraBinders,
+      updatedAt: now,
+    });
   }
 
-  function markCardCollected(cardId) {
+  async function markCardCollected(cardId) {
     const now = new Date().toISOString();
+    const card = cards.find((currentCard) => currentCard.id === cardId);
 
-    const updatedCards = cards.map((card) => {
-      if (card.id !== cardId) {
-        return card;
-      }
+    if (!card) return;
 
-      return {
-        ...card,
-        status: "Keep",
-        binder: "Main Collection",
-        primaryBinder: "Main Collection",
-        updatedAt: now,
-        createdAt: card.createdAt || now,
-      };
+    await editCard({
+      ...card,
+      status: "Keep",
+      binder: "Main Collection",
+      primaryBinder: "Main Collection",
+      updatedAt: now,
+      createdAt: card.createdAt || now,
     });
-
-    setCards(updatedCards);
   }
 
   function nextPage() {

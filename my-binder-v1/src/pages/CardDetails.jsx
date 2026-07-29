@@ -5,7 +5,7 @@ import AddCardModal from "../components/AddCardModal";
 
 function CardDetails() {
   const { id } = useParams();
-  const { cards, setCards } = useContext(CardContext);
+  const { cards, editCard } = useContext(CardContext);
   const [showEditModal, setShowEditModal] = useState(false);
 
   const card = cards.find((card) => Number(card.id) === Number(id));
@@ -52,25 +52,17 @@ function CardDetails() {
     });
   }
 
-  function markAsCollected() {
+  async function markAsCollected() {
     const now = new Date().toISOString();
 
-    const updatedCards = cards.map((currentCard) => {
-      if (Number(currentCard.id) !== Number(id)) {
-        return currentCard;
-      }
-
-      return {
-        ...currentCard,
-        status: "Keep",
-        binder: "Main Collection",
-        primaryBinder: "Main Collection",
-        updatedAt: now,
-        createdAt: currentCard.createdAt || now,
-      };
+    await editCard({
+      ...card,
+      status: "Keep",
+      binder: "Main Collection",
+      primaryBinder: "Main Collection",
+      updatedAt: now,
+      createdAt: card.createdAt || now,
     });
-
-    setCards(updatedCards);
   }
 
   return (
