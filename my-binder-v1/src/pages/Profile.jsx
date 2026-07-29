@@ -20,6 +20,11 @@ const defaultProfile = {
   bio: "Collecting since I was a kid. Always looking for vintage holos.",
   avatar: "",
   featuredCardId: "",
+  profileTheme: "Beacon Dark",
+  profileAccentColor: "#2563EB",
+  profileBanner: "",
+  profileLayout: "Classic",
+  profileTagline: "",
 };
 
 function toAppProfile(profile) {
@@ -38,6 +43,14 @@ function toAppProfile(profile) {
     bio: profile.bio || defaultProfile.bio,
     avatar: profile.avatar || "",
     featuredCardId: profile.featured_card_id || "",
+    profileTheme: profile.profile_theme || profile.profileTheme || defaultProfile.profileTheme,
+    profileAccentColor:
+      profile.profile_accent_color ||
+      profile.profileAccentColor ||
+      defaultProfile.profileAccentColor,
+    profileBanner: profile.profile_banner || profile.profileBanner || "",
+    profileLayout: profile.profile_layout || profile.profileLayout || defaultProfile.profileLayout,
+    profileTagline: profile.profile_tagline || profile.profileTagline || "",
   };
 }
 
@@ -53,6 +66,12 @@ function toDatabaseProfile(profile, userId) {
     bio: profile.bio || "",
     avatar: profile.avatar || "",
     featured_card_id: profile.featuredCardId || "",
+    profile_theme: profile.profileTheme || defaultProfile.profileTheme,
+    profile_accent_color:
+      profile.profileAccentColor || defaultProfile.profileAccentColor,
+    profile_banner: profile.profileBanner || "",
+    profile_layout: profile.profileLayout || defaultProfile.profileLayout,
+    profile_tagline: profile.profileTagline || "",
     updated_at: new Date().toISOString(),
   };
 }
@@ -296,6 +315,25 @@ function Profile() {
     updateProfile("avatar", "");
   }
 
+  function handleBannerUpload(event) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = async function () {
+      updateProfile("profileBanner", reader.result);
+    };
+
+    reader.readAsDataURL(file);
+    event.target.value = "";
+  }
+
+  function removeBanner() {
+    updateProfile("profileBanner", "");
+  }
+
   function exportCollection() {
     const backup = {
       app: "Beacon Collect",
@@ -385,7 +423,18 @@ function Profile() {
 
       {profileMessage && <p className="auth-message">{profileMessage}</p>}
 
-      <section className="collector-profile-card">
+      <section
+        className={`collector-profile-card themed-profile-card theme-${collectorProfile.profileTheme
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")}`}
+        style={{ "--profile-accent": collectorProfile.profileAccentColor }}
+      >
+        {collectorProfile.profileBanner && (
+          <div className="profile-banner-preview">
+            <img src={collectorProfile.profileBanner} alt="Profile banner" />
+          </div>
+        )}
+
         <div className="collector-profile-top">
           <div className="collector-avatar">
             {collectorProfile.avatar ? (
@@ -401,6 +450,9 @@ function Profile() {
           <div>
             <p className="page-label">{accountLabel}</p>
             <h2>{collectorProfile.username}</h2>
+            {collectorProfile.profileTagline && (
+              <p className="profile-tagline">{collectorProfile.profileTagline}</p>
+            )}
             <p>
               {isStoreAccount
                 ? "Shop, event host, or collector business"
@@ -705,6 +757,87 @@ function Profile() {
                   onChange={(event) => updateProfile("bio", event.target.value)}
                 />
               </label>
+
+              <div className="profile-style-panel profile-editor-wide">
+                <div className="editor-section-header">
+                  <div>
+                    <p className="page-label">PROFILE STYLE</p>
+                    <h3>Make It Yours</h3>
+                  </div>
+                </div>
+
+                <div className="profile-editor-grid compact-profile-grid">
+                  <label>
+                    <span>Theme</span>
+                    <select
+                      value={collectorProfile.profileTheme}
+                      onChange={(event) =>
+                        updateProfile("profileTheme", event.target.value)
+                      }
+                    >
+                      <option>Beacon Dark</option>
+                      <option>Showcase Blue</option>
+                      <option>Collector Gold</option>
+                      <option>Neon Cyan</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Accent Color</span>
+                    <input
+                      type="color"
+                      value={collectorProfile.profileAccentColor}
+                      onChange={(event) =>
+                        updateProfile("profileAccentColor", event.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    <span>Layout</span>
+                    <select
+                      value={collectorProfile.profileLayout}
+                      onChange={(event) =>
+                        updateProfile("profileLayout", event.target.value)
+                      }
+                    >
+                      <option>Classic</option>
+                      <option>Showcase</option>
+                      <option>Compact</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Profile Tagline</span>
+                    <input
+                      placeholder="Vintage holos, slabs, and trade nights."
+                      value={collectorProfile.profileTagline}
+                      onChange={(event) =>
+                        updateProfile("profileTagline", event.target.value)
+                      }
+                    />
+                  </label>
+                </div>
+
+                <div className="avatar-actions banner-actions">
+                  <span>Profile Banner</span>
+
+                  <label className="secondary-button">
+                    Upload Banner
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleBannerUpload}
+                    />
+                  </label>
+
+                  {collectorProfile.profileBanner && (
+                    <button type="button" onClick={removeBanner}>
+                      Remove Banner
+                    </button>
+                  )}
+                </div>
+              </div>
 
               <div className="profile-editor-wide avatar-actions">
                 <span>

@@ -22,6 +22,11 @@ const defaultProfile = {
   bio: "Collecting since I was a kid. Always looking for vintage holos.",
   avatar: "",
   featuredCardId: "",
+  profileTheme: "Beacon Dark",
+  profileAccentColor: "#2563EB",
+  profileBanner: "",
+  profileLayout: "Classic",
+  profileTagline: "",
 };
 
 function toAppProfile(profile) {
@@ -40,6 +45,14 @@ function toAppProfile(profile) {
     bio: profile.bio || defaultProfile.bio,
     avatar: profile.avatar || "",
     featuredCardId: profile.featured_card_id || "",
+    profileTheme: profile.profile_theme || profile.profileTheme || defaultProfile.profileTheme,
+    profileAccentColor:
+      profile.profile_accent_color ||
+      profile.profileAccentColor ||
+      defaultProfile.profileAccentColor,
+    profileBanner: profile.profile_banner || profile.profileBanner || "",
+    profileLayout: profile.profile_layout || profile.profileLayout || defaultProfile.profileLayout,
+    profileTagline: profile.profile_tagline || profile.profileTagline || "",
   };
 }
 
@@ -184,7 +197,18 @@ function PublicProfile() {
         }
       />
 
-      <section className="public-profile-card">
+      <section
+        className={`public-profile-card themed-public-profile theme-${collectorProfile.profileTheme
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")}`}
+        style={{ "--profile-accent": collectorProfile.profileAccentColor }}
+      >
+        {collectorProfile.profileBanner && (
+          <div className="public-profile-banner">
+            <img src={collectorProfile.profileBanner} alt="Profile banner" />
+          </div>
+        )}
+
         <div className="public-profile-hero">
           <div className="collector-avatar">
             {collectorProfile.avatar ? (
@@ -204,6 +228,9 @@ function PublicProfile() {
                 : `${collectorProfile.favoriteTcg} COLLECTOR`}
             </p>
             <h2>{collectorProfile.username}</h2>
+            {collectorProfile.profileTagline && (
+              <p className="profile-tagline">{collectorProfile.profileTagline}</p>
+            )}
             <p>"{collectorProfile.bio}"</p>
           </div>
         </div>

@@ -159,3 +159,42 @@
   color: var(--text-main);
   font-size: 1.5rem;
 }
+
+/* ===== Public Profile Themes ===== */
+
+.themed-public-profile {
+  border-color: color-mix(in srgb, var(--profile-accent, var(--primary)) 34%, var(--border));
+}
+
+.themed-public-profile .collector-avatar,
+.themed-public-profile .collector-featured-image,
+.themed-public-profile .public-binder-preview-card {
+  background: linear-gradient(135deg, var(--profile-accent, var(--primary)), var(--secondary));
+}
+
+.public-profile-banner {
+  height: 240px;
+  margin-bottom: 26px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--profile-accent, var(--primary)) 30%, var(--border));
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.24), rgba(6, 182, 212, 0.12));
+}
+
+.public-profile-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.themed-public-profile .profile-tagline {
+  margin: 6px 0 10px;
+  color: var(--profile-accent, var(--primary));
+  font-weight: 800;
+}
+
+@media (max-width: 700px) {
+  .public-profile-banner {
+    height: 160px;
+  }
+}
