@@ -17,8 +17,11 @@ function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [accountPassword, setAccountPassword] = useState("");
+  const [confirmAccountPassword, setConfirmAccountPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   const isSignup = authMode === "signup";
 
@@ -118,6 +121,61 @@ function Auth() {
     setMessage("Check your email for a Beacon Collect login link.");
   }
 
+  async function handlePasswordReset() {
+    if (!getCleanEmail()) {
+      setMessage("Enter your email first, then request a password setup link.");
+      return;
+    }
+
+    setIsSending(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.resetPasswordForEmail(getCleanEmail(), {
+      redirectTo: `${window.location.origin}/auth`,
+    });
+
+    setIsSending(false);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setMessage("Check your email for a password setup link.");
+  }
+
+  async function handleUpdatePassword(event) {
+    event.preventDefault();
+
+    if (accountPassword.length < 8) {
+      setMessage("Your new password needs to be at least 8 characters.");
+      return;
+    }
+
+    if (accountPassword !== confirmAccountPassword) {
+      setMessage("New passwords do not match.");
+      return;
+    }
+
+    setIsUpdatingPassword(true);
+    setMessage("");
+
+    const { error } = await supabase.auth.updateUser({
+      password: accountPassword,
+    });
+
+    setIsUpdatingPassword(false);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setAccountPassword("");
+    setConfirmAccountPassword("");
+    setMessage("Password updated. You can now sign in with email and password.");
+  }
+
   async function handleSignOut() {
     await supabase.auth.signOut();
     setMessage("Signed out.");
@@ -169,6 +227,47 @@ function Auth() {
               Sign Out
             </button>
           </div>
+
+          <form className="account-password-panel" onSubmit={handleUpdatePassword}>
+            <div>
+              <p className="page-label">PASSWORD</p>
+              <h3>Set or change your password</h3>
+              <p>
+                If you signed in with an email link, create a password here so
+                you can sign in normally next time.
+              </p>
+            </div>
+
+            <label className="auth-field">
+              <span>New password</span>
+              <input
+                type="password"
+                placeholder="At least 8 characters"
+                value={accountPassword}
+                onChange={(event) => setAccountPassword(event.target.value)}
+                autoComplete="new-password"
+              />
+            </label>
+
+            <label className="auth-field">
+              <span>Confirm new password</span>
+              <input
+                type="password"
+                placeholder="Re-enter your new password"
+                value={confirmAccountPassword}
+                onChange={(event) => setConfirmAccountPassword(event.target.value)}
+                autoComplete="new-password"
+              />
+            </label>
+
+            <button
+              className="primary-button"
+              type="submit"
+              disabled={isUpdatingPassword}
+            >
+              {isUpdatingPassword ? "Updating Password..." : "Update Password"}
+            </button>
+          </form>
 
           {message && <p className="auth-message">{message}</p>}
         </div>
@@ -283,6 +382,17 @@ function Auth() {
                 ? "Create Account"
                 : "Sign In"}
           </button>
+
+          {!isSignup && (
+            <button
+              className="auth-link-button"
+              type="button"
+              onClick={handlePasswordReset}
+              disabled={isSending}
+            >
+              Forgot or need to create your password?
+            </button>
+          )}
 
           <button
             className="auth-link-button"
