@@ -238,6 +238,41 @@ function CardProvider({ children }) {
     setCardsLoading(false);
   }
 
+  async function replaceCards(importedCards) {
+    const normalizedCards = normalizeCards(importedCards);
+
+    if (!user) {
+      setCards(normalizedCards);
+      return true;
+    }
+
+    setCardsLoading(true);
+    setCardsError("");
+
+    try {
+      await Promise.all(
+        cards.map((card) => {
+          return deleteSupabaseCard(card.id, user.id);
+        })
+      );
+
+      const savedCards = [];
+
+      for (const card of normalizedCards) {
+        const savedCard = await saveCard(card, user.id);
+        savedCards.push(normalizeCard(savedCard));
+      }
+
+      setCards(savedCards);
+      setCardsLoading(false);
+      return true;
+    } catch (error) {
+      setCardsError(error.message);
+      setCardsLoading(false);
+      return false;
+    }
+  }
+
   async function syncLocalCardsToSupabase() {
     if (!user) {
       setCardsError("Sign in before syncing cards.");
@@ -273,6 +308,7 @@ function CardProvider({ children }) {
         addCard,
         editCard,
         removeCard,
+        replaceCards,
         syncLocalCardsToSupabase,
       }}
     >

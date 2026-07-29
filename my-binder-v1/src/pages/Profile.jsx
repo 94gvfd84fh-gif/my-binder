@@ -88,7 +88,7 @@ function getStoredProfile() {
 
 function Profile() {
   const { user } = useContext(AuthContext);
-  const { cards, setCards } = useContext(CardContext);
+  const { cards, replaceCards } = useContext(CardContext);
   const {
     binders,
     binderGoals,
@@ -295,7 +295,7 @@ function Profile() {
 
     const reader = new FileReader();
 
-    reader.onload = function () {
+    reader.onload = async function () {
       updateProfile("avatar", reader.result);
     };
 
@@ -338,7 +338,7 @@ function Profile() {
 
     const reader = new FileReader();
 
-    reader.onload = function () {
+    reader.onload = async function () {
       try {
         const importedBackup = JSON.parse(reader.result);
 
@@ -358,7 +358,12 @@ function Profile() {
 
         if (!confirmImport) return;
 
-        setCards(importedCards);
+        const cardsImported = await replaceCards(importedCards);
+
+        if (!cardsImported) {
+          alert("Could not import cards into your account.");
+          return;
+        }
 
         if (!isOldCardBackup) {
           replaceBinders(importedBackup.binders);
