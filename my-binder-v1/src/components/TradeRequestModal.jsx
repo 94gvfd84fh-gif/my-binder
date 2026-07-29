@@ -24,7 +24,7 @@ function TradeRequestModal({ card, collector, onClose }) {
         <button
           className="primary-button trade-request-submit"
           onClick={() => {
-            alert("Trade request preview sent. Messaging will be added later.");
+            alert("Trade request note created. Use it to start the conversation with this collector.");
             onClose();
           }}
         >

@@ -2324,7 +2324,8 @@ nav a.active {
   color: var(--text-muted);
   font-size: 14px;
   text-align: center;
-}}/* v0.8 layout cleanup */
+}}
+
 
 .form-section,
 .modal-section {
@@ -2559,7 +2560,8 @@ nav a.active {
   .timeline-item small {
     grid-column: 2;
   }
-}/* v0.8 profile backup + binder control polish */
+}
+
 
 .profile-card .primary-button,
 .profile-card .secondary-button,

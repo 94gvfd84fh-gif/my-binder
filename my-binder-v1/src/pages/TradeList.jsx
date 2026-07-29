@@ -115,7 +115,7 @@ function TradeList() {
         <div className="section-header">
           <div>
             <h2>For Sale</h2>
-            <p>Cards you are willing to sell when marketplace tools go live.</p>
+            <p>Cards you are willing to sell or discuss with other collectors.</p>
           </div>
         </div>
 
