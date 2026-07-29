@@ -144,7 +144,7 @@ function Onboarding({ onComplete }) {
         onComplete();
       }
 
-      navigate("/");
+      navigate(isStore ? "/profile" : "/collection");
     } catch (error) {
       setMessage(error.message);
     }
@@ -285,7 +285,7 @@ function Onboarding({ onComplete }) {
               <h2>{isStore ? "Your store is ready to set up." : "Your collection hub is ready."}</h2>
               <p>
                 Beacon will create your {isStore ? "store" : "collector"} profile
-                now. Once you enter the app, these are the first actions worth taking.
+                now. Once you enter Beacon, these are the first actions worth taking.
               </p>
 
               <div className="onboarding-next-grid">
@@ -317,7 +317,11 @@ function Onboarding({ onComplete }) {
               </button>
             ) : (
               <button className="primary-button" type="submit" disabled={isSaving}>
-                {isSaving ? "Creating Profile..." : "Enter Beacon"}
+                {isSaving
+                  ? "Creating Profile..."
+                  : isStore
+                    ? "Go Set Up Store"
+                    : "Go Add Cards"}
               </button>
             )}
 
