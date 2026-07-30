@@ -288,7 +288,7 @@
 
 .theme-showcase-blue::before {
   background:
-    linear-gradient(104deg, transparent 0 16%, rgba(96, 165, 250, 0.14) 28%, rgba(37, 99, 235, 0.44) 39%, rgba(6, 182, 212, 0.18) 49%, transparent 66%),
+    linear-gradient(104deg, transparent 0 16%, rgba(96, 165, 250, 0.16) 28%, rgba(37, 99, 235, 0.44) 39%, rgba(6, 182, 212, 0.18) 49%, transparent 66%),
     linear-gradient(256deg, transparent 0 35%, rgba(59, 130, 246, 0.24) 47%, transparent 67%),
     radial-gradient(circle at 18% 17%, rgba(255, 255, 255, 0.28), transparent 12%),
     radial-gradient(circle at 19% 18%, rgba(59, 130, 246, 0.44), transparent 20%);
@@ -313,21 +313,21 @@
   --theme-glow: rgba(245, 158, 11, 0.55);
   --theme-border: rgba(251, 191, 36, 0.68);
   background:
-    radial-gradient(circle at 82% 0%, rgba(255, 236, 179, 0.2), transparent 24%),
-    radial-gradient(circle at 18% 0%, rgba(245, 158, 11, 0.28), transparent 34%),
+    radial-gradient(circle at 82% 0%, rgba(255, 236, 179, 0.24), transparent 24%),
+    radial-gradient(circle at 18% 0%, rgba(245, 158, 11, 0.3), transparent 34%),
     linear-gradient(150deg, #2b1f06, #090604);
 }
 
 .theme-collector-gold::before {
   background:
-    linear-gradient(112deg, transparent 0 14%, rgba(255, 255, 255, 0.24) 23%, rgba(251, 191, 36, 0.44) 29%, transparent 40%),
+    linear-gradient(112deg, transparent 0 14%, rgba(255, 255, 255, 0.25) 23%, rgba(251, 191, 36, 0.46) 29%, transparent 40%),
     linear-gradient(290deg, transparent 0 38%, rgba(255, 255, 255, 0.18) 47%, rgba(245, 158, 11, 0.34) 52%, transparent 65%),
-    radial-gradient(circle at 86% 10%, rgba(255, 236, 179, 0.4), transparent 16%);
+    radial-gradient(circle at 86% 10%, rgba(255, 236, 179, 0.42), transparent 16%);
 }
 
 .theme-collector-gold .collector-avatar {
   background:
-    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.86), transparent 11%),
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.88), transparent 11%),
     linear-gradient(135deg, #fff7cc, #f59e0b 38%, #92400e);
 }
 
@@ -335,7 +335,7 @@
 .theme-collector-gold .collector-top-card span,
 .theme-collector-gold .collector-featured-card strong {
   color: #fbbf24;
-  text-shadow: 0 0 18px rgba(245, 158, 11, 0.28);
+  text-shadow: 0 0 18px rgba(245, 158, 11, 0.3);
 }
 
 .theme-collector-gold .collector-profile-stats div,
@@ -346,14 +346,14 @@
 .theme-collector-gold .public-profile-banner,
 .theme-collector-gold .profile-style-preview {
   background:
-    linear-gradient(118deg, rgba(255, 255, 255, 0.16), transparent 18% 66%, rgba(251, 191, 36, 0.2)),
-    linear-gradient(145deg, rgba(251, 191, 36, 0.22), rgba(120, 53, 15, 0.22)),
+    linear-gradient(118deg, rgba(255, 255, 255, 0.17), transparent 18% 66%, rgba(251, 191, 36, 0.22)),
+    linear-gradient(145deg, rgba(251, 191, 36, 0.24), rgba(120, 53, 15, 0.24)),
     rgba(15, 23, 42, 0.74);
-  border-color: rgba(251, 191, 36, 0.5);
+  border-color: rgba(251, 191, 36, 0.52);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -1px 0 rgba(120, 53, 15, 0.55),
-    0 20px 60px rgba(245, 158, 11, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(120, 53, 15, 0.58),
+    0 20px 60px rgba(245, 158, 11, 0.2);
 }
 
 .theme-collector-gold .collector-profile-stats div::before,
@@ -363,7 +363,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(110deg, transparent 0 34%, rgba(255, 255, 255, 0.18) 46%, transparent 58%);
+  background: linear-gradient(110deg, transparent 0 34%, rgba(255, 255, 255, 0.2) 46%, transparent 58%);
   pointer-events: none;
 }
 
@@ -377,15 +377,19 @@
 
 .theme-neon-cyan::before {
   background:
-    linear-gradient(90deg, transparent 0 11%, rgba(34, 211, 238, 0.38) 11% 12%, transparent 12% 88%, rgba(34, 211, 238, 0.34) 88% 89%, transparent 89%),
-    linear-gradient(0deg, transparent 0 19%, rgba(6, 182, 212, 0.2) 19% 20%, transparent 20% 79%, rgba(6, 182, 212, 0.18) 79% 80%, transparent 80%),
-    radial-gradient(circle at 88% 12%, rgba(34, 211, 238, 0.52), transparent 20%);
+    radial-gradient(circle at 84% 12%, rgba(34, 211, 238, 0.38), transparent 20%),
+    radial-gradient(circle at 12% 88%, rgba(6, 182, 212, 0.22), transparent 26%),
+    linear-gradient(150deg, rgba(34, 211, 238, 0.08), transparent 42%);
 }
 
 .theme-neon-cyan .profile-tagline,
 .theme-neon-cyan h2,
 .theme-neon-cyan .collector-featured-card strong {
-  text-shadow: 0 0 18px rgba(34, 211, 238, 0.58), 0 0 34px rgba(34, 211, 238, 0.26);
+  color: #cffafe;
+  text-shadow:
+    0 0 8px rgba(34, 211, 238, 0.85),
+    0 0 24px rgba(34, 211, 238, 0.44),
+    0 0 42px rgba(34, 211, 238, 0.22);
 }
 
 .theme-neon-cyan .collector-profile-stats div,
@@ -393,11 +397,27 @@
 .theme-neon-cyan .public-binder-card,
 .theme-neon-cyan .collector-featured-card,
 .theme-neon-cyan .profile-banner-preview,
-.theme-neon-cyan .public-profile-banner {
-  border-color: rgba(34, 211, 238, 0.58);
+.theme-neon-cyan .public-profile-banner,
+.theme-neon-cyan .profile-style-preview {
+  border-color: rgba(34, 211, 238, 0.7);
   box-shadow:
-    0 0 26px rgba(34, 211, 238, 0.16),
-    inset 0 0 28px rgba(34, 211, 238, 0.06);
+    0 0 0 1px rgba(34, 211, 238, 0.3),
+    0 0 20px rgba(34, 211, 238, 0.22),
+    0 0 46px rgba(34, 211, 238, 0.12),
+    inset 0 0 28px rgba(34, 211, 238, 0.07);
+}
+
+.theme-neon-cyan .collector-profile-stats div::after,
+.theme-neon-cyan .collector-social-stats div::after,
+.theme-neon-cyan .public-binder-card::after,
+.theme-neon-cyan .collector-featured-card::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(103, 232, 249, 0.3);
+  border-radius: inherit;
+  box-shadow: inset 0 0 16px rgba(34, 211, 238, 0.12);
+  pointer-events: none;
 }
 
 .theme-card-shop {
@@ -413,9 +433,8 @@
 
 .theme-card-shop::before {
   background:
-    linear-gradient(0deg, transparent 0 24%, rgba(120, 76, 35, 0.5) 24% 26%, rgba(51, 32, 18, 0.7) 26% 28%, transparent 28% 51%, rgba(120, 76, 35, 0.45) 51% 53%, rgba(51, 32, 18, 0.64) 53% 55%, transparent 55% 78%, rgba(120, 76, 35, 0.45) 78% 80%, rgba(51, 32, 18, 0.64) 80% 82%, transparent 82%),
-    repeating-linear-gradient(90deg, rgba(20, 184, 166, 0.08) 0 1px, transparent 1px 110px),
-    radial-gradient(circle at 80% 12%, rgba(20, 184, 166, 0.24), transparent 24%);
+    radial-gradient(circle at 80% 12%, rgba(20, 184, 166, 0.24), transparent 24%),
+    linear-gradient(150deg, rgba(139, 90, 43, 0.12), transparent 36%);
 }
 
 .theme-card-shop .collector-profile-stats div,
@@ -424,15 +443,32 @@
 .theme-card-shop .collector-featured-card,
 .theme-card-shop .profile-collection-mix,
 .theme-card-shop .public-collection-mix {
-  margin-bottom: 18px;
-  border-color: rgba(20, 184, 166, 0.32);
+  margin-bottom: 20px;
+  border-color: rgba(20, 184, 166, 0.34);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(0, 0, 0, 0.08)),
-    rgba(15, 23, 42, 0.8);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(0, 0, 0, 0.08)),
+    rgba(15, 23, 42, 0.84);
   box-shadow:
-    0 18px 0 -10px rgba(126, 75, 35, 0.85),
-    0 24px 0 -14px rgba(57, 34, 18, 0.92),
-    0 26px 54px rgba(0, 0, 0, 0.22);
+    0 18px 0 -10px rgba(126, 75, 35, 0.92),
+    0 24px 0 -14px rgba(57, 34, 18, 0.95),
+    0 28px 60px rgba(0, 0, 0, 0.24);
+}
+
+.theme-card-shop .collector-profile-stats div::before,
+.theme-card-shop .collector-social-stats div::before,
+.theme-card-shop .public-binder-card::before,
+.theme-card-shop .collector-featured-card::before,
+.theme-card-shop .profile-collection-mix::before,
+.theme-card-shop .public-collection-mix::before {
+  content: "DISPLAY SHELF";
+  position: absolute;
+  top: 9px;
+  right: 12px;
+  color: rgba(20, 184, 166, 0.38);
+  font-size: 0.58rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  pointer-events: none;
 }
 
 .theme-card-shop .collector-profile-stats div::after,
@@ -445,11 +481,18 @@
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: -9px;
-  height: 10px;
+  bottom: -10px;
+  height: 12px;
   border-radius: 0 0 8px 8px;
-  background: linear-gradient(180deg, #8b5a2b, #3b2413);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.34);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 32%),
+    linear-gradient(180deg, #9a6732, #3b2413);
+  box-shadow: 0 9px 20px rgba(0, 0, 0, 0.38);
+}
+
+.theme-card-shop .public-binder-preview-row {
+  padding-bottom: 12px;
+  border-bottom: 5px solid rgba(139, 90, 43, 0.78);
 }
 
 .theme-vintage-vault {
@@ -465,11 +508,9 @@
 
 .theme-vintage-vault::before {
   background:
-    radial-gradient(circle at 86% 18%, transparent 0 42px, rgba(203, 213, 225, 0.36) 43px 46px, transparent 47px 68px, rgba(203, 213, 225, 0.22) 69px 72px, transparent 73px),
+    radial-gradient(circle at 86% 18%, transparent 0 42px, rgba(203, 213, 225, 0.38) 43px 46px, transparent 47px 68px, rgba(203, 213, 225, 0.23) 69px 72px, transparent 73px),
     radial-gradient(circle at 86% 18%, rgba(0, 0, 0, 0.42), transparent 74px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent 18% 82%, rgba(255, 255, 255, 0.05)),
-    repeating-linear-gradient(0deg, transparent 0 38px, rgba(255, 255, 255, 0.035) 38px 39px),
-    repeating-linear-gradient(90deg, transparent 0 72px, rgba(0, 0, 0, 0.16) 72px 73px);
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent 18% 82%, rgba(255, 255, 255, 0.05));
 }
 
 .theme-vintage-vault .collector-profile-stats div,
@@ -481,14 +522,15 @@
 .theme-vintage-vault .profile-collection-mix,
 .theme-vintage-vault .public-collection-mix {
   border-width: 2px;
-  border-color: rgba(203, 213, 225, 0.36);
+  border-color: rgba(203, 213, 225, 0.38);
   background:
-    radial-gradient(circle at 95% 18%, transparent 0 16px, rgba(203, 213, 225, 0.2) 17px 19px, transparent 20px),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.14)),
+    radial-gradient(circle at 92% 18%, transparent 0 13px, rgba(203, 213, 225, 0.24) 14px 16px, transparent 17px),
+    radial-gradient(circle at 9% 82%, transparent 0 10px, rgba(203, 213, 225, 0.16) 11px 13px, transparent 14px),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(0, 0, 0, 0.16)),
     linear-gradient(180deg, #27323d, #10161d);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.17),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
     0 24px 62px rgba(0, 0, 0, 0.26);
 }
 
@@ -501,7 +543,28 @@
   content: "";
   position: absolute;
   inset: 8px;
-  border: 1px solid rgba(203, 213, 225, 0.12);
+  border: 1px solid rgba(203, 213, 225, 0.14);
   border-radius: inherit;
+  pointer-events: none;
+}
+
+.theme-vintage-vault .collector-profile-stats div::after,
+.theme-vintage-vault .collector-social-stats div::after,
+.theme-vintage-vault .public-binder-card::after,
+.theme-vintage-vault .collector-featured-card::after,
+.theme-vintage-vault .profile-collection-mix::after,
+.theme-vintage-vault .public-collection-mix::after {
+  content: "LOCKED";
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  padding: 4px 8px;
+  border: 1px solid rgba(203, 213, 225, 0.24);
+  border-radius: 999px;
+  color: rgba(226, 232, 240, 0.42);
+  font-size: 0.55rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  background: rgba(15, 23, 42, 0.42);
   pointer-events: none;
 }
