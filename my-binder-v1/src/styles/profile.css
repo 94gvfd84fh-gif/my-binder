@@ -2106,3 +2106,197 @@
   position: relative;
   z-index: 4;
 }
+
+
+/* ===== Reference Vintage Vault Theme ===== */
+
+.theme-vintage-vault {
+  --profile-accent: #d6a84f;
+  --theme-surface: #21180d;
+  --theme-surface-2: #090603;
+  --theme-glow: rgba(214, 168, 79, 0.34);
+  --theme-border: rgba(214, 168, 79, 0.72);
+  color: #f7dfaa;
+  background:
+    url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%20%20%3Cpath%20d%3D%22M6%206h58c-6%208-8%2017-8%2030v20H36C22%2056%2013%2058%206%2066V6Z%22%20fill%3D%22%23271707%22%20stroke%3D%22%23d6a84f%22%20stroke-opacity%3D%22.48%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M18%2018h38M18%2018v38%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.28%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%226%22%20fill%3D%22%23080503%22%20stroke%3D%22%23d6a84f%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2252%22%20cy%3D%2222%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2252%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%3C%2Fsvg%3E"),
+    url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%20%20%3Cpath%20d%3D%22M6%206h58c-6%208-8%2017-8%2030v20H36C22%2056%2013%2058%206%2066V6Z%22%20fill%3D%22%23271707%22%20stroke%3D%22%23d6a84f%22%20stroke-opacity%3D%22.48%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M18%2018h38M18%2018v38%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.28%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%226%22%20fill%3D%22%23080503%22%20stroke%3D%22%23d6a84f%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2252%22%20cy%3D%2222%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2252%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%3C%2Fsvg%3E"),
+    url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%20%20%3Cpath%20d%3D%22M6%206h58c-6%208-8%2017-8%2030v20H36C22%2056%2013%2058%206%2066V6Z%22%20fill%3D%22%23271707%22%20stroke%3D%22%23d6a84f%22%20stroke-opacity%3D%22.48%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M18%2018h38M18%2018v38%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.28%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%226%22%20fill%3D%22%23080503%22%20stroke%3D%22%23d6a84f%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2252%22%20cy%3D%2222%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2252%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%3C%2Fsvg%3E"),
+    url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%20%20%3Cpath%20d%3D%22M6%206h58c-6%208-8%2017-8%2030v20H36C22%2056%2013%2058%206%2066V6Z%22%20fill%3D%22%23271707%22%20stroke%3D%22%23d6a84f%22%20stroke-opacity%3D%22.48%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M18%2018h38M18%2018v38%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.28%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%226%22%20fill%3D%22%23080503%22%20stroke%3D%22%23d6a84f%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2252%22%20cy%3D%2222%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2252%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%3C%2Fsvg%3E"),
+    url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20420%20260%22%3E%0A%20%20%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.9%22%20numOctaves%3D%224%22%20stitchTiles%3D%22stitch%22%2F%3E%3CfeColorMatrix%20type%3D%22matrix%22%20values%3D%220%200%200%200%200.75%200%200%200%200%200.55%200%200%200%200%200.26%200%200%200%20.32%200%22%2F%3E%3C%2Ffilter%3E%0A%20%20%3Crect%20width%3D%22420%22%20height%3D%22260%22%20filter%3D%22url(%23n)%22%20opacity%3D%22.65%22%2F%3E%0A%20%20%3Cg%20stroke%3D%22%23d6a84f%22%20stroke-opacity%3D%22.14%22%20fill%3D%22none%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18%2020h384v220H18z%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M34%2036h352v188H34z%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23f8e4a7%22%20opacity%3D%22.18%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2234%22%20cy%3D%2236%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22386%22%20cy%3D%2236%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2234%22%20cy%3D%22224%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22386%22%20cy%3D%22224%22%20r%3D%224%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2278%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22122%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22166%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22210%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22254%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22298%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22342%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E"),
+    radial-gradient(circle at 78% 90%, rgba(214, 168, 79, 0.16), transparent 18%),
+    radial-gradient(circle at 50% 0%, rgba(255, 231, 170, 0.12), transparent 24%),
+    linear-gradient(180deg, #24180b, #0b0703 72%);
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, no-repeat, no-repeat, no-repeat;
+  background-position: left 8px top 8px, right 8px top 8px, left 8px bottom 8px, right 8px bottom 8px, center, center, center, center;
+  background-size: 84px 84px, 84px 84px, 84px 84px, 84px 84px, 420px 260px, auto, auto, auto;
+  border-color: rgba(214, 168, 79, 0.5);
+  box-shadow:
+    inset 0 0 0 2px rgba(214, 168, 79, 0.22),
+    inset 0 0 0 10px rgba(0, 0, 0, 0.22),
+    inset 0 0 80px rgba(0, 0, 0, 0.55),
+    0 28px 80px rgba(0, 0, 0, 0.36);
+}
+
+.theme-vintage-vault::before {
+  background:
+    url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20140%20140%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22dial%22%20cx%3D%2238%25%22%20cy%3D%2228%25%22%20r%3D%2272%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23fff7d6%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23d6a84f%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.42%22%20stop-color%3D%22%236b421d%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.72%22%20stop-color%3D%22%231b1209%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%20%20%3Cfilter%20id%3D%22s%22%20x%3D%22-20%25%22%20y%3D%22-20%25%22%20width%3D%22140%25%22%20height%3D%22140%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%225%22%20stdDeviation%3D%225%22%20flood-color%3D%22%23000%22%20flood-opacity%3D%22.7%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2260%22%20fill%3D%22%23120c05%22%20opacity%3D%22.85%22%20filter%3D%22url(%23s)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2254%22%20fill%3D%22url(%23dial)%22%20stroke%3D%22%23f5d38a%22%20stroke-opacity%3D%22.55%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%230b0703%22%20stroke-width%3D%227%22%20opacity%3D%22.75%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2231%22%20fill%3D%22none%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2218%22%20fill%3D%22url(%23dial)%22%20stroke%3D%22%23fff0b8%22%20stroke-opacity%3D%22.48%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Cg%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.52%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M70%2018v10M70%20112v10M18%2070h10M112%2070h10M33%2033l7%207M100%20100l7%207M107%2033l-7%207M40%20100l-7%207%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23f8e4a7%22%20opacity%3D%22.7%22%20font-family%3D%22Georgia%22%20font-size%3D%228%22%20text-anchor%3D%22middle%22%3E%0A%20%20%20%20%3Ctext%20x%3D%2270%22%20y%3D%2233%22%3E20%3C%2Ftext%3E%3Ctext%20x%3D%22108%22%20y%3D%2273%22%3E40%3C%2Ftext%3E%3Ctext%20x%3D%2270%22%20y%3D%22111%22%3E60%3C%2Ftext%3E%3Ctext%20x%3D%2232%22%20y%3D%2273%22%3E80%3C%2Ftext%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Cpath%20d%3D%22M70%2070%2092%2052%22%20stroke%3D%22%23fff7d6%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.82%22%2F%3E%0A%3C%2Fsvg%3E"),
+    radial-gradient(circle at 50% 0%, rgba(255, 239, 197, 0.16), transparent 22%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08), transparent 14% 86%, rgba(255, 255, 255, 0.06));
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: right 32px bottom 22px, center, center;
+  background-size: 180px 180px, auto, auto;
+  opacity: 1;
+}
+
+.theme-vintage-vault::after {
+  background-image: none;
+}
+
+.theme-vintage-vault .collector-profile-stats,
+.theme-vintage-vault .collector-social-stats {
+  gap: 28px;
+}
+
+.theme-vintage-vault .collector-profile-stats div,
+.theme-vintage-vault .collector-social-stats div,
+.theme-vintage-vault .public-binder-card,
+.theme-vintage-vault .collector-featured-card,
+.theme-vintage-vault .profile-banner-preview,
+.theme-vintage-vault .public-profile-banner,
+.theme-vintage-vault .profile-style-preview,
+.theme-vintage-vault .profile-collection-mix,
+.theme-vintage-vault .public-collection-mix {
+  overflow: hidden;
+  color: #f7dfaa;
+  border: 2px solid rgba(214, 168, 79, 0.72);
+  border-radius: 10px;
+  background:
+    url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%20%20%3Cpath%20d%3D%22M6%206h58c-6%208-8%2017-8%2030v20H36C22%2056%2013%2058%206%2066V6Z%22%20fill%3D%22%23271707%22%20stroke%3D%22%23d6a84f%22%20stroke-opacity%3D%22.48%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M18%2018h38M18%2018v38%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.28%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%226%22%20fill%3D%22%23080503%22%20stroke%3D%22%23d6a84f%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2252%22%20cy%3D%2222%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2252%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%3C%2Fsvg%3E"),
+    url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%20%20%3Cpath%20d%3D%22M6%206h58c-6%208-8%2017-8%2030v20H36C22%2056%2013%2058%206%2066V6Z%22%20fill%3D%22%23271707%22%20stroke%3D%22%23d6a84f%22%20stroke-opacity%3D%22.48%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M18%2018h38M18%2018v38%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.28%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%226%22%20fill%3D%22%23080503%22%20stroke%3D%22%23d6a84f%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2252%22%20cy%3D%2222%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2222%22%20cy%3D%2252%22%20r%3D%224%22%20fill%3D%22%23d6a84f%22%20opacity%3D%22.6%22%2F%3E%0A%3C%2Fsvg%3E"),
+    url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20420%20260%22%3E%0A%20%20%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.9%22%20numOctaves%3D%224%22%20stitchTiles%3D%22stitch%22%2F%3E%3CfeColorMatrix%20type%3D%22matrix%22%20values%3D%220%200%200%200%200.75%200%200%200%200%200.55%200%200%200%200%200.26%200%200%200%20.32%200%22%2F%3E%3C%2Ffilter%3E%0A%20%20%3Crect%20width%3D%22420%22%20height%3D%22260%22%20filter%3D%22url(%23n)%22%20opacity%3D%22.65%22%2F%3E%0A%20%20%3Cg%20stroke%3D%22%23d6a84f%22%20stroke-opacity%3D%22.14%22%20fill%3D%22none%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18%2020h384v220H18z%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M34%2036h352v188H34z%22%20stroke-width%3D%221%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23f8e4a7%22%20opacity%3D%22.18%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2234%22%20cy%3D%2236%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22386%22%20cy%3D%2236%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%2234%22%20cy%3D%22224%22%20r%3D%224%22%2F%3E%3Ccircle%20cx%3D%22386%22%20cy%3D%22224%22%20r%3D%224%22%2F%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2278%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22122%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22166%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22210%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22254%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22298%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%3Ccircle%20cx%3D%22342%22%20cy%3D%2236%22%20r%3D%222%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E"),
+    radial-gradient(circle at 76% 50%, rgba(214, 168, 79, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(255, 238, 190, 0.13), rgba(0, 0, 0, 0.18) 44%, rgba(103, 62, 20, 0.2)),
+    linear-gradient(180deg, #2b1f10, #130d06 74%);
+  background-repeat: no-repeat, no-repeat, repeat, no-repeat, no-repeat, no-repeat;
+  background-position: left 4px top 4px, right 4px bottom 4px, center, center, center, center;
+  background-size: 54px 54px, 54px 54px, 360px 220px, auto, auto, auto;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 226, 151, 0.1),
+    inset 0 0 0 7px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 238, 190, 0.26),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.75),
+    0 14px 0 -7px rgba(214, 168, 79, 0.42),
+    0 22px 34px rgba(0, 0, 0, 0.34);
+}
+
+.theme-vintage-vault .collector-profile-stats div,
+.theme-vintage-vault .collector-social-stats div {
+  min-height: 154px;
+  padding: 34px 116px 30px 90px;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+}
+
+.theme-vintage-vault .public-binder-card,
+.theme-vintage-vault .collector-featured-card,
+.theme-vintage-vault .profile-collection-mix,
+.theme-vintage-vault .public-collection-mix,
+.theme-vintage-vault .profile-style-preview {
+  min-height: 156px;
+  padding: 34px 116px 30px 90px;
+}
+
+.theme-vintage-vault .collector-profile-stats div > *,
+.theme-vintage-vault .collector-social-stats div > *,
+.theme-vintage-vault .public-binder-card > *,
+.theme-vintage-vault .collector-featured-card > *,
+.theme-vintage-vault .profile-banner-preview > *,
+.theme-vintage-vault .public-profile-banner > *,
+.theme-vintage-vault .profile-style-preview > *,
+.theme-vintage-vault .profile-collection-mix > *,
+.theme-vintage-vault .public-collection-mix > * {
+  position: relative;
+  z-index: 5;
+}
+
+.theme-vintage-vault .collector-profile-stats div::before,
+.theme-vintage-vault .collector-social-stats div::before,
+.theme-vintage-vault .public-binder-card::before,
+.theme-vintage-vault .collector-featured-card::before,
+.theme-vintage-vault .profile-collection-mix::before,
+.theme-vintage-vault .public-collection-mix::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 24px;
+  width: 58px;
+  height: 96px;
+  border: 0;
+  border-radius: 0;
+  background-image: url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2092%20140%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22brass%22%20x1%3D%220%22%20x2%3D%221%22%20y1%3D%220%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23fff1b8%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23c98f35%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.48%22%20stop-color%3D%22%234a2b10%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.78%22%20stop-color%3D%22%23d9a64d%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231b1209%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%20%20%3Cfilter%20id%3D%22sh%22%20x%3D%22-25%25%22%20y%3D%22-25%25%22%20width%3D%22150%25%22%20height%3D%22150%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%225%22%20stdDeviation%3D%224%22%20flood-color%3D%22%23000%22%20flood-opacity%3D%22.65%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Cpath%20d%3D%22M46%208%2076%2028v84l-30%2020-30-20V28L46%208Z%22%20fill%3D%22url(%23brass)%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.5%22%20stroke-width%3D%222%22%20filter%3D%22url(%23sh)%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M46%2018%2066%2032v76l-20%2014-20-14V32l20-14Z%22%20fill%3D%22%23120c05%22%20opacity%3D%22.54%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.28%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2246%22%20cy%3D%2255%22%20r%3D%2213%22%20fill%3D%22%23080503%22%20stroke%3D%22%23e0ad57%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M38%2067h16l7%2038H31l7-38Z%22%20fill%3D%22%23080503%22%20stroke%3D%22%23e0ad57%22%20stroke-width%3D%223%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%20%20%3Cg%20fill%3D%22%23100a04%22%20stroke%3D%22%23f4ce82%22%20stroke-opacity%3D%22.45%22%20stroke-width%3D%222%22%3E%0A%20%20%20%20%3Ccircle%20cx%3D%2223%22%20cy%3D%2233%22%20r%3D%225%22%2F%3E%3Ccircle%20cx%3D%2269%22%20cy%3D%2233%22%20r%3D%225%22%2F%3E%3Ccircle%20cx%3D%2223%22%20cy%3D%22107%22%20r%3D%225%22%2F%3E%3Ccircle%20cx%3D%2269%22%20cy%3D%22107%22%20r%3D%225%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Cpath%20d%3D%22M31%2024c8%206%2022%206%2030%200M31%20116c8-6%2022-6%2030%200%22%20fill%3D%22none%22%20stroke%3D%22%23fff1b8%22%20stroke-opacity%3D%22.22%22%20stroke-width%3D%222%22%2F%3E%0A%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: .96;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.theme-vintage-vault .collector-profile-stats div::after,
+.theme-vintage-vault .collector-social-stats div::after,
+.theme-vintage-vault .public-binder-card::after,
+.theme-vintage-vault .collector-featured-card::after,
+.theme-vintage-vault .profile-collection-mix::after,
+.theme-vintage-vault .public-collection-mix::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 28px;
+  width: 82px;
+  height: 82px;
+  border: 0;
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20140%20140%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3CradialGradient%20id%3D%22dial%22%20cx%3D%2238%25%22%20cy%3D%2228%25%22%20r%3D%2272%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23fff7d6%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.18%22%20stop-color%3D%22%23d6a84f%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.42%22%20stop-color%3D%22%236b421d%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22.72%22%20stop-color%3D%22%231b1209%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23000%22%2F%3E%0A%20%20%20%20%3C%2FradialGradient%3E%0A%20%20%20%20%3Cfilter%20id%3D%22s%22%20x%3D%22-20%25%22%20y%3D%22-20%25%22%20width%3D%22140%25%22%20height%3D%22140%25%22%3E%0A%20%20%20%20%20%20%3CfeDropShadow%20dx%3D%220%22%20dy%3D%225%22%20stdDeviation%3D%225%22%20flood-color%3D%22%23000%22%20flood-opacity%3D%22.7%22%2F%3E%0A%20%20%20%20%3C%2Ffilter%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2260%22%20fill%3D%22%23120c05%22%20opacity%3D%22.85%22%20filter%3D%22url(%23s)%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2254%22%20fill%3D%22url(%23dial)%22%20stroke%3D%22%23f5d38a%22%20stroke-opacity%3D%22.55%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2242%22%20fill%3D%22none%22%20stroke%3D%22%230b0703%22%20stroke-width%3D%227%22%20opacity%3D%22.75%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2231%22%20fill%3D%22none%22%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2270%22%20cy%3D%2270%22%20r%3D%2218%22%20fill%3D%22url(%23dial)%22%20stroke%3D%22%23fff0b8%22%20stroke-opacity%3D%22.48%22%20stroke-width%3D%222%22%2F%3E%0A%20%20%3Cg%20stroke%3D%22%23f8e4a7%22%20stroke-opacity%3D%22.52%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M70%2018v10M70%20112v10M18%2070h10M112%2070h10M33%2033l7%207M100%20100l7%207M107%2033l-7%207M40%20100l-7%207%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23f8e4a7%22%20opacity%3D%22.7%22%20font-family%3D%22Georgia%22%20font-size%3D%228%22%20text-anchor%3D%22middle%22%3E%0A%20%20%20%20%3Ctext%20x%3D%2270%22%20y%3D%2233%22%3E20%3C%2Ftext%3E%3Ctext%20x%3D%22108%22%20y%3D%2273%22%3E40%3C%2Ftext%3E%3Ctext%20x%3D%2270%22%20y%3D%22111%22%3E60%3C%2Ftext%3E%3Ctext%20x%3D%2232%22%20y%3D%2273%22%3E80%3C%2Ftext%3E%0A%20%20%3C%2Fg%3E%0A%20%20%3Cpath%20d%3D%22M70%2070%2092%2052%22%20stroke%3D%22%23fff7d6%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%20opacity%3D%22.82%22%2F%3E%0A%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  box-shadow: none;
+  pointer-events: none;
+  z-index: 2;
+  opacity: .96;
+}
+
+.theme-vintage-vault .collector-profile-stats span,
+.theme-vintage-vault .collector-social-stats span,
+.theme-vintage-vault .page-label {
+  color: #d6a84f;
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.75);
+}
+
+.theme-vintage-vault .collector-profile-stats strong,
+.theme-vintage-vault .collector-social-stats strong,
+.theme-vintage-vault h2,
+.theme-vintage-vault .collector-featured-card strong {
+  color: #ffe7aa;
+  font-family: Georgia, "Times New Roman", serif;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.9),
+    0 0 12px rgba(214, 168, 79, 0.22);
+}
+
+.theme-vintage-vault .profile-collection-mix,
+.theme-vintage-vault .public-collection-mix {
+  min-height: 150px;
+  padding-right: 190px;
+}
+
+.theme-vintage-vault .profile-collection-mix::after,
+.theme-vintage-vault .public-collection-mix::after {
+  right: 22px;
+  top: 18px;
+  width: 132px;
+  height: 132px;
+}
