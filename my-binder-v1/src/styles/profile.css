@@ -771,7 +771,7 @@
 .theme-card-shop .collector-featured-card::before,
 .theme-card-shop .profile-collection-mix::before,
 .theme-card-shop .public-collection-mix::before {
-  content: "DISPLAY SHELF";
+  content: "";
   position: absolute;
   top: 9px;
   right: 12px;
@@ -865,7 +865,7 @@
 .theme-vintage-vault .collector-featured-card::after,
 .theme-vintage-vault .profile-collection-mix::after,
 .theme-vintage-vault .public-collection-mix::after {
-  content: "LOCKED";
+  content: "";
   position: absolute;
   right: 12px;
   bottom: 10px;
@@ -878,4 +878,258 @@
   letter-spacing: 0.14em;
   background: rgba(15, 23, 42, 0.42);
   pointer-events: none;
+}
+
+
+/* ===== Final Theme Detail Pass ===== */
+
+.theme-card-shop {
+  background:
+    radial-gradient(circle at 82% 4%, rgba(20, 184, 166, 0.22), transparent 22%),
+    linear-gradient(180deg, rgba(20, 184, 166, 0.08), transparent 22%),
+    linear-gradient(150deg, #172014, #080d09);
+}
+
+.theme-card-shop::before {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 18%),
+    radial-gradient(circle at 16% 16%, rgba(245, 158, 11, 0.12), transparent 20%),
+    radial-gradient(circle at 82% 12%, rgba(20, 184, 166, 0.25), transparent 22%);
+}
+
+.theme-card-shop .collector-profile-stats div,
+.theme-card-shop .collector-social-stats div,
+.theme-card-shop .public-binder-card,
+.theme-card-shop .collector-featured-card,
+.theme-card-shop .profile-collection-mix,
+.theme-card-shop .public-collection-mix {
+  border-color: rgba(20, 184, 166, 0.34);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.08)),
+    linear-gradient(90deg, rgba(139, 90, 43, 0.08), transparent 16% 84%, rgba(139, 90, 43, 0.08)),
+    rgba(15, 23, 42, 0.86);
+  box-shadow:
+    0 17px 0 -9px rgba(160, 104, 48, 0.92),
+    0 23px 0 -13px rgba(59, 36, 19, 0.98),
+    0 30px 58px rgba(0, 0, 0, 0.25);
+}
+
+.theme-card-shop .collector-profile-stats div::before,
+.theme-card-shop .collector-social-stats div::before,
+.theme-card-shop .public-binder-card::before,
+.theme-card-shop .collector-featured-card::before,
+.theme-card-shop .profile-collection-mix::before,
+.theme-card-shop .public-collection-mix::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  right: 12px;
+  height: 5px;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(20, 184, 166, 0.42), transparent 32% 68%, rgba(245, 158, 11, 0.28)),
+    rgba(255, 255, 255, 0.045);
+  box-shadow: 0 16px 0 rgba(139, 90, 43, 0.16);
+  pointer-events: none;
+}
+
+.theme-card-shop .collector-profile-stats div::after,
+.theme-card-shop .collector-social-stats div::after,
+.theme-card-shop .public-binder-card::after,
+.theme-card-shop .collector-featured-card::after,
+.theme-card-shop .profile-collection-mix::after,
+.theme-card-shop .public-collection-mix::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: -10px;
+  height: 13px;
+  border-radius: 0 0 8px 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 34%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 22px),
+    linear-gradient(180deg, #a56d35, #3b2413);
+  box-shadow: 0 9px 20px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.theme-card-shop .public-binder-preview-card,
+.theme-card-shop .collector-featured-image {
+  box-shadow:
+    inset 0 -8px 0 rgba(139, 90, 43, 0.34),
+    0 18px 28px rgba(0, 0, 0, 0.22);
+}
+
+.theme-vintage-vault {
+  background:
+    radial-gradient(circle at 82% 18%, transparent 0 74px, rgba(203, 213, 225, 0.16) 75px 79px, transparent 80px 118px, rgba(203, 213, 225, 0.1) 119px 123px, transparent 124px),
+    radial-gradient(circle at 82% 18%, rgba(0, 0, 0, 0.34), transparent 130px),
+    linear-gradient(150deg, #1f2933, #07090d);
+}
+
+.theme-vintage-vault::before {
+  background:
+    radial-gradient(circle at 82% 18%, transparent 0 34px, rgba(203, 213, 225, 0.32) 35px 38px, transparent 39px 58px, rgba(203, 213, 225, 0.18) 59px 62px, transparent 63px),
+    linear-gradient(42deg, transparent 0 43%, rgba(203, 213, 225, 0.16) 44% 45%, transparent 46%),
+    linear-gradient(-42deg, transparent 0 43%, rgba(203, 213, 225, 0.12) 44% 45%, transparent 46%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent 18% 82%, rgba(255, 255, 255, 0.05));
+}
+
+.theme-vintage-vault .collector-profile-stats div,
+.theme-vintage-vault .collector-social-stats div,
+.theme-vintage-vault .public-binder-card,
+.theme-vintage-vault .collector-featured-card,
+.theme-vintage-vault .profile-banner-preview,
+.theme-vintage-vault .public-profile-banner,
+.theme-vintage-vault .profile-collection-mix,
+.theme-vintage-vault .public-collection-mix {
+  border-width: 2px;
+  border-color: rgba(203, 213, 225, 0.4);
+  background:
+    radial-gradient(circle at 16px 16px, rgba(226, 232, 240, 0.24) 0 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 16px) 16px, rgba(226, 232, 240, 0.24) 0 3px, transparent 4px),
+    radial-gradient(circle at 16px calc(100% - 16px), rgba(226, 232, 240, 0.2) 0 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 16px) calc(100% - 16px), rgba(226, 232, 240, 0.2) 0 3px, transparent 4px),
+    radial-gradient(circle at 92% 18%, transparent 0 13px, rgba(203, 213, 225, 0.24) 14px 16px, transparent 17px),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(0, 0, 0, 0.16)),
+    linear-gradient(180deg, #27323d, #10161d);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.17),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    inset 0 0 0 8px rgba(255, 255, 255, 0.018),
+    0 24px 62px rgba(0, 0, 0, 0.26);
+}
+
+.theme-vintage-vault .collector-profile-stats div::before,
+.theme-vintage-vault .collector-social-stats div::before,
+.theme-vintage-vault .public-binder-card::before,
+.theme-vintage-vault .collector-featured-card::before,
+.theme-vintage-vault .profile-collection-mix::before,
+.theme-vintage-vault .public-collection-mix::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(203, 213, 225, 0.15);
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 100% 0%, transparent 0 20px, rgba(203, 213, 225, 0.14) 21px 23px, transparent 24px),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 42%);
+  pointer-events: none;
+}
+
+.theme-vintage-vault .collector-profile-stats div::after,
+.theme-vintage-vault .collector-social-stats div::after,
+.theme-vintage-vault .public-binder-card::after,
+.theme-vintage-vault .collector-featured-card::after,
+.theme-vintage-vault .profile-collection-mix::after,
+.theme-vintage-vault .public-collection-mix::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  width: 28px;
+  height: 22px;
+  border: 2px solid rgba(226, 232, 240, 0.34);
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 50% 58%, rgba(226, 232, 240, 0.36) 0 2px, transparent 3px),
+    linear-gradient(180deg, rgba(226, 232, 240, 0.12), rgba(15, 23, 42, 0.4));
+  box-shadow:
+    0 -10px 0 -6px rgba(15, 23, 42, 0.96),
+    0 -10px 0 -4px rgba(226, 232, 240, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  pointer-events: none;
+}
+
+
+/* ===== Neon Cyan Bright Pass ===== */
+
+.theme-neon-cyan {
+  --profile-accent: #00f5ff;
+  --theme-surface: #063b46;
+  --theme-surface-2: #011f2a;
+  --theme-glow: rgba(0, 245, 255, 0.7);
+  --theme-border: rgba(103, 232, 249, 0.9);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(0, 245, 255, 0.42), transparent 34%),
+    radial-gradient(circle at 86% 12%, rgba(34, 211, 238, 0.52), transparent 28%),
+    radial-gradient(circle at 50% 105%, rgba(14, 165, 233, 0.42), transparent 34%),
+    linear-gradient(145deg, #07485a, #022a36 52%, #011821);
+}
+
+.theme-neon-cyan::before {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.2), transparent 12%),
+    radial-gradient(circle at 84% 12%, rgba(0, 245, 255, 0.54), transparent 24%),
+    radial-gradient(circle at 12% 88%, rgba(103, 232, 249, 0.34), transparent 28%),
+    linear-gradient(135deg, rgba(0, 245, 255, 0.2), transparent 48%);
+  opacity: 1;
+}
+
+.theme-neon-cyan .collector-avatar {
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.9), transparent 13%),
+    linear-gradient(135deg, #ccfbf1, #00f5ff 36%, #0ea5e9);
+  box-shadow:
+    0 0 0 4px rgba(103, 232, 249, 0.28),
+    0 0 28px rgba(0, 245, 255, 0.46),
+    0 0 58px rgba(0, 245, 255, 0.22);
+}
+
+.theme-neon-cyan .profile-tagline,
+.theme-neon-cyan h2,
+.theme-neon-cyan .collector-featured-card strong,
+.theme-neon-cyan .collector-profile-stats strong,
+.theme-neon-cyan .collector-social-stats strong {
+  color: #ecfeff;
+  text-shadow:
+    0 0 8px rgba(0, 245, 255, 0.95),
+    0 0 24px rgba(0, 245, 255, 0.62),
+    0 0 46px rgba(0, 245, 255, 0.34);
+}
+
+.theme-neon-cyan .collector-profile-stats div,
+.theme-neon-cyan .collector-social-stats div,
+.theme-neon-cyan .public-binder-card,
+.theme-neon-cyan .collector-featured-card,
+.theme-neon-cyan .profile-banner-preview,
+.theme-neon-cyan .public-profile-banner,
+.theme-neon-cyan .profile-style-preview,
+.theme-neon-cyan .profile-collection-mix,
+.theme-neon-cyan .public-collection-mix {
+  color: #ecfeff;
+  border-color: rgba(103, 232, 249, 0.86);
+  background:
+    linear-gradient(145deg, rgba(0, 245, 255, 0.24), rgba(14, 165, 233, 0.14)),
+    rgba(6, 78, 93, 0.78);
+  box-shadow:
+    0 0 0 1px rgba(103, 232, 249, 0.46),
+    0 0 24px rgba(0, 245, 255, 0.34),
+    0 0 70px rgba(0, 245, 255, 0.18),
+    inset 0 0 34px rgba(0, 245, 255, 0.12);
+}
+
+.theme-neon-cyan .collector-profile-stats div::after,
+.theme-neon-cyan .collector-social-stats div::after,
+.theme-neon-cyan .public-binder-card::after,
+.theme-neon-cyan .collector-featured-card::after,
+.theme-neon-cyan .profile-collection-mix::after,
+.theme-neon-cyan .public-collection-mix::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(207, 250, 254, 0.44);
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 18px rgba(0, 245, 255, 0.22),
+    0 0 18px rgba(0, 245, 255, 0.18);
+  pointer-events: none;
+}
+
+.theme-neon-cyan .page-label,
+.theme-neon-cyan .collector-profile-stats span,
+.theme-neon-cyan .collector-social-stats span {
+  color: #a5f3fc;
 }
