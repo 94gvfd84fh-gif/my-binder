@@ -4111,3 +4111,90 @@
 .profile-reset-theme-button {
   justify-self: start;
 }
+
+
+/* ===== Final Spaced Individual Tile Color Controls ===== */
+
+.profile-tile-color-panel .profile-tile-color-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  gap: 18px !important;
+  align-items: stretch;
+}
+
+.profile-tile-color-panel .profile-tile-color-row {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  min-height: 176px !important;
+  padding: 18px !important;
+  border: 1px solid rgba(226, 232, 240, 0.16) !important;
+  border-radius: 20px !important;
+  background:
+    linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(26, 34, 48, 0.84)) !important;
+}
+
+.profile-tile-color-panel .profile-tile-color-name {
+  width: 100%;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.1);
+}
+
+.profile-tile-color-panel .profile-tile-color-name span {
+  display: block;
+  overflow: visible;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-weight: 900;
+  line-height: 1.25;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.profile-tile-color-panel .profile-color-control {
+  display: grid !important;
+  grid-template-columns: 1fr 56px !important;
+  align-items: center !important;
+  gap: 16px !important;
+  width: 100% !important;
+  min-height: 54px;
+  padding: 12px 14px !important;
+  border: 1px solid rgba(226, 232, 240, 0.14) !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.055) !important;
+}
+
+.profile-tile-color-panel .profile-color-control label {
+  display: block !important;
+  justify-self: start !important;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--text-main) !important;
+  font-size: 0.78rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.08em !important;
+  text-align: left !important;
+  text-transform: uppercase !important;
+}
+
+.profile-tile-color-panel .profile-color-control input[type="color"] {
+  justify-self: end !important;
+  width: 52px !important;
+  height: 40px !important;
+  min-width: 52px !important;
+  padding: 3px !important;
+  border: 1px solid rgba(226, 232, 240, 0.25) !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  cursor: pointer !important;
+}
+
+@media (max-width: 720px) {
+  .profile-tile-color-panel .profile-tile-color-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
