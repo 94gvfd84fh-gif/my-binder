@@ -2682,3 +2682,137 @@
   opacity: 0.82;
   filter: saturate(0.78) brightness(0.86);
 }
+
+
+/* ===== Vintage Vault Readability Lock Fix ===== */
+
+.theme-vintage-vault .collector-profile-stats div,
+.theme-vintage-vault .collector-social-stats div {
+  min-height: 184px;
+  padding: 34px 104px 32px 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.theme-vintage-vault .public-binder-card,
+.theme-vintage-vault .collector-featured-card,
+.theme-vintage-vault .profile-style-preview {
+  min-height: 184px;
+  padding: 34px 104px 32px 104px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.theme-vintage-vault .profile-collection-mix,
+.theme-vintage-vault .public-collection-mix {
+  min-height: 172px;
+  padding: 34px 152px 32px 104px;
+  text-align: left;
+}
+
+.theme-vintage-vault .collector-profile-stats div::before,
+.theme-vintage-vault .collector-social-stats div::before,
+.theme-vintage-vault .public-binder-card::before,
+.theme-vintage-vault .collector-featured-card::before,
+.theme-vintage-vault .profile-collection-mix::before,
+.theme-vintage-vault .public-collection-mix::before {
+  left: 18px;
+  top: 50%;
+  width: 56px;
+  height: 92px;
+  transform: translateY(-50%);
+  z-index: 2;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.theme-vintage-vault .collector-profile-stats div::after,
+.theme-vintage-vault .collector-social-stats div::after,
+.theme-vintage-vault .public-binder-card::after,
+.theme-vintage-vault .collector-featured-card::after,
+.theme-vintage-vault .profile-collection-mix::after,
+.theme-vintage-vault .public-collection-mix::after {
+  right: 18px;
+  top: 50%;
+  width: 66px;
+  height: 66px;
+  transform: translateY(-50%);
+  z-index: 2;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.theme-vintage-vault .profile-collection-mix::after,
+.theme-vintage-vault .public-collection-mix::after {
+  right: 24px;
+  top: 50%;
+  width: 104px;
+  height: 104px;
+  transform: translateY(-50%);
+}
+
+.theme-vintage-vault .collector-profile-stats div > *,
+.theme-vintage-vault .collector-social-stats div > *,
+.theme-vintage-vault .public-binder-card > *,
+.theme-vintage-vault .collector-featured-card > *,
+.theme-vintage-vault .profile-style-preview > *,
+.theme-vintage-vault .profile-collection-mix > *,
+.theme-vintage-vault .public-collection-mix > * {
+  position: relative;
+  z-index: 4;
+  max-width: 100%;
+}
+
+.theme-vintage-vault .collector-profile-stats span,
+.theme-vintage-vault .collector-social-stats span,
+.theme-vintage-vault .page-label {
+  max-width: 11rem;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.theme-vintage-vault .collector-profile-stats strong,
+.theme-vintage-vault .collector-social-stats strong,
+.theme-vintage-vault .collector-featured-card strong,
+.theme-vintage-vault .public-binder-card strong {
+  max-width: 11rem;
+  line-height: 1.16;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .theme-vintage-vault .collector-profile-stats div,
+  .theme-vintage-vault .collector-social-stats div,
+  .theme-vintage-vault .public-binder-card,
+  .theme-vintage-vault .collector-featured-card,
+  .theme-vintage-vault .profile-style-preview {
+    padding: 30px 84px 30px 84px;
+  }
+
+  .theme-vintage-vault .collector-profile-stats div::before,
+  .theme-vintage-vault .collector-social-stats div::before,
+  .theme-vintage-vault .public-binder-card::before,
+  .theme-vintage-vault .collector-featured-card::before {
+    left: 14px;
+    width: 46px;
+    height: 76px;
+  }
+
+  .theme-vintage-vault .collector-profile-stats div::after,
+  .theme-vintage-vault .collector-social-stats div::after,
+  .theme-vintage-vault .public-binder-card::after,
+  .theme-vintage-vault .collector-featured-card::after {
+    right: 14px;
+    width: 54px;
+    height: 54px;
+  }
+}
