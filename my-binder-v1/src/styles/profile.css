@@ -1380,3 +1380,270 @@
   color: #f8fafc;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.55), 0 0 22px rgba(196, 176, 138, 0.12);
 }
+
+
+/* ===== Ultra Detailed Shop And Vault Polish ===== */
+
+.theme-card-shop {
+  background:
+    linear-gradient(90deg, rgba(4, 120, 87, 0.22) 0 1px, transparent 1px 64px),
+    linear-gradient(180deg, transparent 0 58px, rgba(100, 64, 32, 0.36) 59px 68px, transparent 69px 126px, rgba(100, 64, 32, 0.3) 127px 136px, transparent 137px 194px, rgba(100, 64, 32, 0.24) 195px 204px, transparent 205px),
+    radial-gradient(circle at 12% 8%, rgba(255, 237, 213, 0.22), transparent 16%),
+    radial-gradient(circle at 92% 10%, rgba(45, 212, 191, 0.24), transparent 22%),
+    radial-gradient(circle at 50% 100%, rgba(34, 197, 94, 0.14), transparent 34%),
+    linear-gradient(150deg, #1b2817, #0b1009 72%);
+}
+
+.theme-card-shop::before {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent 12%),
+    radial-gradient(circle at 12% 20%, rgba(251, 191, 36, 0.18) 0 5px, transparent 6px),
+    radial-gradient(circle at 19% 20%, rgba(59, 130, 246, 0.16) 0 5px, transparent 6px),
+    radial-gradient(circle at 26% 20%, rgba(34, 197, 94, 0.18) 0 5px, transparent 6px),
+    radial-gradient(circle at 74% 18%, rgba(251, 191, 36, 0.16) 0 5px, transparent 6px),
+    radial-gradient(circle at 81% 18%, rgba(244, 63, 94, 0.13) 0 5px, transparent 6px),
+    linear-gradient(90deg, transparent 0 9%, rgba(255, 255, 255, 0.055) 9.5% 10%, transparent 10.5% 30%, rgba(255, 255, 255, 0.05) 30.5% 31%, transparent 31.5% 52%, rgba(255, 255, 255, 0.045) 52.5% 53%, transparent 53.5% 75%, rgba(255, 255, 255, 0.04) 75.5% 76%, transparent 76.5%),
+    linear-gradient(180deg, transparent 0 72%, rgba(255, 255, 255, 0.045) 73% 74%, transparent 75%);
+  opacity: 1;
+}
+
+.theme-card-shop .collector-profile-stats div,
+.theme-card-shop .collector-social-stats div {
+  min-height: 132px;
+  padding: 52px 22px 24px;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  gap: 6px;
+}
+
+.theme-card-shop .public-binder-card,
+.theme-card-shop .collector-featured-card,
+.theme-card-shop .profile-collection-mix,
+.theme-card-shop .public-collection-mix,
+.theme-card-shop .profile-style-preview {
+  padding-top: 54px;
+}
+
+.theme-card-shop .collector-profile-stats div > *,
+.theme-card-shop .collector-social-stats div > *,
+.theme-card-shop .public-binder-card > *,
+.theme-card-shop .collector-featured-card > *,
+.theme-card-shop .profile-banner-preview > *,
+.theme-card-shop .public-profile-banner > *,
+.theme-card-shop .profile-style-preview > *,
+.theme-card-shop .profile-collection-mix > *,
+.theme-card-shop .public-collection-mix > * {
+  position: relative;
+  z-index: 2;
+}
+
+.theme-card-shop .collector-profile-stats div,
+.theme-card-shop .collector-social-stats div,
+.theme-card-shop .public-binder-card,
+.theme-card-shop .collector-featured-card,
+.theme-card-shop .profile-banner-preview,
+.theme-card-shop .public-profile-banner,
+.theme-card-shop .profile-style-preview,
+.theme-card-shop .profile-collection-mix,
+.theme-card-shop .public-collection-mix {
+  overflow: hidden;
+  border-color: rgba(94, 234, 212, 0.42);
+  background:
+    radial-gradient(circle at 22px 22px, rgba(251, 191, 36, 0.32) 0 4px, transparent 5px),
+    radial-gradient(circle at 42px 22px, rgba(59, 130, 246, 0.24) 0 4px, transparent 5px),
+    radial-gradient(circle at 62px 22px, rgba(34, 197, 94, 0.3) 0 4px, transparent 5px),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.025) 48%, rgba(0, 0, 0, 0.12)),
+    linear-gradient(90deg, rgba(139, 90, 43, 0.16), transparent 17% 83%, rgba(139, 90, 43, 0.16)),
+    rgba(9, 17, 14, 0.92);
+  box-shadow:
+    0 24px 0 -11px rgba(181, 116, 54, 0.98),
+    0 32px 0 -16px rgba(63, 38, 19, 1),
+    0 40px 86px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -16px 0 rgba(139, 90, 43, 0.12);
+}
+
+.theme-card-shop .collector-profile-stats div::before,
+.theme-card-shop .collector-social-stats div::before,
+.theme-card-shop .public-binder-card::before,
+.theme-card-shop .collector-featured-card::before,
+.theme-card-shop .profile-collection-mix::before,
+.theme-card-shop .public-collection-mix::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  height: 24px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 10% 50%, rgba(251, 191, 36, 0.55) 0 4px, transparent 5px),
+    radial-gradient(circle at 18% 50%, rgba(59, 130, 246, 0.35) 0 4px, transparent 5px),
+    radial-gradient(circle at 26% 50%, rgba(244, 63, 94, 0.26) 0 4px, transparent 5px),
+    linear-gradient(90deg, rgba(34, 197, 94, 0.5), transparent 34% 74%, rgba(251, 191, 36, 0.36)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 58%);
+  box-shadow:
+    0 22px 0 rgba(139, 90, 43, 0.28),
+    0 27px 0 rgba(54, 32, 17, 0.72),
+    0 0 26px rgba(20, 184, 166, 0.18);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.theme-card-shop .collector-profile-stats div::after,
+.theme-card-shop .collector-social-stats div::after,
+.theme-card-shop .public-binder-card::after,
+.theme-card-shop .collector-featured-card::after,
+.theme-card-shop .profile-collection-mix::after,
+.theme-card-shop .public-collection-mix::after {
+  content: "";
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  bottom: -10px;
+  height: 22px;
+  border-radius: 0 0 10px 10px;
+  background:
+    radial-gradient(circle at 12% 42%, rgba(251, 191, 36, 0.45) 0 3px, transparent 4px),
+    radial-gradient(circle at 20% 42%, rgba(20, 184, 166, 0.36) 0 3px, transparent 4px),
+    radial-gradient(circle at 28% 42%, rgba(59, 130, 246, 0.28) 0 3px, transparent 4px),
+    radial-gradient(circle at 36% 42%, rgba(244, 63, 94, 0.22) 0 3px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 19px),
+    linear-gradient(180deg, #c8843e, #4d2b15 72%);
+  box-shadow:
+    0 11px 22px rgba(0, 0, 0, 0.46),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.theme-vintage-vault {
+  background:
+    radial-gradient(circle at 82% 20%, transparent 0 78px, rgba(226, 232, 240, 0.2) 79px 84px, transparent 85px 122px, rgba(196, 176, 138, 0.18) 123px 129px, transparent 130px 164px, rgba(226, 232, 240, 0.1) 165px 169px, transparent 170px),
+    conic-gradient(from 0.08turn at 82% 20%, transparent 0 8%, rgba(226, 232, 240, 0.12) 8.5% 9.5%, transparent 10% 20%, rgba(196, 176, 138, 0.14) 20.5% 21.5%, transparent 22% 34%, rgba(226, 232, 240, 0.1) 34.5% 35.5%, transparent 36% 100%),
+    radial-gradient(circle at 12% 14%, rgba(196, 176, 138, 0.14), transparent 20%),
+    radial-gradient(circle at 82% 20%, rgba(0, 0, 0, 0.42), transparent 190px),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 16px),
+    linear-gradient(150deg, #303942, #080a0d 72%);
+}
+
+.theme-vintage-vault::before {
+  background:
+    radial-gradient(circle at 82% 20%, transparent 0 30px, rgba(226, 232, 240, 0.42) 31px 35px, transparent 36px 53px, rgba(196, 176, 138, 0.3) 54px 59px, transparent 60px),
+    radial-gradient(circle at 82% 20%, rgba(196, 176, 138, 0.22) 0 8px, transparent 9px),
+    linear-gradient(34deg, transparent 0 46%, rgba(226, 232, 240, 0.16) 47% 48%, transparent 49%),
+    linear-gradient(-34deg, transparent 0 46%, rgba(196, 176, 138, 0.14) 47% 48%, transparent 49%),
+    radial-gradient(circle at 10% 12%, rgba(248, 250, 252, 0.11) 0 8px, transparent 9px),
+    radial-gradient(circle at 16% 18%, rgba(196, 176, 138, 0.14) 0 4px, transparent 5px),
+    radial-gradient(circle at 8% 86%, rgba(196, 176, 138, 0.12) 0 5px, transparent 6px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.065), transparent 15% 85%, rgba(255, 255, 255, 0.05));
+  opacity: 1;
+}
+
+.theme-vintage-vault .collector-profile-stats div,
+.theme-vintage-vault .collector-social-stats div {
+  min-height: 122px;
+  padding: 28px 24px 30px;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: left;
+  gap: 6px;
+}
+
+.theme-vintage-vault .public-binder-card,
+.theme-vintage-vault .collector-featured-card,
+.theme-vintage-vault .profile-collection-mix,
+.theme-vintage-vault .public-collection-mix,
+.theme-vintage-vault .profile-style-preview {
+  padding-top: 30px;
+  padding-right: 68px;
+}
+
+.theme-vintage-vault .collector-profile-stats div > *,
+.theme-vintage-vault .collector-social-stats div > *,
+.theme-vintage-vault .public-binder-card > *,
+.theme-vintage-vault .collector-featured-card > *,
+.theme-vintage-vault .profile-banner-preview > *,
+.theme-vintage-vault .public-profile-banner > *,
+.theme-vintage-vault .profile-style-preview > *,
+.theme-vintage-vault .profile-collection-mix > *,
+.theme-vintage-vault .public-collection-mix > * {
+  position: relative;
+  z-index: 2;
+}
+
+.theme-vintage-vault .collector-profile-stats div,
+.theme-vintage-vault .collector-social-stats div,
+.theme-vintage-vault .public-binder-card,
+.theme-vintage-vault .collector-featured-card,
+.theme-vintage-vault .profile-banner-preview,
+.theme-vintage-vault .public-profile-banner,
+.theme-vintage-vault .profile-style-preview,
+.theme-vintage-vault .profile-collection-mix,
+.theme-vintage-vault .public-collection-mix {
+  overflow: hidden;
+  border-width: 2px;
+  border-color: rgba(196, 176, 138, 0.56);
+  background:
+    radial-gradient(circle at 18px 18px, rgba(248, 250, 252, 0.36) 0 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 18px) 18px, rgba(248, 250, 252, 0.34) 0 3px, transparent 4px),
+    radial-gradient(circle at 18px calc(100% - 18px), rgba(196, 176, 138, 0.32) 0 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 18px) calc(100% - 18px), rgba(196, 176, 138, 0.32) 0 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 34px) 34px, transparent 0 17px, rgba(196, 176, 138, 0.28) 18px 20px, transparent 21px),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 13px),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.22)),
+    linear-gradient(180deg, #343f48, #11171d);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.62),
+    inset 0 0 0 8px rgba(196, 176, 138, 0.035),
+    inset 0 0 34px rgba(0, 0, 0, 0.14),
+    0 26px 68px rgba(0, 0, 0, 0.34);
+}
+
+.theme-vintage-vault .collector-profile-stats div::before,
+.theme-vintage-vault .collector-social-stats div::before,
+.theme-vintage-vault .public-binder-card::before,
+.theme-vintage-vault .collector-featured-card::before,
+.theme-vintage-vault .profile-collection-mix::before,
+.theme-vintage-vault .public-collection-mix::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1px solid rgba(196, 176, 138, 0.23);
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at calc(100% - 28px) 28px, transparent 0 18px, rgba(196, 176, 138, 0.22) 19px 22px, transparent 23px),
+    radial-gradient(circle at 26px calc(100% - 24px), rgba(226, 232, 240, 0.1) 0 5px, transparent 6px),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 44%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.theme-vintage-vault .collector-profile-stats div::after,
+.theme-vintage-vault .collector-social-stats div::after,
+.theme-vintage-vault .public-binder-card::after,
+.theme-vintage-vault .collector-featured-card::after,
+.theme-vintage-vault .profile-collection-mix::after,
+.theme-vintage-vault .public-collection-mix::after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  width: 42px;
+  height: 30px;
+  border: 2px solid rgba(196, 176, 138, 0.52);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 50% 58%, rgba(248, 250, 252, 0.48) 0 2px, transparent 3px),
+    linear-gradient(90deg, transparent 0 38%, rgba(196, 176, 138, 0.18) 39% 61%, transparent 62%),
+    linear-gradient(180deg, rgba(226, 232, 240, 0.18), rgba(15, 23, 42, 0.5));
+  box-shadow:
+    0 -14px 0 -8px rgba(15, 23, 42, 0.98),
+    0 -14px 0 -5px rgba(196, 176, 138, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 12px 20px rgba(0, 0, 0, 0.36);
+  pointer-events: none;
+  z-index: 1;
+}
