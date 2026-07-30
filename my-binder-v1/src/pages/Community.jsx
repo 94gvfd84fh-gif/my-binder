@@ -110,6 +110,17 @@ function matchesLocation(fields, locationText) {
   return fields.some((field) => textIncludes(field, locationText));
 }
 
+function getActiveSearchLabel(searchText, locationText, activeFilter, distanceFilter) {
+  const labels = [];
+
+  if (searchText) labels.push('"' + searchText + '"');
+  if (locationText) labels.push('near "' + locationText + '"');
+  if (activeFilter !== "All") labels.push(activeFilter);
+  if (distanceFilter !== "Any distance") labels.push(distanceFilter);
+
+  return labels.join(" · ");
+}
+
 function Community() {
   const [search, setSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
@@ -217,6 +228,26 @@ function Community() {
     (showStores ? filteredStores.length : 0) +
     (showCollectors ? filteredCollectors.length : 0);
 
+  const hasActiveSearch =
+    Boolean(searchText) ||
+    Boolean(locationText) ||
+    activeFilter !== "All" ||
+    distanceFilter !== "Any distance";
+
+  const activeSearchLabel = getActiveSearchLabel(
+    searchText,
+    locationText,
+    activeFilter,
+    distanceFilter
+  );
+
+  function clearCommunitySearch() {
+    setSearch("");
+    setLocationSearch("");
+    setDistanceFilter("Any distance");
+    setActiveFilter("All");
+  }
+
   const savedEventDetails = allEvents.filter((event) => {
     return savedEvents.includes(event.id);
   });
@@ -234,61 +265,107 @@ function Community() {
       />
 
       <section className="community-search-card">
-        <p className="page-label">DISCOVER</p>
-        <h2>Find collectors, stores, and events</h2>
-        <p>
-          Search by username, store name, city, card type, event type, or trade
-          night.
-        </p>
+        <div className="community-search-top">
+          <div>
+            <p className="page-label">DISCOVER</p>
+            <h2>Find collectors, stores, and events</h2>
+            <p>
+              Search by username, store name, city, card type, event type, or
+              trade night.
+            </p>
+          </div>
 
-        <div className="community-search-grid">
-          <input
-            type="search"
-            placeholder="Search Pokemon, shops, collectors, trade nights..."
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-
-          <input
-            type="search"
-            placeholder="City or ZIP"
-            value={locationSearch}
-            onChange={(event) => setLocationSearch(event.target.value)}
-          />
-
-          <select
-            value={distanceFilter}
-            onChange={(event) => setDistanceFilter(event.target.value)}
-          >
-            {distanceOptions.map((option) => (
-              <option key={option}>{option}</option>
-            ))}
-          </select>
+          <div className="community-result-card">
+            <span>Results</span>
+            <strong>{visibleResultCount}</strong>
+            <small>{hasActiveSearch ? activeSearchLabel : "All community"}</small>
+          </div>
         </div>
 
-        <div className="community-filter-pills" aria-label="Community filters">
-          {communityFilters.map((filter) => (
-            <button
-              className={activeFilter === filter ? "active-community-filter" : ""}
-              type="button"
-              key={filter}
-              onClick={() => setActiveFilter(filter)}
+        <div className="community-search-grid">
+          <label>
+            <span>Search</span>
+            <input
+              type="search"
+              placeholder="Pokemon, shops, collectors, trade nights..."
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+          </label>
+
+          <label>
+            <span>Location</span>
+            <input
+              type="search"
+              placeholder="City or ZIP"
+              value={locationSearch}
+              onChange={(event) => setLocationSearch(event.target.value)}
+            />
+          </label>
+
+          <label>
+            <span>Radius</span>
+            <select
+              value={distanceFilter}
+              onChange={(event) => setDistanceFilter(event.target.value)}
             >
-              {filter}
+              {distanceOptions.map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <div className="community-search-actions">
+          <div className="community-filter-pills" aria-label="Community filters">
+            {communityFilters.map((filter) => (
+              <button
+                className={activeFilter === filter ? "active-community-filter" : ""}
+                type="button"
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+
+          {hasActiveSearch && (
+            <button
+              type="button"
+              className="community-clear-button"
+              onClick={clearCommunitySearch}
+            >
+              Clear Search
             </button>
-          ))}
+          )}
         </div>
 
         <div className="community-result-summary">
-          <span>{visibleResultCount} results</span>
+          <span>{filteredCollectors.length} collectors</span>
+          <span>{filteredStores.length} stores</span>
+          <span>{filteredEvents.length} events</span>
           <span>{liveCollectors.length} live collectors</span>
           <span>{liveStores.length} store profiles</span>
           <span>{storeEvents.length} store events</span>
-          <span>{distanceFilter}</span>
         </div>
       </section>
 
       {communityMessage && <p className="auth-message">{communityMessage}</p>}
+
+      {hasActiveSearch && visibleResultCount === 0 && (
+        <section className="community-no-results">
+          <p className="page-label">NO RESULTS</p>
+          <h2>Nothing matched that search yet.</h2>
+          <p>
+            Try a broader card type, city, collector name, shop name, or event
+            type while the Beacon community grows.
+          </p>
+          <button type="button" onClick={clearCommunitySearch}>
+            Clear Search
+          </button>
+        </section>
+      )}
 
       <div className="marketplace-preview">
         {communityFeatures.map((feature) => {

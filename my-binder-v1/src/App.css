@@ -5717,3 +5717,125 @@ nav a.active {
     justify-content: space-between;
   }
 }
+
+
+/* Community discovery polish */
+.community-search-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.community-result-card {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  min-height: 160px;
+  padding: 22px;
+  border: 1px solid rgba(6, 182, 212, 0.28);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(6, 182, 212, 0.24), transparent 42%),
+    rgba(2, 6, 23, 0.48);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.community-result-card span,
+.community-search-grid label > span {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.community-result-card strong {
+  color: var(--text-main);
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  line-height: 0.9;
+}
+
+.community-result-card small {
+  color: var(--brand-cyan);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.community-search-grid label {
+  display: grid;
+  gap: 8px;
+}
+
+.community-search-grid input,
+.community-search-grid select {
+  min-height: 62px;
+  border-radius: 18px;
+  background: rgba(2, 6, 23, 0.68);
+}
+
+.community-search-grid input:first-of-type {
+  font-size: 1.05rem;
+}
+
+.community-search-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.community-clear-button,
+.community-no-results button {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid rgba(6, 182, 212, 0.38);
+  border-radius: 999px;
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--brand-cyan);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.community-clear-button:hover,
+.community-no-results button:hover {
+  border-color: rgba(6, 182, 212, 0.72);
+  background: rgba(6, 182, 212, 0.18);
+  color: var(--text-main);
+}
+
+.community-no-results {
+  margin: 0 0 28px;
+  padding: 28px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 34%),
+    rgba(15, 23, 42, 0.64);
+}
+
+.community-no-results h2 {
+  margin: 8px 0;
+  color: var(--text-main);
+}
+
+.community-no-results p:not(.page-label) {
+  max-width: 680px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 860px) {
+  .community-search-top {
+    grid-template-columns: 1fr;
+  }
+
+  .community-result-card {
+    min-height: auto;
+  }
+
+  .community-clear-button {
+    width: 100%;
+  }
+}
