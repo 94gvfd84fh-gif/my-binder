@@ -27,6 +27,8 @@ const defaultProfile = {
   profileBanner: "",
   profileLayout: "Classic",
   profileTagline: "",
+  profileTileColors: {},
+  profileTileTextColors: {},
 };
 
 function toAppProfile(profile) {
@@ -53,6 +55,14 @@ function toAppProfile(profile) {
     profileBanner: profile.profile_banner || profile.profileBanner || "",
     profileLayout: profile.profile_layout || profile.profileLayout || defaultProfile.profileLayout,
     profileTagline: profile.profile_tagline || profile.profileTagline || "",
+    profileTileColors:
+      profile.profileTileColors ||
+      profile.profile_tile_colors ||
+      defaultProfile.profileTileColors,
+    profileTileTextColors:
+      profile.profileTileTextColors ||
+      profile.profile_tile_text_colors ||
+      defaultProfile.profileTileTextColors,
   };
 }
 
@@ -185,6 +195,20 @@ function PublicProfile() {
 
   const isStoreAccount = collectorProfile.accountType === "Store";
 
+  function getProfileTileStyle(tileKey) {
+    const tileColor = collectorProfile.profileTileColors?.[tileKey];
+    const textColor = collectorProfile.profileTileTextColors?.[tileKey];
+
+    if (!tileColor && !textColor) {
+      return undefined;
+    }
+
+    return {
+      ...(tileColor ? { "--profile-tile-color": tileColor } : {}),
+      ...(textColor ? { "--profile-tile-text-color": textColor } : {}),
+    };
+  }
+
   return (
     <div>
       <PageHeader
@@ -239,32 +263,32 @@ function PublicProfile() {
         </div>
 
         <div className="collector-profile-stats">
-          <div>
+          <div style={getProfileTileStyle("accountType")}>
             <span>Account Type</span>
             <strong>{collectorProfile.accountType}</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("collectorSince")}>
             <span>{isStoreAccount ? "Store Since" : "Collector Since"}</span>
             <strong>{collectorProfile.collectorSince}</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("favoriteSet")}>
             <span>Favorite Set</span>
             <strong>{collectorProfile.favoriteSet}</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("topCardType")}>
             <span>Top Card Type</span>
             <strong>{topCardType}</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("ownedCollection")}>
             <span>Owned Cards</span>
             <strong>{ownedCards.length}</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("publicBinders")}>
             <span>Public Binders</span>
             <strong>{publicBinders.length}</strong>
           </div>

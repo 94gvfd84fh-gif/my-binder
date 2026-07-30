@@ -25,6 +25,8 @@ const defaultProfile = {
   profileBanner: "",
   profileLayout: "Classic",
   profileTagline: "",
+  profileTileColors: {},
+  profileTileTextColors: {},
 };
 
 function toAppProfile(profile) {
@@ -51,6 +53,14 @@ function toAppProfile(profile) {
     profileBanner: profile.profile_banner || profile.profileBanner || "",
     profileLayout: profile.profile_layout || profile.profileLayout || defaultProfile.profileLayout,
     profileTagline: profile.profile_tagline || profile.profileTagline || "",
+    profileTileColors:
+      profile.profileTileColors ||
+      profile.profile_tile_colors ||
+      defaultProfile.profileTileColors,
+    profileTileTextColors:
+      profile.profileTileTextColors ||
+      profile.profile_tile_text_colors ||
+      defaultProfile.profileTileTextColors,
   };
 }
 
@@ -72,6 +82,8 @@ function toDatabaseProfile(profile, userId) {
     profile_banner: profile.profileBanner || "",
     profile_layout: profile.profileLayout || defaultProfile.profileLayout,
     profile_tagline: profile.profileTagline || "",
+    profile_tile_colors: profile.profileTileColors || {},
+    profile_tile_text_colors: profile.profileTileTextColors || {},
     updated_at: new Date().toISOString(),
   };
 }
@@ -103,11 +115,13 @@ function Profile() {
     binders,
     binderGoals,
     binderVisibility,
+    binderColors,
     BINDER_VISIBILITY,
     getBinderVisibility,
     replaceBinders,
     replaceBinderGoals,
     replaceBinderVisibility,
+    replaceBinderColors,
   } = useContext(BinderContext);
 
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -128,7 +142,14 @@ function Profile() {
         const supabaseProfile = await getProfile(user.id);
 
         if (supabaseProfile) {
-          const appProfile = toAppProfile(supabaseProfile);
+          const appProfile = {
+            ...toAppProfile(supabaseProfile),
+            profileTileColors:
+              getStoredProfile().profileTileColors || defaultProfile.profileTileColors,
+            profileTileTextColors:
+              getStoredProfile().profileTileTextColors ||
+              defaultProfile.profileTileTextColors,
+          };
           setCollectorProfile(appProfile);
           localStorage.setItem(STORAGE_KEYS.profile, JSON.stringify(appProfile));
           return;
@@ -238,6 +259,51 @@ function Profile() {
   const displayedFeaturedCard =
     selectedFeaturedCard || favoriteFeaturedCard || newestOwnedCard;
 
+  const profileTileControls = [
+    { key: "accountType", label: "Account Type" },
+    { key: "collectorSince", label: isStoreAccount ? "Store Since" : "Collector Since" },
+    { key: "favoriteSet", label: isStoreAccount ? "Main Focus" : "Favorite Set" },
+    { key: "topCardType", label: isStoreAccount ? "Shop Category" : "Top Card Type" },
+    { key: "location", label: "Location" },
+    { key: "ownedCollection", label: "Owned Collection" },
+    { key: "estimatedValue", label: "Estimated Value" },
+    { key: "favorites", label: "Favorites" },
+    { key: "wishlist", label: "Wishlist" },
+    { key: "forTrade", label: "For Trade" },
+    { key: "graded", label: "Graded" },
+    { key: "followers", label: "Followers" },
+    { key: "following", label: "Following" },
+    { key: "accountStatus", label: isStoreAccount ? "Account Status" : "Trade Rating" },
+  ];
+
+  function getProfileTileStyle(tileKey) {
+    const tileColor = collectorProfile.profileTileColors?.[tileKey];
+    const textColor = collectorProfile.profileTileTextColors?.[tileKey];
+
+    if (!tileColor && !textColor) {
+      return undefined;
+    }
+
+    return {
+      ...(tileColor ? { "--profile-tile-color": tileColor } : {}),
+      ...(textColor ? { "--profile-tile-text-color": textColor } : {}),
+    };
+  }
+
+  function updateProfileTileColor(tileKey, color) {
+    updateProfile("profileTileColors", {
+      ...(collectorProfile.profileTileColors || {}),
+      [tileKey]: color,
+    });
+  }
+
+  function updateProfileTileTextColor(tileKey, color) {
+    updateProfile("profileTileTextColors", {
+      ...(collectorProfile.profileTileTextColors || {}),
+      [tileKey]: color,
+    });
+  }
+
   const publicBinders = binders.filter(isPublicBinder).map((binderName) => {
     const cardCount = cards.filter((card) => {
       return cardBelongsToBinder(card, binderName);
@@ -343,6 +409,7 @@ function Profile() {
       binders,
       binderGoals,
       binderVisibility,
+      binderColors,
       collectorProfile,
     };
 
@@ -396,6 +463,7 @@ function Profile() {
           replaceBinders(importedBackup.binders);
           replaceBinderGoals(importedBackup.binderGoals);
           replaceBinderVisibility(importedBackup.binderVisibility);
+          replaceBinderColors(importedBackup.binderColors);
           replaceCollectorProfile(importedBackup.collectorProfile);
         }
 
@@ -504,61 +572,61 @@ function Profile() {
         <p className="collector-bio">"{collectorProfile.bio}"</p>
 
         <div className="collector-profile-stats">
-          <div>
+          <div style={getProfileTileStyle("accountType")}>
             <span>Account Type</span>
             <strong>{collectorProfile.accountType}</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("collectorSince")}>
             <span>{isStoreAccount ? "Store Since" : "Collector Since"}</span>
             <strong>{collectorProfile.collectorSince}</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("favoriteSet")}>
             <span>{isStoreAccount ? "Main Focus" : "Favorite Set"}</span>
             <strong>{collectorProfile.favoriteSet}</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("topCardType")}>
             <span>{isStoreAccount ? "Shop Category" : "Top Card Type"}</span>
             <strong>{topCardType}</strong>
           </div>
 
           {!isPreviewingPublicProfile && (
-            <div>
+            <div style={getProfileTileStyle("location")}>
               <span>Location · Private</span>
               <strong>{collectorProfile.location}</strong>
             </div>
           )}
 
-          <div>
+          <div style={getProfileTileStyle("ownedCollection")}>
             <span>Owned Collection</span>
             <strong>{totalCards} Cards</strong>
           </div>
 
           {!isPreviewingPublicProfile && (
-            <div>
+            <div style={getProfileTileStyle("estimatedValue")}>
               <span>Estimated Value · Private</span>
               <strong>${totalValue.toLocaleString()}</strong>
             </div>
           )}
 
-          <div>
+          <div style={getProfileTileStyle("favorites")}>
             <span>Favorites</span>
             <strong>{favoriteCards}</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("wishlist")}>
             <span>Wishlist</span>
             <strong>{wishlistCards.length} Cards</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("forTrade")}>
             <span>For Trade</span>
             <strong>{tradeCards} Cards</strong>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("graded")}>
             <span>Graded</span>
             <strong>{gradedCards} Cards</strong>
           </div>
@@ -599,17 +667,17 @@ function Profile() {
         )}
 
         <div className="collector-social-stats">
-          <div>
+          <div style={getProfileTileStyle("followers")}>
             <strong>0</strong>
             <span>Followers</span>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("following")}>
             <strong>{followedCollectors.length}</strong>
             <span>Following</span>
           </div>
 
-          <div>
+          <div style={getProfileTileStyle("accountStatus")}>
             <strong>{isStoreAccount ? "Store Account" : "New Collector"}</strong>
             <span>{isStoreAccount ? "Account Status" : "Trade Rating"}</span>
           </div>
@@ -824,6 +892,59 @@ function Profile() {
                     />
                   </label>
                 </div>
+
+                {collectorProfile.profileTheme === "Card Shop" && (
+                  <div className="profile-tile-color-panel">
+                    <div>
+                      <p className="page-label">CARD SHOP TILE COLORS</p>
+                      <h4>Color Each Display Tile</h4>
+                      <p>Change only one profile plaque at a time, like Account Type, Favorites, Wishlist, and more.</p>
+                    </div>
+
+                    <div className="profile-tile-color-grid">
+                      {profileTileControls.map((tile) => (
+                        <div className="profile-tile-color-row" key={tile.key}>
+                          <div className="profile-tile-color-name">
+                            <span>{tile.label}</span>
+                          </div>
+
+                          <div className="profile-color-control">
+                            <label htmlFor={`tile-color-${tile.key}`}>Tile</label>
+                            <input
+                              id={`tile-color-${tile.key}`}
+                              type="color"
+                              value={
+                                collectorProfile.profileTileColors?.[tile.key] ||
+                                collectorProfile.profileAccentColor
+                              }
+                              onChange={(event) =>
+                                updateProfileTileColor(tile.key, event.target.value)
+                              }
+                            />
+                          </div>
+
+                          <div className="profile-color-control">
+                            <label htmlFor={`tile-text-color-${tile.key}`}>Text</label>
+                            <input
+                              id={`tile-text-color-${tile.key}`}
+                              type="color"
+                              value={
+                                collectorProfile.profileTileTextColors?.[tile.key] ||
+                                "#211005"
+                              }
+                              onChange={(event) =>
+                                updateProfileTileTextColor(
+                                  tile.key,
+                                  event.target.value
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="profile-style-preview" aria-hidden="true">
                   <div className="style-preview-banner"></div>

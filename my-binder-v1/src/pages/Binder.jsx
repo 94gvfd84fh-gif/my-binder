@@ -16,6 +16,8 @@ function Binder() {
     setBinderGoal,
     getBinderVisibility,
     setBinderVisibilityStatus,
+    getBinderColor,
+    setBinderColor,
     isDefaultBinder,
   } = useContext(BinderContext);
 
@@ -42,6 +44,7 @@ function Binder() {
 
   const selectedBinderIsDefault = isDefaultBinder(selectedBinder);
   const selectedBinderVisibility = getBinderVisibility(selectedBinder);
+  const selectedBinderColor = getBinderColor(selectedBinder);
 
   function getPrimaryBinder(card) {
     if (card.status === "Wishlist") {
@@ -150,6 +153,7 @@ function Binder() {
       : 0;
 
   const emptyBinderMessage = getEmptyBinderMessage();
+  const binderColorStyle = { "--binder-color": selectedBinderColor };
 
   function resetBinderTools() {
     setPage(1);
@@ -326,7 +330,7 @@ function Binder() {
   }
 
   return (
-    <div>
+    <div className="binder-page-shell" style={binderColorStyle}>
       <PageHeader
         label="BEACON COLLECT BINDERS"
         title="Your Binders"
@@ -375,6 +379,24 @@ function Binder() {
           <option>{BINDER_VISIBILITY.PUBLIC}</option>
           <option>{BINDER_VISIBILITY.TRADE_VISIBLE}</option>
         </select>
+      </div>
+
+      <div className="binder-color-panel">
+        <div>
+          <p className="page-label">BINDER COLOR</p>
+          <h3>Customize {selectedBinder}</h3>
+          <p>This changes only this binder, so every binder can have its own look.</p>
+        </div>
+
+        <div className="binder-color-tools">
+          <span style={{ background: selectedBinderColor }}></span>
+          <input
+            type="color"
+            value={selectedBinderColor}
+            aria-label={`Change ${selectedBinder} color`}
+            onChange={(event) => setBinderColor(selectedBinder, event.target.value)}
+          />
+        </div>
       </div>
 
       <form className="add-binder-form" onSubmit={handleAddBinder}>
@@ -514,7 +536,7 @@ function Binder() {
         </div>
       )}
 
-      <div className="binder-page">
+      <div className="binder-page" style={binderColorStyle}>
         {binderSlots.map((card, index) => (
           <div
             className={card ? "binder-pocket" : "binder-pocket empty-pocket"}

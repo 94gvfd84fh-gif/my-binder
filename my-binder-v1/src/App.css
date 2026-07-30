@@ -5608,3 +5608,112 @@ nav a.active {
 .account-password-panel .auth-field input {
   margin: 0;
 }
+
+
+/* Per-binder color customization */
+
+.binder-page-shell {
+  --binder-color: var(--brand-blue);
+}
+
+.binder-page-shell .binder-toolbar {
+  border-color: color-mix(in srgb, var(--binder-color) 52%, rgba(148, 163, 184, 0.28));
+  background:
+    radial-gradient(circle at 12% 18%, color-mix(in srgb, var(--binder-color) 28%, transparent), transparent 34%),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(26, 34, 48, 0.88));
+  box-shadow:
+    0 22px 46px rgba(0, 0, 0, 0.28),
+    0 0 36px color-mix(in srgb, var(--binder-color) 22%, transparent);
+}
+
+.binder-color-panel {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 22px;
+  align-items: center;
+  margin: 24px 0;
+  padding: 26px;
+  border: 1px solid color-mix(in srgb, var(--binder-color) 46%, rgba(148, 163, 184, 0.2));
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--binder-color) 18%, transparent), transparent 42%),
+    rgba(15, 23, 42, 0.76);
+  box-shadow: var(--shadow-card);
+}
+
+.binder-color-panel h3 {
+  margin: 0 0 8px;
+  color: var(--text-main);
+  font-size: 1.45rem;
+}
+
+.binder-color-panel p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.binder-color-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 18px;
+  background: rgba(7, 13, 26, 0.86);
+}
+
+.binder-color-tools span {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 0 20px color-mix(in srgb, var(--binder-color) 36%, transparent);
+}
+
+.binder-color-tools input[type="color"] {
+  width: 58px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.binder-page-shell .binder-page {
+  border-color: color-mix(in srgb, var(--binder-color) 54%, rgba(148, 163, 184, 0.22));
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--binder-color) 18%, transparent), transparent 34%),
+    rgba(5, 11, 24, 0.78);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--binder-color) 24%, transparent),
+    0 24px 52px rgba(0, 0, 0, 0.32);
+}
+
+.binder-page-shell .binder-pocket {
+  border-color: color-mix(in srgb, var(--binder-color) 34%, rgba(255, 255, 255, 0.12));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--binder-color) 10%, transparent), rgba(255, 255, 255, 0.035)),
+    rgba(255, 255, 255, 0.035);
+}
+
+.binder-page-shell .empty-pocket {
+  border-color: color-mix(in srgb, var(--binder-color) 30%, rgba(255, 255, 255, 0.14));
+}
+
+.binder-page-shell .binder-goal-progress span {
+  background: linear-gradient(90deg, var(--binder-color), color-mix(in srgb, var(--binder-color) 55%, #ffffff));
+}
+
+@media (max-width: 760px) {
+  .binder-color-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .binder-color-tools {
+    justify-content: space-between;
+  }
+}

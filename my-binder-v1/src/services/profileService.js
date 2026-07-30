@@ -35,7 +35,7 @@ export async function getPublicProfiles() {
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "id, username, account_type, favorite_tcg, favorite_set, location, collector_since, bio, avatar, featured_card_id, profile_theme, profile_accent_color, profile_banner, profile_layout, profile_tagline, updated_at"
+      "id, username, account_type, favorite_tcg, favorite_set, location, collector_since, bio, avatar, featured_card_id, profile_theme, profile_accent_color, profile_banner, profile_layout, profile_tagline, profile_tile_colors, profile_tile_text_colors, updated_at"
     )
     .order("updated_at", { ascending: false })
     .limit(80);
@@ -52,7 +52,7 @@ export async function getPublicProfile(profileId) {
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "id, username, account_type, favorite_tcg, favorite_set, location, collector_since, bio, avatar, featured_card_id, profile_theme, profile_accent_color, profile_banner, profile_layout, profile_tagline, updated_at"
+      "id, username, account_type, favorite_tcg, favorite_set, location, collector_since, bio, avatar, featured_card_id, profile_theme, profile_accent_color, profile_banner, profile_layout, profile_tagline, profile_tile_colors, profile_tile_text_colors, updated_at"
     )
     .eq("id", profileId)
     .single();

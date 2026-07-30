@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 
 const OLD_NOTIFICATION_KEYS = [
   "pocket-deck-read-notifications",
@@ -8,11 +9,11 @@ const OLD_NOTIFICATION_KEYS = [
 ];
 
 function getNotificationsKey(userId) {
-  return `beacon-collect-notifications-${userId}`;
+  return `${STORAGE_KEYS.notificationsPrefix}-${userId}`;
 }
 
 function getReadNotificationsKey(userId) {
-  return `beacon-collect-read-notifications-${userId}`;
+  return `${STORAGE_KEYS.readNotificationsPrefix}-${userId}`;
 }
 
 function getSavedArray(key) {

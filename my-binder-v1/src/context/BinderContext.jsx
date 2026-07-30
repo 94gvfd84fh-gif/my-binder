@@ -11,9 +11,11 @@ export const BinderContext = createContext();
 const BINDERS_STORAGE_KEY = STORAGE_KEYS.binders;
 const GOALS_STORAGE_KEY = STORAGE_KEYS.binderGoals;
 const VISIBILITY_STORAGE_KEY = STORAGE_KEYS.binderVisibility;
+const COLORS_STORAGE_KEY = STORAGE_KEYS.binderColors;
 const LEGACY_BINDERS_STORAGE_KEY = LEGACY_STORAGE_KEYS.binders;
 const LEGACY_GOALS_STORAGE_KEY = LEGACY_STORAGE_KEYS.binderGoals;
 const LEGACY_VISIBILITY_STORAGE_KEY = LEGACY_STORAGE_KEYS.binderVisibility;
+const LEGACY_COLORS_STORAGE_KEY = LEGACY_STORAGE_KEYS.binderColors;
 
 export const BINDER_VISIBILITY = {
   PRIVATE: "Private",
@@ -35,6 +37,14 @@ const defaultBinderVisibility = {
   "Trade Binder": BINDER_VISIBILITY.TRADE_VISIBLE,
   "Graded Collection": BINDER_VISIBILITY.PRIVATE,
   Wishlist: BINDER_VISIBILITY.PRIVATE,
+};
+
+const defaultBinderColors = {
+  "Main Collection": "#2563EB",
+  "Showcase Binder": "#06B6D4",
+  "Trade Binder": "#22C55E",
+  "Graded Collection": "#F59E0B",
+  Wishlist: "#EC4899",
 };
 
 function getStoredBinders() {
@@ -100,12 +110,36 @@ function getStoredVisibility() {
   return defaultBinderVisibility;
 }
 
+function getStoredColors() {
+  const savedColors =
+    localStorage.getItem(COLORS_STORAGE_KEY) ||
+    localStorage.getItem(LEGACY_COLORS_STORAGE_KEY);
+
+  if (savedColors) {
+    try {
+      const parsedColors = JSON.parse(savedColors);
+
+      if (parsedColors && typeof parsedColors === "object") {
+        return {
+          ...defaultBinderColors,
+          ...parsedColors,
+        };
+      }
+    } catch {
+      return defaultBinderColors;
+    }
+  }
+
+  return defaultBinderColors;
+}
+
 function BinderProvider({ children }) {
   const { user, authLoading } = useContext(AuthContext);
 
   const [binders, setBinders] = useState(getStoredBinders);
   const [binderGoals, setBinderGoals] = useState(getStoredGoals);
   const [binderVisibility, setBinderVisibility] = useState(getStoredVisibility);
+  const [binderColors, setBinderColors] = useState(getStoredColors);
   const [binderSettingsLoading, setBinderSettingsLoading] = useState(false);
   const [binderSettingsError, setBinderSettingsError] = useState("");
 
@@ -123,6 +157,10 @@ function BinderProvider({ children }) {
       JSON.stringify(binderVisibility)
     );
   }, [binderVisibility]);
+
+  useEffect(() => {
+    localStorage.setItem(COLORS_STORAGE_KEY, JSON.stringify(binderColors));
+  }, [binderColors]);
 
   useEffect(() => {
     async function loadSupabaseBinderSettings() {
@@ -147,6 +185,10 @@ function BinderProvider({ children }) {
           setBinderVisibility({
             ...defaultBinderVisibility,
             ...(settings.binder_visibility || {}),
+          });
+          setBinderColors({
+            ...defaultBinderColors,
+            ...(settings.binder_colors || {}),
           });
         } else {
           await saveBinderSettings({
@@ -211,6 +253,21 @@ function BinderProvider({ children }) {
     persistBinderSettings(binders, binderGoals, updatedVisibility);
   }
 
+  function getBinderColor(name) {
+    return binderColors[name] || defaultBinderColors[name] || "#2563EB";
+  }
+
+  function setBinderColor(name, color) {
+    if (!color) return;
+
+    const updatedColors = {
+      ...binderColors,
+      [name]: color,
+    };
+
+    setBinderColors(updatedColors);
+  }
+
   function addBinder(name) {
     const trimmedName = name.trim();
 
@@ -223,9 +280,14 @@ function BinderProvider({ children }) {
       ...binderVisibility,
       [trimmedName]: BINDER_VISIBILITY.PRIVATE,
     };
+    const updatedColors = {
+      ...binderColors,
+      [trimmedName]: "#2563EB",
+    };
 
     setBinders(updatedBinders);
     setBinderVisibility(updatedVisibility);
+    setBinderColors(updatedColors);
     persistBinderSettings(updatedBinders, binderGoals, updatedVisibility);
 
     return true;
@@ -262,9 +324,14 @@ function BinderProvider({ children }) {
       updatedVisibility[oldName] || BINDER_VISIBILITY.PRIVATE;
     delete updatedVisibility[oldName];
 
+    const updatedColors = { ...binderColors };
+    updatedColors[trimmedName] = getBinderColor(oldName);
+    delete updatedColors[oldName];
+
     setBinders(updatedBinders);
     setBinderGoals(updatedGoals);
     setBinderVisibility(updatedVisibility);
+    setBinderColors(updatedColors);
     persistBinderSettings(updatedBinders, updatedGoals, updatedVisibility);
 
     return true;
@@ -283,9 +350,13 @@ function BinderProvider({ children }) {
     const updatedVisibility = { ...binderVisibility };
     delete updatedVisibility[name];
 
+    const updatedColors = { ...binderColors };
+    delete updatedColors[name];
+
     setBinders(updatedBinders);
     setBinderGoals(updatedGoals);
     setBinderVisibility(updatedVisibility);
+    setBinderColors(updatedColors);
     persistBinderSettings(updatedBinders, updatedGoals, updatedVisibility);
 
     return true;
@@ -336,6 +407,18 @@ function BinderProvider({ children }) {
     persistBinderSettings(binders, binderGoals, updatedVisibility);
   }
 
+  function replaceBinderColors(importedColors) {
+    const updatedColors =
+      !importedColors || typeof importedColors !== "object"
+        ? defaultBinderColors
+        : {
+            ...defaultBinderColors,
+            ...importedColors,
+          };
+
+    setBinderColors(updatedColors);
+  }
+
   return (
     <BinderContext.Provider
       value={{
@@ -344,6 +427,7 @@ function BinderProvider({ children }) {
         binderGoals,
         setBinderGoals,
         binderVisibility,
+        binderColors,
         binderSettingsLoading,
         binderSettingsError,
         BINDER_VISIBILITY,
@@ -353,9 +437,12 @@ function BinderProvider({ children }) {
         setBinderGoal,
         getBinderVisibility,
         setBinderVisibilityStatus,
+        getBinderColor,
+        setBinderColor,
         replaceBinders,
         replaceBinderGoals,
         replaceBinderVisibility,
+        replaceBinderColors,
         isDefaultBinder,
       }}
     >
