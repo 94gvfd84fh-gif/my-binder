@@ -10,6 +10,136 @@ import StoreEvents from "../components/StoreEvents";
 import PageHeader from "../ui/PageHeader";
 import "../styles/profile.css";
 
+
+const cardShopTilePresets = [
+  {
+    name: "Classic Card Shop",
+    description: "Warm wood shelves and tan display plaques.",
+    tileColors: {
+      accountType: "#d6a15a",
+      collectorSince: "#c89452",
+      favoriteSet: "#e0b76f",
+      topCardType: "#b97832",
+      location: "#d2a35f",
+      ownedCollection: "#c68b45",
+      estimatedValue: "#d8a95f",
+      favorites: "#c89452",
+      wishlist: "#d7ad66",
+      forTrade: "#b97832",
+      graded: "#c89452",
+      followers: "#d6a15a",
+      following: "#c68b45",
+      accountStatus: "#e0b76f",
+    },
+    textColor: "#211005",
+  },
+  {
+    name: "Pokémon Wall",
+    description: "Bold red, yellow, and blue binder-wall energy.",
+    tileColors: {
+      accountType: "#facc15",
+      collectorSince: "#2563eb",
+      favoriteSet: "#ef4444",
+      topCardType: "#f97316",
+      location: "#38bdf8",
+      ownedCollection: "#fde047",
+      estimatedValue: "#22c55e",
+      favorites: "#ef4444",
+      wishlist: "#60a5fa",
+      forTrade: "#f59e0b",
+      graded: "#a855f7",
+      followers: "#2563eb",
+      following: "#facc15",
+      accountStatus: "#ef4444",
+    },
+    textColor: "#09090b",
+  },
+  {
+    name: "Sports Shop",
+    description: "Clean stadium green, navy, cream, and scoreboard contrast.",
+    tileColors: {
+      accountType: "#f8fafc",
+      collectorSince: "#14532d",
+      favoriteSet: "#1d4ed8",
+      topCardType: "#f97316",
+      location: "#e2e8f0",
+      ownedCollection: "#166534",
+      estimatedValue: "#facc15",
+      favorites: "#0f172a",
+      wishlist: "#94a3b8",
+      forTrade: "#16a34a",
+      graded: "#334155",
+      followers: "#1d4ed8",
+      following: "#f8fafc",
+      accountStatus: "#14532d",
+    },
+    textColor: "#0f172a",
+  },
+  {
+    name: "Vintage Counter",
+    description: "Aged paper, brass labels, and collector-case warmth.",
+    tileColors: {
+      accountType: "#f5deb3",
+      collectorSince: "#d6a15a",
+      favoriteSet: "#c08438",
+      topCardType: "#ead7aa",
+      location: "#b7792f",
+      ownedCollection: "#f2d492",
+      estimatedValue: "#c89452",
+      favorites: "#e6c278",
+      wishlist: "#d8b56f",
+      forTrade: "#b97832",
+      graded: "#f5deb3",
+      followers: "#d6a15a",
+      following: "#c08438",
+      accountStatus: "#ead7aa",
+    },
+    textColor: "#1c1005",
+  },
+  {
+    name: "Neon Trade Night",
+    description: "Electric cyan, blue, pink, and night-market glow.",
+    tileColors: {
+      accountType: "#06b6d4",
+      collectorSince: "#2563eb",
+      favoriteSet: "#a855f7",
+      topCardType: "#22d3ee",
+      location: "#ec4899",
+      ownedCollection: "#38bdf8",
+      estimatedValue: "#10b981",
+      favorites: "#f0abfc",
+      wishlist: "#06b6d4",
+      forTrade: "#2563eb",
+      graded: "#8b5cf6",
+      followers: "#22d3ee",
+      following: "#ec4899",
+      accountStatus: "#10b981",
+    },
+    textColor: "#f8fafc",
+  },
+  {
+    name: "Vault Gold",
+    description: "Deep brass, dark metal, and premium vault labels.",
+    tileColors: {
+      accountType: "#b45309",
+      collectorSince: "#92400e",
+      favoriteSet: "#d97706",
+      topCardType: "#78350f",
+      location: "#ca8a04",
+      ownedCollection: "#a16207",
+      estimatedValue: "#f59e0b",
+      favorites: "#854d0e",
+      wishlist: "#b45309",
+      forTrade: "#92400e",
+      graded: "#d97706",
+      followers: "#a16207",
+      following: "#78350f",
+      accountStatus: "#f59e0b",
+    },
+    textColor: "#fff7d6",
+  },
+];
+
 const defaultProfile = {
   username: "Beacon Collector",
   accountType: "Collector",
@@ -302,6 +432,29 @@ function Profile() {
       ...(collectorProfile.profileTileTextColors || {}),
       [tileKey]: color,
     });
+  }
+
+  function applyCardShopPreset(preset) {
+    setCollectorProfile((currentProfile) => ({
+      ...currentProfile,
+      profileTheme: "Card Shop",
+      profileAccentColor: preset.tileColors.accountType || currentProfile.profileAccentColor,
+      profileTileColors: { ...preset.tileColors },
+      profileTileTextColors: profileTileControls.reduce((colors, tile) => {
+        return {
+          ...colors,
+          [tile.key]: preset.textColor,
+        };
+      }, {}),
+    }));
+  }
+
+  function resetCardShopTileColors() {
+    setCollectorProfile((currentProfile) => ({
+      ...currentProfile,
+      profileTileColors: {},
+      profileTileTextColors: {},
+    }));
   }
 
   const publicBinders = binders.filter(isPublicBinder).map((binderName) => {
@@ -900,6 +1053,39 @@ function Profile() {
                       <h4>Color Each Display Tile</h4>
                       <p>Change only one profile plaque at a time, like Account Type, Favorites, Wishlist, and more.</p>
                     </div>
+
+                    <div className="profile-preset-panel">
+                      {cardShopTilePresets.map((preset) => (
+                        <button
+                          type="button"
+                          className="profile-preset-button"
+                          key={preset.name}
+                          onClick={() => applyCardShopPreset(preset)}
+                        >
+                          <span>{preset.name}</span>
+                          <small>{preset.description}</small>
+
+                          <div className="profile-preset-swatches" aria-hidden="true">
+                            {Object.values(preset.tileColors)
+                              .slice(0, 5)
+                              .map((color) => (
+                                <i
+                                  key={color}
+                                  style={{ backgroundColor: color }}
+                                ></i>
+                              ))}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      className="secondary-button profile-reset-theme-button"
+                      onClick={resetCardShopTileColors}
+                    >
+                      Reset Tile Colors
+                    </button>
 
                     <div className="profile-tile-color-grid">
                       {profileTileControls.map((tile) => (
