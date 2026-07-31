@@ -1,3 +1,4 @@
+import GettingStarted from "../components/GettingStarted";
 import Stats from "../components/Stats";
 import QuickActions from "../components/QuickActions";
 import CommunitySummary from "../components/CommunitySummary";
@@ -17,6 +18,7 @@ function Dashboard() {
         <p>Track your cards, binders, wishlist, and collection activity.</p>
       </div>
 
+      <GettingStarted />
       <Stats />
       <QuickActions />
       <CommunitySummary />
