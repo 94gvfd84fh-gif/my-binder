@@ -647,6 +647,8 @@ function Profile() {
       <section
         className={`collector-profile-card themed-profile-card theme-${collectorProfile.profileTheme
           .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")} layout-${collectorProfile.profileLayout
+          .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-")}`}
         style={{ "--profile-accent": collectorProfile.profileAccentColor }}
       >

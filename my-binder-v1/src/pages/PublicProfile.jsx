@@ -224,6 +224,8 @@ function PublicProfile() {
       <section
         className={`public-profile-card themed-public-profile theme-${collectorProfile.profileTheme
           .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")} layout-${collectorProfile.profileLayout
+          .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-")}`}
         style={{ "--profile-accent": collectorProfile.profileAccentColor }}
       >

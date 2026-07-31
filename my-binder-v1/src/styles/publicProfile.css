@@ -3517,3 +3517,201 @@
     grid-column: 1 / -1;
   }
 }
+
+
+/* ===== Profile Layout Modes ===== */
+.themed-profile-card.layout-classic,
+.themed-public-profile.layout-classic {
+  max-width: 1100px;
+}
+
+.themed-profile-card.layout-classic .collector-profile-stats,
+.themed-public-profile.layout-classic .collector-profile-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.themed-profile-card.layout-showcase,
+.themed-public-profile.layout-showcase {
+  max-width: 1280px;
+  padding: 36px;
+}
+
+.themed-profile-card.layout-showcase .collector-profile-top,
+.themed-public-profile.layout-showcase .public-profile-hero {
+  min-height: 300px;
+  align-items: flex-end;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 18% 20%, color-mix(in srgb, var(--profile-accent) 28%, transparent), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+}
+
+.themed-profile-card.layout-showcase .collector-avatar,
+.themed-public-profile.layout-showcase .collector-avatar {
+  width: 132px;
+  height: 132px;
+  border-radius: 30px;
+}
+
+.themed-profile-card.layout-showcase .collector-profile-top h2,
+.themed-public-profile.layout-showcase .public-profile-hero h2 {
+  font-size: clamp(3rem, 7vw, 5.8rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+.themed-profile-card.layout-showcase .collector-bio,
+.themed-public-profile.layout-showcase .public-profile-hero p:last-child {
+  max-width: 860px;
+  font-size: 1.25rem;
+}
+
+.themed-profile-card.layout-showcase .collector-top-card,
+.themed-public-profile.layout-showcase .collector-featured-card {
+  min-height: 220px;
+  border-color: color-mix(in srgb, var(--profile-accent) 48%, rgba(255, 255, 255, 0.16));
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--profile-accent) 28%, transparent), transparent 42%),
+    rgba(255, 255, 255, 0.06);
+}
+
+.themed-profile-card.layout-showcase .collector-profile-stats,
+.themed-public-profile.layout-showcase .collector-profile-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.themed-profile-card.layout-compact,
+.themed-public-profile.layout-compact {
+  max-width: 920px;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.themed-profile-card.layout-compact .collector-profile-top,
+.themed-public-profile.layout-compact .public-profile-hero {
+  gap: 14px;
+}
+
+.themed-profile-card.layout-compact .collector-avatar,
+.themed-public-profile.layout-compact .collector-avatar {
+  width: 58px;
+  height: 58px;
+}
+
+.themed-profile-card.layout-compact .collector-profile-top h2,
+.themed-public-profile.layout-compact .public-profile-hero h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.themed-profile-card.layout-compact .collector-bio,
+.themed-profile-card.layout-compact .profile-collection-mix,
+.themed-public-profile.layout-compact .public-collection-mix {
+  margin: 14px 0;
+}
+
+.themed-profile-card.layout-compact .collector-profile-stats,
+.themed-public-profile.layout-compact .collector-profile-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.themed-profile-card.layout-compact .collector-profile-stats div,
+.themed-profile-card.layout-compact .collector-social-stats div,
+.themed-public-profile.layout-compact .collector-profile-stats div {
+  min-height: 76px;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.themed-profile-card.layout-compact .collector-social-stats {
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.themed-profile-card.layout-gallery,
+.themed-public-profile.layout-gallery {
+  max-width: 1320px;
+}
+
+.themed-profile-card.layout-gallery .collector-profile-top,
+.themed-public-profile.layout-gallery .public-profile-hero {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: center;
+}
+
+.themed-profile-card.layout-gallery .profile-action-row {
+  grid-column: 1 / -1;
+  margin-left: 0;
+}
+
+.themed-profile-card.layout-gallery .collector-profile-stats,
+.themed-public-profile.layout-gallery .collector-profile-stats {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.themed-profile-card.layout-gallery .collector-profile-stats div,
+.themed-public-profile.layout-gallery .collector-profile-stats div {
+  min-height: 132px;
+}
+
+.themed-profile-card.layout-gallery .public-binders-preview,
+.themed-public-profile.layout-gallery .public-binders-preview {
+  margin-top: 30px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.themed-public-profile.layout-gallery .public-binder-card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.themed-public-profile.layout-gallery .collector-featured-card {
+  grid-template-columns: minmax(180px, 280px) 1fr;
+  min-height: 280px;
+}
+
+@media (max-width: 900px) {
+  .themed-profile-card.layout-showcase .collector-profile-stats,
+  .themed-public-profile.layout-showcase .collector-profile-stats,
+  .themed-profile-card.layout-gallery .collector-profile-stats,
+  .themed-public-profile.layout-gallery .collector-profile-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .themed-profile-card.layout-gallery .collector-profile-top,
+  .themed-public-profile.layout-gallery .public-profile-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .themed-profile-card.layout-showcase,
+  .themed-public-profile.layout-showcase {
+    padding: 20px;
+  }
+
+  .themed-profile-card.layout-showcase .collector-profile-top,
+  .themed-public-profile.layout-showcase .public-profile-hero {
+    min-height: auto;
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+  .themed-profile-card.layout-classic .collector-profile-stats,
+  .themed-public-profile.layout-classic .collector-profile-stats,
+  .themed-profile-card.layout-compact .collector-profile-stats,
+  .themed-public-profile.layout-compact .collector-profile-stats,
+  .themed-profile-card.layout-showcase .collector-profile-stats,
+  .themed-public-profile.layout-showcase .collector-profile-stats,
+  .themed-profile-card.layout-gallery .collector-profile-stats,
+  .themed-public-profile.layout-gallery .collector-profile-stats {
+    grid-template-columns: 1fr;
+  }
+}
