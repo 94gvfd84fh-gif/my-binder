@@ -130,14 +130,15 @@ function Community() {
   const [publicProfiles, setPublicProfiles] = useState([]);
   const [communityMessage, setCommunityMessage] = useState("");
 
+  const preferenceContext = useContext(UserPreferencesContext) || {};
   const {
-    savedEvents,
-    savedStores,
-    followedCollectors,
-    toggleSavedEvent,
-    toggleSavedStore,
-    toggleFollowCollector,
-  } = useContext(UserPreferencesContext);
+    savedEvents = [],
+    savedStores = [],
+    followedCollectors = [],
+    toggleSavedEvent = () => {},
+    toggleSavedStore = () => {},
+    toggleFollowCollector = () => {},
+  } = preferenceContext;
 
   useEffect(() => {
     async function loadCommunityDiscovery() {
@@ -149,8 +150,14 @@ function Community() {
           getPublicProfiles(),
         ]);
 
-        setStoreEvents(publicEvents.map(normalizeStoreEvent));
-        setPublicProfiles(profiles.map(normalizeProfile));
+        setStoreEvents(
+          Array.isArray(publicEvents)
+            ? publicEvents.map(normalizeStoreEvent)
+            : []
+        );
+        setPublicProfiles(
+          Array.isArray(profiles) ? profiles.map(normalizeProfile) : []
+        );
       } catch {
         setCommunityMessage(
           "Community discovery is available. Some sample results are included while more collectors and stores join Beacon."
@@ -370,7 +377,7 @@ function Community() {
       <div className="marketplace-preview">
         {communityFeatures.map((feature) => {
           const target = getFeatureTarget(feature);
-          const isRouteLink = target.startsWith("/");
+          const isRouteLink = String(target).startsWith("/");
 
           if (isRouteLink) {
             return (
