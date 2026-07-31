@@ -4,6 +4,27 @@ import { CardContext } from "../context/CardContext";
 import { BinderContext } from "../context/BinderContext";
 import PageHeader from "../ui/PageHeader";
 
+const BINDER_SLOT_LABELS_KEY = "beacon-collect-binder-slot-labels";
+const BINDER_CARD_LAYOUT_KEY = "beacon-collect-binder-card-layouts";
+
+function getStoredObject(storageKey) {
+  const savedValue = localStorage.getItem(storageKey);
+
+  if (savedValue) {
+    try {
+      const parsedValue = JSON.parse(savedValue);
+
+      if (parsedValue && typeof parsedValue === "object") {
+        return parsedValue;
+      }
+    } catch {
+      return {};
+    }
+  }
+
+  return {};
+}
+
 function Binder() {
   const { cards, editCard } = useContext(CardContext);
   const {
@@ -29,6 +50,14 @@ function Binder() {
   const [renameBinderName, setRenameBinderName] = useState("");
   const [goalInput, setGoalInput] = useState("");
   const [cardToAdd, setCardToAdd] = useState("");
+  const [binderSlotLabels, setBinderSlotLabels] = useState(() =>
+    getStoredObject(BINDER_SLOT_LABELS_KEY)
+  );
+  const [binderCardLayouts, setBinderCardLayouts] = useState(() =>
+    getStoredObject(BINDER_CARD_LAYOUT_KEY)
+  );
+  const [draggedCardId, setDraggedCardId] = useState("");
+  const [dragOverSlotNumber, setDragOverSlotNumber] = useState(0);
 
   useEffect(() => {
     const binderFromUrl = searchParams.get("view");
@@ -39,8 +68,24 @@ function Binder() {
       setRenameBinderName("");
       setGoalInput("");
       setCardToAdd("");
+      setDraggedCardId("");
+      setDragOverSlotNumber(0);
     }
   }, [searchParams, binders]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      BINDER_SLOT_LABELS_KEY,
+      JSON.stringify(binderSlotLabels)
+    );
+  }, [binderSlotLabels]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      BINDER_CARD_LAYOUT_KEY,
+      JSON.stringify(binderCardLayouts)
+    );
+  }, [binderCardLayouts]);
 
   const selectedBinderIsDefault = isDefaultBinder(selectedBinder);
   const selectedBinderVisibility = getBinderVisibility(selectedBinder);
@@ -124,6 +169,67 @@ function Binder() {
     return "Only you can see this binder.";
   }
 
+  function getSlotLabel(binderName, slotNumber) {
+    return binderSlotLabels[binderName]?.[slotNumber] || "";
+  }
+
+  function updateSlotLabel(binderName, slotNumber, label) {
+    setBinderSlotLabels((currentLabels) => {
+      const binderLabels = currentLabels[binderName] || {};
+      const updatedBinderLabels = {
+        ...binderLabels,
+        [slotNumber]: label,
+      };
+
+      if (!label.trim()) {
+        delete updatedBinderLabels[slotNumber];
+      }
+
+      return {
+        ...currentLabels,
+        [binderName]: updatedBinderLabels,
+      };
+    });
+  }
+
+  function renameBinderLayout(oldName, newName) {
+    setBinderSlotLabels((currentLabels) => {
+      if (!currentLabels[oldName]) return currentLabels;
+
+      const updatedLabels = { ...currentLabels };
+      updatedLabels[newName] = updatedLabels[oldName];
+      delete updatedLabels[oldName];
+      return updatedLabels;
+    });
+
+    setBinderCardLayouts((currentLayouts) => {
+      if (!currentLayouts[oldName]) return currentLayouts;
+
+      const updatedLayouts = { ...currentLayouts };
+      updatedLayouts[newName] = updatedLayouts[oldName];
+      delete updatedLayouts[oldName];
+      return updatedLayouts;
+    });
+  }
+
+  function deleteBinderLayout(binderName) {
+    setBinderSlotLabels((currentLabels) => {
+      if (!currentLabels[binderName]) return currentLabels;
+
+      const updatedLabels = { ...currentLabels };
+      delete updatedLabels[binderName];
+      return updatedLabels;
+    });
+
+    setBinderCardLayouts((currentLayouts) => {
+      if (!currentLayouts[binderName]) return currentLayouts;
+
+      const updatedLayouts = { ...currentLayouts };
+      delete updatedLayouts[binderName];
+      return updatedLayouts;
+    });
+  }
+
   const binderCards = cards.filter((card) => {
     return cardBelongsToBinder(card, selectedBinder);
   });
@@ -132,17 +238,69 @@ function Binder() {
     return !cardBelongsToBinder(card, selectedBinder);
   });
 
+  const selectedBinderGoal = binderGoals[selectedBinder] || 0;
   const cardsPerPage = 9;
-  const totalPages = Math.max(1, Math.ceil(binderCards.length / cardsPerPage));
 
+  function getResolvedCardSlots(binderName, collectionCards) {
+    const storedLayout = binderCardLayouts[binderName] || {};
+    const usedSlots = new Set();
+    const resolvedSlots = {};
+
+    collectionCards.forEach((card) => {
+      const storedSlot = Number(storedLayout[card.id]);
+
+      if (storedSlot > 0 && !usedSlots.has(storedSlot)) {
+        resolvedSlots[card.id] = storedSlot;
+        usedSlots.add(storedSlot);
+      }
+    });
+
+    collectionCards.forEach((card) => {
+      if (resolvedSlots[card.id]) return;
+
+      let nextSlot = 1;
+
+      while (usedSlots.has(nextSlot)) {
+        nextSlot += 1;
+      }
+
+      resolvedSlots[card.id] = nextSlot;
+      usedSlots.add(nextSlot);
+    });
+
+    return resolvedSlots;
+  }
+
+  const resolvedCardSlots = getResolvedCardSlots(selectedBinder, binderCards);
+  const slotToCard = new Map(
+    binderCards.map((card) => [resolvedCardSlots[card.id], card])
+  );
+  const highestUsedSlot = Object.values(resolvedCardSlots).reduce(
+    (highestSlot, slotNumber) => Math.max(highestSlot, Number(slotNumber || 0)),
+    0
+  );
+  const plannedSlotCount = Math.max(
+    binderCards.length,
+    selectedBinderGoal,
+    highestUsedSlot
+  );
+  const totalPages = Math.max(1, Math.ceil(plannedSlotCount / cardsPerPage));
   const start = (page - 1) * cardsPerPage;
-  const visibleCards = binderCards.slice(start, start + cardsPerPage);
 
   const binderSlots = Array.from({ length: cardsPerPage }, (_, index) => {
-    return visibleCards[index] || null;
-  });
+    const slotNumber = start + index + 1;
+    const card = slotToCard.get(slotNumber) || null;
+    const slotLabel = getSlotLabel(selectedBinder, slotNumber);
+    const isPlannedSlot =
+      selectedBinderGoal > 0 || slotNumber <= plannedSlotCount || Boolean(slotLabel);
 
-  const selectedBinderGoal = binderGoals[selectedBinder] || 0;
+    return {
+      card,
+      slotNumber,
+      slotLabel,
+      isPlannedSlot,
+    };
+  });
 
   const goalPercent =
     selectedBinderGoal > 0
@@ -160,6 +318,8 @@ function Binder() {
     setRenameBinderName("");
     setGoalInput("");
     setCardToAdd("");
+    setDraggedCardId("");
+    setDragOverSlotNumber(0);
   }
 
   function handleBinderChange(event) {
@@ -217,6 +377,8 @@ function Binder() {
         });
       })
     );
+
+    renameBinderLayout(selectedBinder, trimmedName);
     setSelectedBinder(trimmedName);
     setRenameBinderName("");
     setPage(1);
@@ -224,7 +386,9 @@ function Binder() {
 
   async function handleDeleteBinder() {
     const confirmDelete = confirm(
-      `Delete "${selectedBinder}"? Cards will be removed from this custom binder only.`
+      'Delete "' +
+        selectedBinder +
+        '"? Cards will be removed from this custom binder only.'
     );
 
     if (!confirmDelete) return;
@@ -253,6 +417,8 @@ function Binder() {
         });
       })
     );
+
+    deleteBinderLayout(selectedBinder);
     setSelectedBinder("Main Collection");
     setRenameBinderName("");
     setPage(1);
@@ -261,10 +427,9 @@ function Binder() {
   function handleSetGoal(event) {
     event.preventDefault();
 
-    if (selectedBinderIsDefault) return;
-
     setBinderGoal(selectedBinder, goalInput);
     setGoalInput("");
+    setPage(1);
   }
 
   async function handleAddCardToBinder(event) {
@@ -303,6 +468,16 @@ function Binder() {
       extraBinders,
       updatedAt: now,
     });
+
+    setBinderCardLayouts((currentLayouts) => {
+      const binderLayout = { ...(currentLayouts[selectedBinder] || {}) };
+      delete binderLayout[cardId];
+
+      return {
+        ...currentLayouts,
+        [selectedBinder]: binderLayout,
+      };
+    });
   }
 
   async function markCardCollected(cardId) {
@@ -321,6 +496,46 @@ function Binder() {
     });
   }
 
+  function placeCardInSlot(cardId, slotNumber) {
+    const numericSlot = Number(slotNumber);
+
+    if (!cardId || numericSlot < 1) return;
+
+    const sourceSlot = Number(resolvedCardSlots[cardId]);
+    const targetCard = slotToCard.get(numericSlot);
+    const targetCardId = targetCard ? String(targetCard.id) : "";
+
+    if (targetCardId === String(cardId)) return;
+
+    setBinderCardLayouts((currentLayouts) => {
+      const nextLayout = { ...(currentLayouts[selectedBinder] || {}) };
+
+      binderCards.forEach((card) => {
+        nextLayout[card.id] = resolvedCardSlots[card.id];
+      });
+
+      nextLayout[cardId] = numericSlot;
+
+      if (targetCardId && sourceSlot > 0) {
+        nextLayout[targetCardId] = sourceSlot;
+      }
+
+      return {
+        ...currentLayouts,
+        [selectedBinder]: nextLayout,
+      };
+    });
+  }
+
+  function moveCardBySlot(cardId, direction) {
+    const currentSlot = Number(resolvedCardSlots[cardId]);
+    const nextSlot = currentSlot + direction;
+
+    if (nextSlot < 1) return;
+
+    placeCardInSlot(cardId, nextSlot);
+  }
+
   function nextPage() {
     setPage((currentPage) => Math.min(currentPage + 1, totalPages));
   }
@@ -334,14 +549,14 @@ function Binder() {
       <PageHeader
         label="BEACON COLLECT BINDERS"
         title="Your Binders"
-        description="Create binders for master sets, favorite Pokémon, trades, wishlists, and more."
+        description="Create binders for master sets, favorite Pokemon, trades, wishlists, and more."
       />
 
       <div className="binder-toolbar">
         <div>
           <h2>{selectedBinder}</h2>
           <p>
-            {binderCards.length} cards · Page {page} of {totalPages}
+            {binderCards.length} cards - Page {page} of {totalPages}
           </p>
         </div>
 
@@ -393,7 +608,7 @@ function Binder() {
           <input
             type="color"
             value={selectedBinderColor}
-            aria-label={`Change ${selectedBinder} color`}
+            aria-label={"Change " + selectedBinder + " color"}
             onChange={(event) => setBinderColor(selectedBinder, event.target.value)}
           />
         </div>
@@ -403,7 +618,7 @@ function Binder() {
         <div className="form-copy">
           <p className="page-label">CREATE BINDER</p>
           <h3>New Custom Binder</h3>
-          <p>Create a binder for a Pokémon, set, chase list, or theme.</p>
+          <p>Create a binder for a Pokemon, set, chase list, or theme.</p>
         </div>
 
         <input
@@ -414,6 +629,86 @@ function Binder() {
 
         <button type="submit">Add Binder</button>
       </form>
+
+      <form
+        className="add-card-to-binder-form binder-goal-form"
+        onSubmit={handleSetGoal}
+      >
+        <div className="form-copy">
+          <p className="page-label">BINDER LAYOUT</p>
+          <h3>
+            {selectedBinderGoal
+              ? binderCards.length + " / " + selectedBinderGoal + " slots filled"
+              : "Set Planned Slots"}
+          </h3>
+          <p>
+            {selectedBinderGoal
+              ? goalPercent + "% complete"
+              : "Set the number of pockets you want, then name empty slots for missing cards."}
+          </p>
+
+          {selectedBinderGoal > 0 && (
+            <div
+              className="binder-goal-progress"
+              style={{ "--goal-progress": goalPercent + "%" }}
+            >
+              <span></span>
+            </div>
+          )}
+        </div>
+
+        <input
+          type="number"
+          min="1"
+          placeholder="Planned slots ex: 102"
+          value={goalInput}
+          onChange={(event) => setGoalInput(event.target.value)}
+        />
+
+        <button type="submit">
+          {selectedBinderGoal ? "Update Slots" : "Set Slots"}
+        </button>
+
+        {selectedBinderGoal > 0 && (
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => {
+              setBinderGoal(selectedBinder, "");
+              setPage(1);
+            }}
+          >
+            Clear
+          </button>
+        )}
+      </form>
+
+      <section className="master-binder-plan">
+        <div>
+          <p className="page-label">POCKET PLANNER</p>
+          <h3>Numbered Binder Slots</h3>
+          <p>
+            Drag cards into any pocket and leave open spaces for cards you are
+            still missing. Empty pockets can be named so you know what belongs
+            there.
+          </p>
+        </div>
+
+        <div className="master-binder-plan-stats">
+          <span>
+            <strong>{binderCards.length}</strong>
+            Filled
+          </span>
+          <span>
+            <strong>{Math.max(0, plannedSlotCount - binderCards.length)}</strong>
+            Empty
+          </span>
+          <span>
+            <strong>{plannedSlotCount}</strong>
+            Slots
+          </span>
+        </div>
+      </section>
 
       {!selectedBinderIsDefault && (
         <>
@@ -444,56 +739,6 @@ function Binder() {
             </select>
 
             <button type="submit">Add Card</button>
-          </form>
-
-          <form
-            className="add-card-to-binder-form binder-goal-form"
-            onSubmit={handleSetGoal}
-          >
-            <div className="form-copy">
-              <p className="page-label">BINDER GOAL</p>
-              <h3>
-                {selectedBinderGoal
-                  ? `${binderCards.length} / ${selectedBinderGoal} cards`
-                  : "Set a Goal"}
-              </h3>
-              <p>
-                {selectedBinderGoal
-                  ? `${goalPercent}% complete`
-                  : "Track progress for this custom binder."}
-              </p>
-
-              {selectedBinderGoal > 0 && (
-                <div
-                  className="binder-goal-progress"
-                  style={{ "--goal-progress": `${goalPercent}%` }}
-                >
-                  <span></span>
-                </div>
-              )}
-            </div>
-
-            <input
-              type="number"
-              min="1"
-              placeholder="Target cards ex: 50"
-              value={goalInput}
-              onChange={(event) => setGoalInput(event.target.value)}
-            />
-
-            <button type="submit">
-              {selectedBinderGoal ? "Update Goal" : "Set Goal"}
-            </button>
-
-            {selectedBinderGoal > 0 && (
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={() => setBinderGoal(selectedBinder, "")}
-              >
-                Clear
-              </button>
-            )}
           </form>
 
           <form
@@ -528,7 +773,7 @@ function Binder() {
         </>
       )}
 
-      {binderCards.length === 0 && (
+      {binderCards.length === 0 && selectedBinderGoal === 0 && (
         <div className="binder-empty-state">
           <p className="page-label">EMPTY BINDER</p>
           <h3>{emptyBinderMessage.title}</h3>
@@ -537,13 +782,54 @@ function Binder() {
       )}
 
       <div className="binder-page" style={binderColorStyle}>
-        {binderSlots.map((card, index) => (
+        {binderSlots.map(({ card, slotNumber, slotLabel, isPlannedSlot }) => (
           <div
-            className={card ? "binder-pocket" : "binder-pocket empty-pocket"}
-            key={card ? card.id : `empty-${index}`}
+            className={
+              card
+                ? dragOverSlotNumber === slotNumber
+                  ? "binder-pocket draggable-binder-pocket drag-over-pocket"
+                  : "binder-pocket draggable-binder-pocket"
+                : isPlannedSlot
+                  ? dragOverSlotNumber === slotNumber
+                    ? "binder-pocket empty-pocket planned-empty-pocket drag-over-pocket"
+                    : "binder-pocket empty-pocket planned-empty-pocket"
+                  : dragOverSlotNumber === slotNumber
+                    ? "binder-pocket empty-pocket drag-over-pocket"
+                    : "binder-pocket empty-pocket"
+            }
+            draggable={Boolean(card)}
+            onDragStart={() => {
+              if (card) setDraggedCardId(String(card.id));
+            }}
+            onDragOver={(event) => {
+              if (draggedCardId) {
+                event.preventDefault();
+                setDragOverSlotNumber(slotNumber);
+              }
+            }}
+            onDragLeave={() => setDragOverSlotNumber(0)}
+            onDrop={(event) => {
+              event.preventDefault();
+
+              if (draggedCardId) {
+                placeCardInSlot(draggedCardId, slotNumber);
+              }
+
+              setDraggedCardId("");
+              setDragOverSlotNumber(0);
+            }}
+            onDragEnd={() => {
+              setDraggedCardId("");
+              setDragOverSlotNumber(0);
+            }}
+            key={card ? card.id : "empty-" + slotNumber}
           >
             {card ? (
               <>
+                <div className="binder-slot-number">
+                  Slot {String(slotNumber).padStart(3, "0")}
+                </div>
+
                 {card.gradingCompany && card.gradingCompany !== "Raw" && (
                   <div className="graded-badge">
                     {card.gradingCompany} {card.grade || ""}
@@ -561,9 +847,32 @@ function Binder() {
                 <h3>{card.name || "Untitled Card"}</h3>
                 <p>{card.set || "Unknown set"}</p>
 
+                {slotLabel && (
+                  <small className="planned-slot-note">{slotLabel}</small>
+                )}
+
                 {card.certNumber && (
                   <small className="cert-number">Cert #{card.certNumber}</small>
                 )}
+
+                <div className="main-binder-pocket-tools">
+                  <button
+                    type="button"
+                    className="move-card-button"
+                    disabled={slotNumber === 1}
+                    onClick={() => moveCardBySlot(card.id, -1)}
+                  >
+                    Back
+                  </button>
+
+                  <button
+                    type="button"
+                    className="move-card-button"
+                    onClick={() => moveCardBySlot(card.id, 1)}
+                  >
+                    Forward
+                  </button>
+                </div>
 
                 {selectedBinder === "Wishlist" && (
                   <button
@@ -586,7 +895,22 @@ function Binder() {
                 )}
               </>
             ) : (
-              <span>Empty Pocket</span>
+              <div className="planned-slot-label">
+                <strong>Slot {String(slotNumber).padStart(3, "0")}</strong>
+                <input
+                  className="planned-slot-input"
+                  placeholder="Name this missing card"
+                  value={slotLabel}
+                  onChange={(event) =>
+                    updateSlotLabel(
+                      selectedBinder,
+                      slotNumber,
+                      event.target.value
+                    )
+                  }
+                />
+                <span>{slotLabel ? "Planned Card" : "Empty Pocket"}</span>
+              </div>
             )}
           </div>
         ))}
