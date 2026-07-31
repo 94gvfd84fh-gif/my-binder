@@ -121,6 +121,49 @@ function getActiveSearchLabel(searchText, locationText, activeFilter, distanceFi
   return labels.join(" · ");
 }
 
+function getStoreBadges(store, isSaved) {
+  return [
+    store.isSupabaseProfile ? "Store Profile" : "Local Shop",
+    isSaved ? "Saved" : "Discover",
+  ];
+}
+
+function getStoreStats(store) {
+  return [
+    { label: "Area", value: store.area || "Online" },
+    { label: "Focus", value: store.eventType || "Events" },
+  ];
+}
+
+function getCollectorBadges(collector, isFollowing) {
+  return [
+    collector.isSupabaseProfile ? "Live Profile" : "Preview",
+    isFollowing ? "Following" : "Collector",
+    collector.tradeStatus?.toLowerCase().includes("open") ? "Open to Trade" : "Browse",
+  ];
+}
+
+function getCollectorStats(collector) {
+  return [
+    { label: "Favorite", value: collector.favoriteTcg || "Cards" },
+    { label: "Binders", value: collector.publicBinders || "Public" },
+  ];
+}
+
+function getEventBadges(event, isSaved) {
+  return [
+    event.isStorePosted ? "Store Posted" : "Community Event",
+    isSaved ? "Saved" : "Upcoming",
+  ];
+}
+
+function getEventStats(event) {
+  return [
+    { label: "Date", value: event.date || "TBA" },
+    { label: "Time", value: event.time || "TBA" },
+  ];
+}
+
 function Community() {
   const [search, setSearch] = useState("");
   const [locationSearch, setLocationSearch] = useState("");
@@ -422,9 +465,12 @@ function Community() {
             {savedEventDetails.map((event) => (
               <CommunityCard
                 key={event.id}
+                variant="event"
                 label={event.type}
                 title={event.title}
-                details={[event.date, event.time, event.location]}
+                badges={getEventBadges(event, true)}
+                stats={getEventStats(event)}
+                details={[event.location]}
                 description={event.details}
                 image={event.flyer}
                 imageAlt={`${event.title} flyer`}
@@ -461,11 +507,14 @@ function Community() {
                 return (
                   <CommunityCard
                     key={event.id}
+                    variant="event"
                     label={
                       event.isStorePosted ? "STORE " + event.type : event.type
                     }
                     title={event.title}
-                    details={[event.date, event.time, event.location]}
+                    badges={getEventBadges(event, isSaved)}
+                    stats={getEventStats(event)}
+                    details={[event.location]}
                     description={event.details}
                     image={event.flyer}
                     imageAlt={`${event.title} flyer`}
@@ -498,10 +547,13 @@ function Community() {
             {savedStoreDetails.map((store) => (
               <CommunityCard
                 key={store.id}
+                variant="store"
                 label={store.isSupabaseProfile ? "BEACON STORE" : "LOCAL SHOP"}
                 title={store.name}
-                details={[store.area, store.distance, store.eventType]}
-                description={store.specialties}
+                badges={getStoreBadges(store, true)}
+                stats={getStoreStats(store)}
+                details={[store.distance, store.specialties]}
+                description={store.eventType}
                 linkTo={store.linkTo}
                 linkText="View Store"
                 buttonText="Remove Saved"
@@ -530,10 +582,13 @@ function Community() {
                 return (
                   <CommunityCard
                     key={store.id}
+                    variant="store"
                     label={store.isSupabaseProfile ? "BEACON STORE" : "LOCAL SHOP"}
                     title={store.name}
-                    details={[store.area, store.distance, store.eventType]}
-                    description={store.specialties}
+                    badges={getStoreBadges(store, isSaved)}
+                    stats={getStoreStats(store)}
+                    details={[store.distance, store.specialties]}
+                    description={store.eventType}
                     linkTo={store.linkTo}
                     linkText="View Store"
                     buttonText={isSaved ? "Saved" : "Save Store"}
@@ -574,13 +629,15 @@ function Community() {
                         ? "LIVE " + collector.favoriteTcg + " COLLECTOR"
                         : collector.favoriteTcg + " COLLECTOR"
                     }
+                    variant="collector"
                     title={collector.username}
+                    badges={getCollectorBadges(collector, isFollowing)}
+                    stats={getCollectorStats(collector)}
                     details={[
-                      collector.style,
-                      String(collector.publicBinders) + " public binders",
                       collector.tradeStatus,
                       "Featured: " + collector.featuredCard,
                     ]}
+                    description={collector.style}
                     linkTo={collector.linkTo}
                     linkText="View Profile"
                     buttonText={
