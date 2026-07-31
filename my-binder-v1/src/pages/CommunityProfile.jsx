@@ -23,6 +23,11 @@ function toProfileView(profile) {
     bio: profile.bio || "This Beacon profile is still being filled out.",
     avatar: profile.avatar || "",
     featuredCard: profile.favorite_set || "Featured card not set yet",
+    profileTheme: profile.profile_theme || "Beacon Dark",
+    profileAccentColor: profile.profile_accent_color || "#2563EB",
+    profileBanner: profile.profile_banner || "",
+    profileLayout: profile.profile_layout || "Classic",
+    profileTagline: profile.profile_tagline || "",
   };
 }
 
@@ -112,6 +117,19 @@ function CommunityProfile() {
   }
 
   const isStoreSaved = savedStores.includes(profile.id);
+  const themeClass = profile.profileTheme.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const layoutClass = profile.profileLayout.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const communitySignals = profile.isStore
+    ? [
+        { label: "Events", value: storeEvents.length },
+        { label: "Saved", value: isStoreSaved ? "Yes" : "Not Yet" },
+        { label: "Location", value: profile.location },
+      ]
+    : [
+        { label: "Collects", value: profile.favoriteTcg },
+        { label: "Featured", value: profile.featuredCard },
+        { label: "Location", value: profile.location },
+      ];
 
   return (
     <div>
@@ -127,7 +145,19 @@ function CommunityProfile() {
 
       {message && <p className="auth-message">{message}</p>}
 
-      <section className="collector-detail-card community-profile-card">
+      <section
+        className={`collector-detail-card community-profile-card theme-${themeClass} layout-${layoutClass}`}
+        style={{ "--profile-accent": profile.profileAccentColor }}
+      >
+        {profile.profileBanner && (
+          <div
+            className="community-profile-banner"
+            style={{ backgroundImage: `url(${profile.profileBanner})` }}
+          >
+            <img src={profile.profileBanner} alt="Profile banner" />
+          </div>
+        )}
+
         <div className="collector-detail-hero">
           <div className="collector-avatar">
             {profile.avatar ? (
@@ -144,8 +174,20 @@ function CommunityProfile() {
                 : profile.favoriteTcg + " COLLECTOR"}
             </p>
             <h2>{profile.name}</h2>
+            {profile.profileTagline && (
+              <p className="community-profile-tagline">{profile.profileTagline}</p>
+            )}
             <p>{profile.bio}</p>
           </div>
+        </div>
+
+        <div className="community-signal-strip">
+          {communitySignals.map((signal) => (
+            <div key={signal.label}>
+              <span>{signal.label}</span>
+              <strong>{signal.value}</strong>
+            </div>
+          ))}
         </div>
 
         <div className="collector-detail-stats">
@@ -194,8 +236,14 @@ function CommunityProfile() {
               ? isStoreSaved
                 ? "Saved Shop"
                 : "Save Shop"
-              : "Follow"}
+              : "Follow Collector"}
           </button>
+
+          {profile.isStore && storeEvents.length > 0 && (
+            <a className="secondary-button" href="#store-events">
+              View Events
+            </a>
+          )}
 
           <Link className="secondary-button" to="/community">
             Back to Community
@@ -204,7 +252,7 @@ function CommunityProfile() {
       </section>
 
       {profile.isStore && (
-        <section className="community-events-section">
+        <section className="community-events-section" id="store-events">
           <div className="section-header">
             <div>
               <h2>Public Events</h2>
