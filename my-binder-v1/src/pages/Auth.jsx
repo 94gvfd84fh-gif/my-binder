@@ -1,13 +1,35 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { supabase } from "../lib/supabaseClient";
+import { getProfile } from "../services/profileService";
 import PageHeader from "../ui/PageHeader";
 
 const authFeatures = [
   "Track collections, binders, wishlists, and values",
   "Create a collector or store profile",
   "Save events, shops, and community activity",
+];
+
+const accountNextSteps = [
+  {
+    title: "Finish your profile",
+    description: "Set your username, account type, banner, theme, and public details.",
+    to: "/profile",
+    action: "Edit Profile",
+  },
+  {
+    title: "Build your collection",
+    description: "Add cards, values, conditions, binders, wishlists, and sale prices.",
+    to: "/collection",
+    action: "Open Collection",
+  },
+  {
+    title: "Explore community",
+    description: "Find collectors, shops, events, and trade nights around Beacon.",
+    to: "/community",
+    action: "Discover",
+  },
 ];
 
 function Auth() {
@@ -20,10 +42,43 @@ function Auth() {
   const [accountPassword, setAccountPassword] = useState("");
   const [confirmAccountPassword, setConfirmAccountPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [profile, setProfile] = useState(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   const isSignup = authMode === "signup";
+  const accountType = profile?.account_type || "Collector";
+  const username = profile?.username || "Set up your username";
+  const accountCreatedAt = user?.created_at
+    ? new Date(user.created_at).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "Account active";
+
+  useEffect(() => {
+    async function loadProfile() {
+      if (!user) {
+        setProfile(null);
+        return;
+      }
+
+      setIsLoadingProfile(true);
+
+      try {
+        const savedProfile = await getProfile(user.id);
+        setProfile(savedProfile || null);
+      } catch {
+        setProfile(null);
+      }
+
+      setIsLoadingProfile(false);
+    }
+
+    loadProfile();
+  }, [user]);
 
   function getCleanEmail() {
     return email.trim().toLowerCase();
@@ -202,13 +257,41 @@ function Auth() {
           description="You can now save your collection, profile, binders, and community activity."
         />
 
-        <div className="auth-card signed-in-card">
-          <p className="page-label">SIGNED IN</p>
-          <h2>{user.email}</h2>
-          <p>
-            Your Beacon account is active. Manage your profile, collection,
-            binders, wishlist items, and community activity from one place.
-          </p>
+        <div className="auth-card signed-in-card account-home-card">
+          <div className="account-home-header">
+            <div>
+              <p className="page-label">SIGNED IN</p>
+              <h2>{username}</h2>
+              <p>
+                Your Beacon account is active. Manage your profile, collection,
+                binders, wishlist items, and community activity from one place.
+              </p>
+            </div>
+
+            <span className="account-type-pill">{accountType}</span>
+          </div>
+
+          <div className="account-summary-grid">
+            <div>
+              <span>Email</span>
+              <strong>{user.email}</strong>
+            </div>
+
+            <div>
+              <span>Account Type</span>
+              <strong>{isLoadingProfile ? "Loading..." : accountType}</strong>
+            </div>
+
+            <div>
+              <span>Status</span>
+              <strong>Active</strong>
+            </div>
+
+            <div>
+              <span>Created</span>
+              <strong>{accountCreatedAt}</strong>
+            </div>
+          </div>
 
           <div className="auth-action-row">
             <Link className="primary-button" to="/profile">
@@ -220,13 +303,30 @@ function Auth() {
             </Link>
 
             <button
-              className="secondary-button"
+              className="danger-button"
               type="button"
               onClick={handleSignOut}
             >
-              Sign Out
+              Log Out
             </button>
           </div>
+
+          <section className="account-next-steps">
+            <div>
+              <p className="page-label">NEXT STEPS</p>
+              <h3>Keep building your Beacon account</h3>
+            </div>
+
+            <div className="account-next-step-grid">
+              {accountNextSteps.map((step) => (
+                <Link to={step.to} key={step.title}>
+                  <strong>{step.title}</strong>
+                  <span>{step.description}</span>
+                  <small>{step.action}</small>
+                </Link>
+              ))}
+            </div>
+          </section>
 
           <form className="account-password-panel" onSubmit={handleUpdatePassword}>
             <div>
